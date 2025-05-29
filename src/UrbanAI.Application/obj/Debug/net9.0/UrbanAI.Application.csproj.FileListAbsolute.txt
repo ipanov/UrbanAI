@@ -1,0 +1,15 @@
+C:\Repos\UrbanAI\src\UrbanAI.Application\bin\Debug\net9.0\UrbanAI.Application.deps.json
+C:\Repos\UrbanAI\src\UrbanAI.Application\bin\Debug\net9.0\UrbanAI.Application.dll
+C:\Repos\UrbanAI\src\UrbanAI.Application\bin\Debug\net9.0\UrbanAI.Application.pdb
+C:\Repos\UrbanAI\src\UrbanAI.Application\bin\Debug\net9.0\UrbanAI.Domain.dll
+C:\Repos\UrbanAI\src\UrbanAI.Application\bin\Debug\net9.0\UrbanAI.Domain.pdb
+C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\UrbanAI.Application.csproj.AssemblyReference.cache
+C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\UrbanAI.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\UrbanAI.Application.AssemblyInfoInputs.cache
+C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\UrbanAI.Application.AssemblyInfo.cs
+C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\UrbanAI.Application.csproj.CoreCompileInputs.cache
+C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\UrbanAI..CB3F322F.Up2Date
+C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\UrbanAI.Application.dll
+C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\refint\UrbanAI.Application.dll
+C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\UrbanAI.Application.pdb
+C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\ref\UrbanAI.Application.dll

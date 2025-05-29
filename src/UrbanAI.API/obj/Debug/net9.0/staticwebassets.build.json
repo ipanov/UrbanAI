@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "wUGI2B4iSrgHN/5MkYVFRnihMqWsdNPxijDCr/qRa28=",
+  "Source": "UrbanAI.API",
+  "BasePath": "_content/UrbanAI.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
