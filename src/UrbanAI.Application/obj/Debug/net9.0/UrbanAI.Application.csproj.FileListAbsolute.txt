@@ -13,3 +13,6 @@ C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\UrbanAI.Application.dl
 C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\refint\UrbanAI.Application.dll
 C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\UrbanAI.Application.pdb
 C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\ref\UrbanAI.Application.dll
+C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Application.deps.json
+C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Application.dll
+C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Application.pdb

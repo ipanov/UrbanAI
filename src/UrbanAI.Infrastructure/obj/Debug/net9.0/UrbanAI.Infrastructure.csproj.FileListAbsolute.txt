@@ -15,3 +15,7 @@ C:\Repos\UrbanAI\src\UrbanAI.Infrastructure\obj\Debug\net9.0\refint\UrbanAI.Infr
 C:\Repos\UrbanAI\src\UrbanAI.Infrastructure\obj\Debug\net9.0\UrbanAI.Infrastructure.pdb
 C:\Repos\UrbanAI\src\UrbanAI.Infrastructure\obj\Debug\net9.0\UrbanAI.Infrastructure.genruntimeconfig.cache
 C:\Repos\UrbanAI\src\UrbanAI.Infrastructure\obj\Debug\net9.0\ref\UrbanAI.Infrastructure.dll
+C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Infrastructure.deps.json
+C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Infrastructure.runtimeconfig.json
+C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Infrastructure.dll
+C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Infrastructure.pdb

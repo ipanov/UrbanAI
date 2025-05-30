@@ -1,4 +1,4 @@
-@UrbanAI.API_HostAddress = http://localhost:5018
+@UrbanAI.API_HostAddress = http://localhost:5001
 
 GET {{UrbanAI.API_HostAddress}}/weatherforecast/
 Accept: application/json

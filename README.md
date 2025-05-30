@@ -1,82 +1,66 @@
-# UrbanAI
+# UrbanAI Backend
 
-This repository contains the backend services for the UrbanAI project, built with .NET Core following a layered architecture (Domain, Application, Infrastructure, WebAPI).
+This repository contains the backend services for the UrbanAI project, including the Performance API and the AI Agent.
 
 ## Project Structure
 
-- `src/UrbanAI.Domain`: Contains core domain entities, value objects, and interfaces.
-- `src/UrbanAI.Application`: Contains application logic, use cases, DTOs, and application services.
-- `src/UrbanAI.Infrastructure`: Contains data access implementations (EF Core, NoSQL), external service integrations, and infrastructure concerns.
-- `src/UrbanAI.API`: ASP.NET Core Web API project, acting as the presentation layer.
-- `tests/`: Contains unit and integration tests for the various layers.
-- `docs/`: Contains architecture diagrams, ADRs, and API documentation.
-- `Figma/`: (Conceptual) Location for Figma design files.
+- **UrbanAI.API:** The main Web API project.
+- **UrbanAI.Application:** Contains application services and business logic.
+- **UrbanAI.Domain:** Contains core domain entities and interfaces.
+- **UrbanAI.Infrastructure:** Handles data access and external service integrations.
+- **docs:** Documentation files, including architecture diagrams.
 
-## Technologies Used
+## Setup Instructions
 
-- .NET Core (Latest LTS)
-- ASP.NET Core
-- Entity Framework Core (for relational data)
-- (Planned) NoSQL Database (e.g., MongoDB/Cosmos DB)
-- Swashbuckle (for Swagger/OpenAPI documentation)
-- xUnit (for testing)
+Follow these steps to set up and run the UrbanAI backend locally:
 
-## Setup
+1.  **Prerequisites:**
+    *   [.NET SDK (latest LTS)](https://dotnet.microsoft.com/download)
+    *   A database system (e.g., SQL Server, PostgreSQL, SQLite). Ensure it's installed and accessible.
+    *   [Git](https://git-scm.com/downloads)
 
-1.  **Clone the repository:**
+2.  **Clone the repository:**
     ```bash
-    git clone [Repository URL]
+    git clone <repository_url>
     cd UrbanAI
     ```
-    *(Note: Repository URL will be added once the Azure DevOps repo is set up)*
+    Replace `<repository_url>` with the actual URL of the repository.
 
-2.  **Restore dependencies:**
-    ```bash
-    dotnet restore
-    ```
+3.  **Configure Database Connection:**
+    *   Open the `src/UrbanAI.API/appsettings.json` file.
+    *   Update the `ConnectionStrings` section with your database connection string. Example for SQL Server:
+        ```json
+        "ConnectionStrings": {
+          "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=UrbanAIDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+        }
+        ```
 
-## Building
+4.  **Apply Database Migrations:**
+    *   Navigate to the project root directory (`c:/Repos/UrbanAI`).
+    *   Run the following command to apply the latest Entity Framework Core migrations and create the database schema:
+        ```bash
+        dotnet ef database update --project src/UrbanAI.Infrastructure --startup-project src/UrbanAI.API
+        ```
 
-To build the solution:
+5.  **Run the API:**
+    *   Navigate to the project root directory (`c:/Repos/UrbanAI`).
+    *   Run the API project:
+        ```bash
+        dotnet run --project src/UrbanAI.API
+        ```
+    *   The API should start and be accessible, typically at `https://localhost:5001` (HTTPS) and `http://localhost:5000` (HTTP). Check the console output for the exact URLs.
 
-```bash
-dotnet build
-```
+6.  **Access Swagger UI:**
+    *   Once the API is running, open your web browser and navigate to `/swagger` (e.g., `https://localhost:5001/swagger`) to view the interactive API documentation.
 
-## Running the API
+## API Documentation (Swagger/OpenAPI)
 
-To run the UrbanAI API locally:
+Once the API is running, you can access the Swagger UI for interactive API documentation at `/swagger`.
 
-```bash
-dotnet run --project src/UrbanAI.API/UrbanAI.API.csproj
-```
+## Architecture Diagrams
 
-The API will typically run on `https://localhost:7001` and `http://localhost:5001`.
-
-## Accessing Swagger UI
-
-Once the API is running, you can access the Swagger UI for interactive API documentation at:
-
-```
-https://localhost:7001/swagger
-```
-or
-```
-http://localhost:5001/swagger
-```
-
-## Documentation
-
-- **Architecture Diagrams:** Located in `docs/architecture/`.
-- **API Documentation:** Accessible via the Swagger UI.
-- **ADR Log:** Located in `docs/adr/`.
+Architecture diagrams are located in the `docs` directory.
 
 ## Contributing
 
-Please follow the GitFlow branching strategy. Create feature branches from `develop`, open Pull Requests into `develop`, and ensure all tests pass before merging.
-
-*(More detailed contribution guidelines will be added later)*
-
-## License
-
-*(License information will be added later)*
+Please refer to the GitFlow branching strategy outlined in the project documentation.

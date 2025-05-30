@@ -9,3 +9,6 @@ C:\Repos\UrbanAI\src\UrbanAI.Domain\obj\Debug\net9.0\UrbanAI.Domain.dll
 C:\Repos\UrbanAI\src\UrbanAI.Domain\obj\Debug\net9.0\refint\UrbanAI.Domain.dll
 C:\Repos\UrbanAI\src\UrbanAI.Domain\obj\Debug\net9.0\UrbanAI.Domain.pdb
 C:\Repos\UrbanAI\src\UrbanAI.Domain\obj\Debug\net9.0\ref\UrbanAI.Domain.dll
+C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Domain.deps.json
+C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Domain.dll
+C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Domain.pdb
