@@ -1,0 +1,33 @@
+==== UrbanAI Wiki Connection Tester ====
+
+1. Testing connection to Azure DevOps...
+{
+  "status": "success",
+  "organization": "https://dev.azure.com/urban-ai",
+  "project": "UrbanAI",
+  "wikis": 1,
+  "wiki_names": [
+    "UrbanAI.wiki"
+  ]
+}
+
+2. Available wikis:
+  1. UrbanAI.wiki (ID: 11370c99-432d-416b-99b7-54390f99cec1)
+
+3. Available wiki templates:
+  1. api_template
+  2. feature_template
+
+4. Pages in the first wiki (UrbanAI.wiki):
+{
+  "path": "/",
+  "order": 0,
+  "isParentPage": true,
+  "gitItemPath": "/",
+  "subPages": [],
+  "url": "https://dev.azure.com/urban-ai/0ed092af-0605-4fad-afa7-2729339cc9a2/_apis/wiki/wikis/11370c99-432d-416b-99b7-54390f99cec1/pages/%2F",
+  "remoteUrl": "https://dev.azure.com/urban-ai/0ed092af-0605-4fad-afa7-2729339cc9a2/_wiki/wikis/11370c99-432d-416b-99b7-54390f99cec1?pagePath=%2F",
+  "content": ""
+}
+
+==== Test Complete ====

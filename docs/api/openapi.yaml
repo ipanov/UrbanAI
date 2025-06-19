@@ -1,0 +1,78 @@
+openapi: 3.0.0
+info:
+  title: UrbanAI API
+  description: API for managing urban issues, including reporting, classification, and regulation crawling.
+  version: 1.0.0
+servers:
+  - url: /v1
+    description: Base URL for API version 1
+paths:
+  /issues:
+    post:
+      summary: Create a new urban issue
+      description: Submits a new urban issue report, including description and optional image data.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateIssueRequest'
+      responses:
+        '201':
+          description: Issue created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueDto'
+        '400':
+          description: Invalid request payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    CreateIssueRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Detailed description of the urban issue.
+        imageData:
+          type: string
+          format: byte
+          description: Optional image data associated with the issue.
+      required:
+        - description
+    IssueDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the issue.
+        description:
+          type: string
+          description: Detailed description of the urban issue.
+        status:
+          type: string
+          description: Current status of the issue (e.g., Open, In Progress, Closed).
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the issue was created.
+      required:
+        - id
+        - description
+        - status
+        - createdAt
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A brief message describing the error.
+        details:
+          type: array
+          items:
+            type: string
+          description: Specific details about the validation errors.
