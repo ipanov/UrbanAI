@@ -1,10 +1,12 @@
 using System;
 
+using UrbanAI.Domain.Common;
+
 namespace UrbanAI.Domain.Entities
 {
-    public class User
+    public class User : BaseEntity
     {
-        public Guid Id { get; set; }
+        // Id and CreatedAt are inherited from BaseEntity
         // Add other user properties as needed later
     }
 }

@@ -16,3 +16,4 @@ C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\ref\UrbanAI.Applicatio
 C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Application.deps.json
 C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Application.dll
 C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Application.pdb
+C:\Repos\UrbanAI\src\UrbanAI.Application\obj\Debug\net9.0\UrbanAI.Application.sourcelink.json
