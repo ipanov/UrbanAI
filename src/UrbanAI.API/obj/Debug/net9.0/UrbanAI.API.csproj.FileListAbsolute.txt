@@ -26,12 +26,6 @@ C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\scopedcss\bundle\UrbanAI.API.s
 C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\staticwebassets.build.json
 C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\staticwebassets.development.json
 C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\staticwebassets.build.endpoints.json
-C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\staticwebassets\msbuild.UrbanAI.API.Microsoft.AspNetCore.StaticWebAssets.props
-C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\staticwebassets\msbuild.UrbanAI.API.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\staticwebassets\msbuild.build.UrbanAI.API.props
-C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\staticwebassets\msbuild.buildMultiTargeting.UrbanAI.API.props
-C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\staticwebassets\msbuild.buildTransitive.UrbanAI.API.props
-C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\staticwebassets.pack.json
 C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\UrbanAI..C8331117.Up2Date
 C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\UrbanAI.API.dll
 C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\refint\UrbanAI.API.dll
@@ -196,3 +190,9 @@ C:\Repos\UrbanAI\src\UrbanAI.API\bin\Debug\net9.0\MongoDB.Driver.dll
 C:\Repos\UrbanAI\src\UrbanAI.API\bin\Debug\net9.0\SharpCompress.dll
 C:\Repos\UrbanAI\src\UrbanAI.API\bin\Debug\net9.0\Snappier.dll
 C:\Repos\UrbanAI\src\UrbanAI.API\bin\Debug\net9.0\ZstdSharp.dll
+C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\UrbanAI.API.sourcelink.json
+C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\rjimswa.dswa.cache.json
+C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
+C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
+C:\Repos\UrbanAI\src\UrbanAI.API\obj\Debug\net9.0\staticwebassets.build.json.cache

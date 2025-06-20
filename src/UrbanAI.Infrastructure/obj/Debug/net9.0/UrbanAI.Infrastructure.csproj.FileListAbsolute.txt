@@ -19,3 +19,4 @@ C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Infrastructure.deps.json
 C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Infrastructure.runtimeconfig.json
 C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Infrastructure.dll
 C:\Repos\UrbanAI\bin\Debug\net9.0\UrbanAI.Infrastructure.pdb
+C:\Repos\UrbanAI\src\UrbanAI.Infrastructure\obj\Debug\net9.0\UrbanAI.Infrastructure.sourcelink.json

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UrbanAI.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f8c760aa5633f9aa971a0608d826ba8f30ae8cef")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+68f6064434a222dead37e56651aa0ae0827f1681")]
 [assembly: System.Reflection.AssemblyProductAttribute("UrbanAI.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UrbanAI.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
