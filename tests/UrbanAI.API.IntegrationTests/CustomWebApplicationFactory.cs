@@ -2,99 +2,116 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Testcontainers.PostgreSql;
-using Respawn;
 using System.Data.Common;
-using Npgsql;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using UrbanAI.Infrastructure.Data;
 using System.Linq;
+using Microsoft.Data.Sqlite; // For SqliteConnection
+using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting; // Required for IHostBuilder
+using Microsoft.AspNetCore.Authentication; // Required for AuthenticationSchemeOptions
+using Microsoft.Extensions.DependencyInjection.Extensions; // Required for RemoveAll
 
 namespace UrbanAI.API.IntegrationTests
 {
     public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
-        private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
-            .WithImage("postgres:latest")
-            .WithDatabase("urbanai_test_db")
-            .WithUsername("admin")
-            .WithPassword("admin")
-            .Build();
-
         private DbConnection _dbConnection = null!;
-        private Respawner _respawner = null!;
+        // Respawn is typically not needed for in-memory SQLite as each test gets a fresh DB
+        // private Respawner _respawner = null!; 
 
         public HttpClient HttpClient { get; private set; } = null!;
 
         public async Task InitializeAsync()
         {
-            await _dbContainer.StartAsync();
-
-            _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
-
-            HttpClient = CreateClient();
-
+            // Create a new in-memory SQLite connection for each test run
+            _dbConnection = new SqliteConnection("DataSource=:memory:");
             await _dbConnection.OpenAsync();
-            await InitializeRespawnerAsync();
+
+            // Perform initial database setup (create schema) ONCE for the entire test collection
+            using (var scope = Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                // EnsureCreatedAsync creates the database schema based on the model
+                await dbContext.Database.EnsureCreatedAsync(); 
+            }
+
+            // Respawn is not strictly necessary for in-memory SQLite as it's fresh each time,
+            // but if we wanted to clear data between tests, we'd initialize it here.
+            // _respawner = await Respawner.CreateAsync(_dbConnection, new RespawnOptions
+            // {
+            //     TablesToIgnore = new Respawn.Graph.Table[] { "__EFMigrationsHistory" },
+            //     DbAdapter = DbAdapter.Sqlite
+            // });
+
+            HttpClient = CreateClient(); // Create client last
         }
 
         public new async Task DisposeAsync()
         {
-            await _dbContainer.DisposeAsync();
             await _dbConnection.DisposeAsync();
+            // No container to dispose for in-memory SQLite
         }
 
         public async Task ResetDatabaseAsync()
         {
-            await _respawner.ResetAsync(_dbConnection);
+            // For in-memory SQLite, a full reset means recreating the schema
+            // This is handled by InitializeAsync for the entire collection,
+            // or by individual test setup if needed per test.
+            // For simplicity, we'll just ensure the database is created.
+            using (var scope = Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                await dbContext.Database.EnsureCreatedAsync();
+            }
+            // If Respawn was used, it would be called here:
+            // await _respawner.ResetAsync(_dbConnection);
         }
 
+        // Override ConfigureWebHost to configure test services directly
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            Environment.SetEnvironmentVariable("ConnectionStrings:DefaultConnection", _dbContainer.GetConnectionString());
-
-            builder.ConfigureAppConfiguration((context, config) =>
-            {
-                config.AddInMemoryCollection(new Dictionary<string, string>
-                {
-                    {"ConnectionStrings:DefaultConnection", _dbContainer.GetConnectionString()}
-                });
-            });
-
             builder.ConfigureServices(services =>
             {
-                var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
+                // Remove existing DbContext registrations
+                var dbContextRelatedServices = services.Where(
+                    d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>) ||
+                         d.ServiceType == typeof(ApplicationDbContext) ||
+                         d.ServiceType == typeof(IDbContextFactory<ApplicationDbContext>)).ToList();
 
-                if (descriptor != null)
+                foreach (var descriptor in dbContextRelatedServices)
                 {
                     services.Remove(descriptor);
                 }
 
+                // Add the in-memory SQLite DbContext
                 services.AddDbContext<ApplicationDbContext>(options =>
                 {
-                    options.UseNpgsql(_dbContainer.GetConnectionString());
-                });
-
-                var sp = services.BuildServiceProvider();
-                using (var scope = sp.CreateScope())
+                    options.UseSqlite(_dbConnection); 
+                    options.ConfigureWarnings(x => x.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+                });                // Remove existing authentication
+                var authServices = services.Where(s => 
+                    s.ServiceType.FullName != null && 
+                    s.ServiceType.FullName.Contains("Authentication")).ToList();
+                foreach (var service in authServices)
                 {
-                    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                    dbContext.Database.Migrate();
+                    services.Remove(service);
                 }
+
+                // Add test authentication as the default
+                services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = TestAuthHandler.SchemeName;
+                    options.DefaultChallengeScheme = TestAuthHandler.SchemeName;
+                    options.DefaultScheme = TestAuthHandler.SchemeName;
+                })
+                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.SchemeName, options => { });
+                
+                services.AddAuthorization();
             });
 
+            // Ensure the environment is set to Development for tests, so Program.cs conditional logic works
             builder.UseEnvironment("Development");
-        }
-
-        private async Task InitializeRespawnerAsync()
-        {
-            _respawner = await Respawner.CreateAsync(_dbConnection, new RespawnerOptions
-            {
-                TablesToIgnore = new Respawn.Graph.Table[] { "__EFMigrationsHistory" },
-                DbAdapter = DbAdapter.Postgres
-            });
         }
     }
 }

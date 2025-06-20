@@ -7,6 +7,7 @@ using Xunit;
 
 namespace UrbanAI.API.IntegrationTests.Controllers;
 
+[Collection("Integration Tests")]
 public class AuthControllerTests : TestBase
 {
     public AuthControllerTests(CustomWebApplicationFactory factory) : base(factory)

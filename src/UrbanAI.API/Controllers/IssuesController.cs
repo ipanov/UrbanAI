@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Threading.Tasks;
 using UrbanAI.Application.Interfaces;
@@ -9,7 +10,8 @@ using UrbanAI.Domain.Entities;
 namespace UrbanAI.API.Controllers
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
+    [Authorize]
     public class IssuesController : ControllerBase
     {
         private readonly IIssueService _issueService;
@@ -35,17 +37,13 @@ namespace UrbanAI.API.Controllers
                 return NotFound();
             }
             return Ok(issue);
-        }
-
-        [HttpPost]
+        }        [HttpPost]
         public async Task<ActionResult<CreateIssueResponseDto>> CreateIssue([FromBody] CreateIssueRequestDto request)
         {
             var response = await _issueService.CreateIssueAsync(request);
             return CreatedAtAction(nameof(GetIssueById), new { id = response.Id }, response);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult<IssueDto>> UpdateIssue(Guid id, [FromBody] UpdateIssueRequestDto request)
+        }        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateIssue(Guid id, [FromBody] UpdateIssueRequestDto request)
         {
             request.Id = id;
             var updatedIssue = await _issueService.UpdateIssueAsync(request);
@@ -53,14 +51,19 @@ namespace UrbanAI.API.Controllers
             {
                 return NotFound();
             }
-            return Ok(updatedIssue);
-        }
-
-        [HttpDelete("{id}")]
+            return NoContent();
+        }[HttpDelete("{id}")]
         public async Task<IActionResult> DeleteIssue(Guid id)
         {
-            await _issueService.DeleteIssueAsync(id);
-            return NoContent();
+            try
+            {
+                await _issueService.DeleteIssueAsync(id);
+                return NoContent();
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpGet("regulations/{location}")]

@@ -9,6 +9,7 @@ using Xunit;
 
 namespace UrbanAI.API.IntegrationTests.Controllers;
 
+[Collection("Integration Tests")]
 public class IssuesControllerTests : TestBase
 {
     public IssuesControllerTests(CustomWebApplicationFactory factory) : base(factory)
@@ -34,15 +35,10 @@ public class IssuesControllerTests : TestBase
         loginResponse.EnsureSuccessStatusCode();
         var authResponse = await loginResponse.Content.ReadFromJsonAsync<AuthResponseDto>();
         return authResponse!.Token!;
-    }
-
-    [Fact]
+    }    [Fact]
     public async Task CreateIssue_AuthenticatedUser_ReturnsCreated()
     {
-        // Arrange
-        var token = await GetAuthTokenAsync("issuecreator", "Password123!");
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
+        // Arrange - TestAuthHandler automatically authenticates all requests
         var request = new CreateIssueRequestDto
         {
             Title = "Test Issue",
@@ -60,12 +56,13 @@ public class IssuesControllerTests : TestBase
         issueResponse.Should().NotBeNull();
         issueResponse.Id.Should().NotBeEmpty();
         issueResponse.Title.Should().Be(request.Title);
-    }
-
-    [Fact]
+    }    [Fact]
     public async Task CreateIssue_UnauthenticatedUser_ReturnsUnauthorized()
     {
-        // Arrange
+        // Arrange - Use unauthenticated factory
+        using var unauthenticatedFactory = new UnauthenticatedWebApplicationFactory();
+        using var unauthenticatedClient = unauthenticatedFactory.CreateClient();
+        
         var request = new CreateIssueRequestDto
         {
             Title = "Unauthorized Issue",
@@ -75,7 +72,7 @@ public class IssuesControllerTests : TestBase
         };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/issues", request);
+        var response = await unauthenticatedClient.PostAsJsonAsync("/api/issues", request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -149,6 +146,7 @@ public class IssuesControllerTests : TestBase
         {
             Title = "Updated Issue Title",
             Description = "Updated description.",
+            PhotoUrl = "http://updated.example.com/photo.jpg",
             Status = "Closed",
             Priority = "High"
         };
@@ -179,6 +177,7 @@ public class IssuesControllerTests : TestBase
         {
             Title = "Non-existent Issue",
             Description = "Should not update.",
+            PhotoUrl = "http://nonexistent.example.com/photo.jpg",
             Status = "Open",
             Priority = "Low"
         };
