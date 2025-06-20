@@ -4,12 +4,22 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using UrbanAI.Application.DTOs;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Microsoft.Extensions.Configuration;
+using UrbanAI.Domain.Entities;
+using UrbanAI.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using BCrypt.Net;
 
 namespace UrbanAI.API.Controllers
 {
     [ApiController]
-    [Route("v1/auth")]
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
         private const string JwtSecret = "c97b177d-55c8-4c02-a258-30b6e1f92301"; // Replace with a strong secret
@@ -17,11 +27,60 @@ namespace UrbanAI.API.Controllers
 
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _dbContext;
 
-        public AuthController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public AuthController(IHttpClientFactory httpClientFactory, IConfiguration configuration, ApplicationDbContext dbContext)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
+            _dbContext = dbContext;
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] AuthRequestDto request)
+        {
+            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
+            {
+                return BadRequest("Username, Email, and Password are required.");
+            }
+
+            if (await _dbContext.Users.AnyAsync(u => u.Username == request.Username || u.Email == request.Email))
+            {
+                return Conflict("User with this username or email already exists.");
+            }
+
+            var user = new User
+            {
+                Username = request.Username,
+                Email = request.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                Role = "User" // Default role
+            };
+
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
+
+            var token = GenerateJwtToken(user);
+            return Ok(new AuthResponseDto { Token = token });
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] AuthRequestDto request)
+        {
+            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+            {
+                return BadRequest("Username and Password are required.");
+            }
+
+            var user = await _dbContext.Users.SingleOrDefaultAsync(u => u.Username == request.Username);
+
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            {
+                return Unauthorized("Invalid credentials.");
+            }
+
+            var token = GenerateJwtToken(user);
+            return Ok(new AuthResponseDto { Token = token });
         }
 
         [HttpPost("exchange-token")]
@@ -72,7 +131,7 @@ namespace UrbanAI.API.Controllers
 
                 var response = new AuthResponseDto
                 {
-                    AccessToken = accessToken
+                    Token = accessToken
                 };
 
                 return Ok(response);
@@ -81,6 +140,28 @@ namespace UrbanAI.API.Controllers
             {
                 return BadRequest("Unsupported provider.");
             }
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(JwtSecret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Username!),
+                    new Claim(ClaimTypes.Email, user.Email!),
+                    new Claim(ClaimTypes.Role, user.Role!)
+                }),
+                Issuer = JwtIssuer,
+                Audience = JwtIssuer,
+                Expires = DateTime.UtcNow.AddDays(7), // Token valid for 7 days
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }

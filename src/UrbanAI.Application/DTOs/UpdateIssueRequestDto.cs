@@ -11,5 +11,6 @@ namespace UrbanAI.Application.DTOs
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public required string Status { get; set; }
+        public string? Priority { get; set; }
     }
 }
