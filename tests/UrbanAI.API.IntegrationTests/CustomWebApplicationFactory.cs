@@ -13,12 +13,9 @@ using Microsoft.AspNetCore.Authentication; // Required for AuthenticationSchemeO
 using Microsoft.Extensions.DependencyInjection.Extensions; // Required for RemoveAll
 
 namespace UrbanAI.API.IntegrationTests
-{
-    public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
+{    public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
         private DbConnection _dbConnection = null!;
-        // Respawn is typically not needed for in-memory SQLite as each test gets a fresh DB
-        // private Respawner _respawner = null!; 
 
         public HttpClient HttpClient { get; private set; } = null!;
 
@@ -26,23 +23,13 @@ namespace UrbanAI.API.IntegrationTests
         {
             // Create a new in-memory SQLite connection for each test run
             _dbConnection = new SqliteConnection("DataSource=:memory:");
-            await _dbConnection.OpenAsync();
-
-            // Perform initial database setup (create schema) ONCE for the entire test collection
+            await _dbConnection.OpenAsync();            // Perform initial database setup (create schema) ONCE for the entire test collection
             using (var scope = Services.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 // EnsureCreatedAsync creates the database schema based on the model
                 await dbContext.Database.EnsureCreatedAsync(); 
             }
-
-            // Respawn is not strictly necessary for in-memory SQLite as it's fresh each time,
-            // but if we wanted to clear data between tests, we'd initialize it here.
-            // _respawner = await Respawner.CreateAsync(_dbConnection, new RespawnOptions
-            // {
-            //     TablesToIgnore = new Respawn.Graph.Table[] { "__EFMigrationsHistory" },
-            //     DbAdapter = DbAdapter.Sqlite
-            // });
 
             HttpClient = CreateClient(); // Create client last
         }
@@ -51,9 +38,7 @@ namespace UrbanAI.API.IntegrationTests
         {
             await _dbConnection.DisposeAsync();
             // No container to dispose for in-memory SQLite
-        }
-
-        public async Task ResetDatabaseAsync()
+        }        public async Task ResetDatabaseAsync()
         {
             // For in-memory SQLite, a full reset means recreating the schema
             // This is handled by InitializeAsync for the entire collection,
@@ -64,8 +49,6 @@ namespace UrbanAI.API.IntegrationTests
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 await dbContext.Database.EnsureCreatedAsync();
             }
-            // If Respawn was used, it would be called here:
-            // await _respawner.ResetAsync(_dbConnection);
         }
 
         // Override ConfigureWebHost to configure test services directly
@@ -82,14 +65,14 @@ namespace UrbanAI.API.IntegrationTests
                 foreach (var descriptor in dbContextRelatedServices)
                 {
                     services.Remove(descriptor);
-                }
-
-                // Add the in-memory SQLite DbContext
+                }                // Add the in-memory SQLite DbContext
                 services.AddDbContext<ApplicationDbContext>(options =>
                 {
                     options.UseSqlite(_dbConnection); 
                     options.ConfigureWarnings(x => x.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
-                });                // Remove existing authentication
+                });
+
+                // Remove existing authentication
                 var authServices = services.Where(s => 
                     s.ServiceType.FullName != null && 
                     s.ServiceType.FullName.Contains("Authentication")).ToList();
