@@ -13,11 +13,20 @@ using Microsoft.AspNetCore.Authentication; // Required for AuthenticationSchemeO
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Only add SQL Server DbContext if not in Development environment (used for integration tests)
-if (!builder.Environment.IsDevelopment())
+// Configure database context based on environment
+// - Development: Local SQL Server (localdb) or Docker SQL Server
+// - Staging/Production: Azure SQL Database
+// - Testing: InMemory provider (configured in CustomWebApplicationFactory)
+if (!builder.Environment.IsEnvironment("Testing"))
 {
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new InvalidOperationException("DefaultConnection connection string is not configured.");
+    }
+    
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+        options.UseSqlServer(connectionString));
 }
 
 // Configure MongoDB settings

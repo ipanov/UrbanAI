@@ -110,10 +110,8 @@ namespace UrbanAI.API.IntegrationTests
                         return new List<UrbanAI.Domain.Entities.Regulation>();
                     });
                 services.AddSingleton(mockRegulationRepository.Object);
-            });
-
-            // Ensure the environment is set to Development for tests, so Program.cs conditional logic works
-            builder.UseEnvironment("Development");
+            });            // Ensure the environment is set to Testing for integration tests
+            builder.UseEnvironment("Testing");
         }
     }
 }
