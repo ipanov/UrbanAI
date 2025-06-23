@@ -1,3 +1,6 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using UrbanAI.Infrastructure.Data;
@@ -6,11 +9,16 @@ using UrbanAI.Infrastructure.Repositories;
 using UrbanAI.Application.Interfaces;
 using UrbanAI.Application.Services;
 using UrbanAI.Infrastructure.Data.Models; // Assuming MongoDbContext is here or in a related namespace
+using Microsoft.AspNetCore.Authentication; // Required for AuthenticationSchemeOptions
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Only add SQL Server DbContext if not in Development environment (used for integration tests)
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
 
 // Configure MongoDB settings
 builder.Services.Configure<MongoDbSettings>(
@@ -32,9 +40,57 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddHttpClient();
 
+// Add Authentication and JWT configuration
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    var jwtSecret = builder.Configuration["Jwt:Secret"] ?? 
+        throw new InvalidOperationException("JWT Secret is not configured.");
+    var key = Encoding.ASCII.GetBytes(jwtSecret);
+    
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+    };
+})
+.AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? 
+        throw new InvalidOperationException("Google ClientId is not configured.");
+    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? 
+        throw new InvalidOperationException("Google ClientSecret is not configured.");
+})
+.AddMicrosoftAccount(options =>
+{
+    options.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"] ?? 
+        throw new InvalidOperationException("Microsoft ClientId is not configured.");
+    options.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"] ?? 
+        throw new InvalidOperationException("Microsoft ClientSecret is not configured.");
+})
+.AddFacebook(options =>
+{
+    options.AppId = builder.Configuration["Authentication:Facebook:AppId"] ?? 
+        throw new InvalidOperationException("Facebook AppId is not configured.");
+    options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"] ?? 
+        throw new InvalidOperationException("Facebook AppSecret is not configured.");
+});
+
+builder.Services.AddAuthorization();
+
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
-builder.Services.AddScoped<UrbanAI.Application.Features.Issues.IIssueService, UrbanAI.Application.Features.Issues.IssueService>();
+builder.Services.AddScoped<UrbanAI.Application.Interfaces.IIssueService, UrbanAI.Application.Services.IssueService>();
 builder.Services.AddScoped<UrbanAI.Application.Features.Users.IUserService, UrbanAI.Application.Features.Users.UserService>();
 
 var app = builder.Build();
@@ -48,6 +104,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseRouting(); // Add routing middleware
+app.UseAuthentication(); // Add authentication middleware
+app.UseAuthorization(); // Add authorization middleware
+
+app.MapControllers(); // Map controller endpoints
 
 app.Run();
 

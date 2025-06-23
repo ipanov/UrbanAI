@@ -17,20 +17,18 @@ namespace UrbanAI.Application.Services
         {
             _issueRepository = issueRepository;
             _regulationRepository = regulationRepository;
-        }
-
-        public async Task<CreateIssueResponseDto> CreateIssueAsync(CreateIssueRequestDto request)
+        }        public async Task<CreateIssueResponseDto> CreateIssueAsync(CreateIssueRequestDto request)
         {
             var issue = new Issue
             {
                 Id = Guid.NewGuid(),
                 Title = request.Title,
                 Description = request.Description,
-                PhotoUrl = request.PhotoUrl,
+                PhotoUrl = request.PhotoUrl ?? "",
                 Latitude = request.Latitude,
                 Longitude = request.Longitude,
                 CreatedAt = DateTime.UtcNow,
-                Status = "Open" // Initial status
+                Status = request.Status ?? "Open" // Use provided status or default to "Open"
             };
 
             await _issueRepository.AddAsync(issue);
@@ -38,6 +36,7 @@ namespace UrbanAI.Application.Services
             var response = new CreateIssueResponseDto
             {
                 Id = issue.Id,
+                Title = issue.Title,
                 Description = issue.Description,
                 PhotoUrl = issue.PhotoUrl,
                 Latitude = issue.Latitude,
@@ -123,15 +122,14 @@ namespace UrbanAI.Application.Services
                 Longitude = issue.Longitude,
                 Status = issue.Status
             };
-        }
-
-        public async Task DeleteIssueAsync(Guid id)
+        }        public async Task DeleteIssueAsync(Guid id)
         {
             var issue = await _issueRepository.GetByIdAsync(id);
-            if (issue != null)
+            if (issue == null)
             {
-                await _issueRepository.DeleteAsync(issue);
+                throw new InvalidOperationException($"Issue with ID {id} not found.");
             }
+            await _issueRepository.DeleteAsync(issue);
         }
 
         public async Task<IEnumerable<UrbanAI.Domain.Entities.Regulation>> GetRegulationsByLocationAsync(string location)
