@@ -6,13 +6,6 @@
 # dotenv files
 .env
 
-# Secrets and sensitive configuration
-appsettings.Production.json
-appsettings.*.json
-!appsettings.json
-!appsettings.Development.json
-!appsettings.Testing.json
-
 # User-specific files
 *.rsuser
 *.suo
@@ -159,10 +152,6 @@ _TeamCity*
 coverage*.json
 coverage*.xml
 coverage*.info
-
-# Custom coverage reports directory
-coverage_reports/
-TestResults/
 
 # Visual Studio code coverage results
 *.coverage
@@ -498,26 +487,6 @@ $RECYCLE.BIN/
 **/bin/
 **/obj/
 
-# Entity Framework migrations (uncomment if you want to ignore them)
-# **/Migrations/
-
 # Explicitly ignore test results and coverage reports
 TestResults/
 coverage_reports/
-**/coverage_reports/
-
-# JetBrains Rider
-*.sln.iml
-.idea/
-
-# Azure DevOps
-.azure/
-
-# MCP servers and test artifacts
-mcp/test_*.py
-mcp/*_test.py
-mcp/*.log
-mcp_servers/*/test_*.py
-
-# Wiki and documentation generation artifacts
-wiki_templates/generated/

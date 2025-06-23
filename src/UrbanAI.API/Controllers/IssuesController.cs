@@ -40,11 +40,32 @@ namespace UrbanAI.API.Controllers
         }        [HttpPost]
         public async Task<ActionResult<CreateIssueResponseDto>> CreateIssue([FromBody] CreateIssueRequestDto request)
         {
+            if (string.IsNullOrEmpty(request.Title))
+            {
+                return BadRequest("Title is required.");
+            }
             var response = await _issueService.CreateIssueAsync(request);
             return CreatedAtAction(nameof(GetIssueById), new { id = response.Id }, response);
         }        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateIssue(Guid id, [FromBody] UpdateIssueRequestDto request)
         {
+            if (string.IsNullOrEmpty(request.Title))
+            {
+                return BadRequest("Title is required.");
+            }
+            if (string.IsNullOrEmpty(request.Description))
+            {
+                return BadRequest("Description is required.");
+            }
+            if (string.IsNullOrEmpty(request.PhotoUrl))
+            {
+                return BadRequest("PhotoUrl is required.");
+            }
+            if (string.IsNullOrEmpty(request.Status))
+            {
+                return BadRequest("Status is required.");
+            }
+
             request.Id = id;
             var updatedIssue = await _issueService.UpdateIssueAsync(request);
             if (updatedIssue == null)
@@ -70,7 +91,7 @@ namespace UrbanAI.API.Controllers
         public async Task<ActionResult<IEnumerable<Regulation>>> GetRegulationsByLocation(string location)
         {
             var regulations = await _issueService.GetRegulationsByLocationAsync(location);
-            if (regulations == null || !((List<Regulation>)regulations).Any())
+            if (regulations == null || !regulations.Any())
             {
                 return NotFound($"No regulations found for location: {location}");
             }

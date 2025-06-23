@@ -45,6 +45,11 @@ namespace UrbanAI.API.Controllers
                 return BadRequest("Username and Password are required.");
             }
 
+            if (request.Password.Length < 8)
+            {
+                return BadRequest("Password must be at least 8 characters long.");
+            }
+
             if (await _dbContext.Users.AnyAsync(u => u.Username == request.Username))
             {
                 return Conflict("Username already exists.");

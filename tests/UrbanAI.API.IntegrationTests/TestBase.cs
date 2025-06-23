@@ -7,17 +7,18 @@ using Microsoft.EntityFrameworkCore;
 using Bogus;
 using UrbanAI.Domain.Entities;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
+using UrbanAI.Application.DTOs;
 
 namespace UrbanAI.API.IntegrationTests;
 
 [Collection("Integration Tests")]
 public abstract class TestBase : IAsyncLifetime
-{
-    protected readonly CustomWebApplicationFactory _factory;
+{    protected readonly CustomWebApplicationFactory _factory;
     protected readonly HttpClient _client;
-    protected IServiceScope _scope;
-    protected ApplicationDbContext _dbContext;
+    protected IServiceScope _scope = null!;
+    protected ApplicationDbContext _dbContext = null!;
 
     protected TestBase(CustomWebApplicationFactory factory)
     {
@@ -43,13 +44,16 @@ public abstract class TestBase : IAsyncLifetime
         // For in-memory SQLite, the connection is closed and the database is lost on dispose.
         // No need for explicit database reset here.
         await Task.CompletedTask; // To satisfy IAsyncLifetime interface
-    }
-
-    protected virtual async Task ClearDatabaseAsync()
+    }    protected virtual async Task ClearDatabaseAsync()
     {
-        // For in-memory SQLite, the database is recreated for each test run,
-        // so explicit clearing via Respawn is not needed.
-        // We just ensure the schema is created.
+        // Clear all data from tables
+        _dbContext.Issues.RemoveRange(_dbContext.Issues);
+        _dbContext.Regulations.RemoveRange(_dbContext.Regulations);
+        _dbContext.ExternalLogins.RemoveRange(_dbContext.ExternalLogins);
+        _dbContext.Users.RemoveRange(_dbContext.Users);
+        await _dbContext.SaveChangesAsync();
+
+        // Ensure the schema is still created
         await _dbContext.Database.EnsureCreatedAsync();
     }
 
@@ -61,7 +65,7 @@ public abstract class TestBase : IAsyncLifetime
         {
             Username = faker.Internet.UserName(),
             Email = faker.Internet.Email(),
-            PasswordHash = "hashedpassword", // In a real scenario, hash this
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"), // Hash the password
             Role = "User"
         };
 
@@ -70,5 +74,28 @@ public abstract class TestBase : IAsyncLifetime
             _dbContext.Users.Add(testUser);
             await _dbContext.SaveChangesAsync();
         }
+    }
+
+    protected async Task<string> GetUserTokenAsync()
+    {
+        // Register a new user
+        var registerRequest = new AuthRequestDto
+        {
+            Username = "testuser_" + Guid.NewGuid().ToString().Substring(0, 8),
+            Email = "test_" + Guid.NewGuid().ToString().Substring(0, 8) + "@example.com",
+            Password = "Password123!"
+        };
+        var registerResponse = await _client.PostAsJsonAsync("/api/auth/register", registerRequest);
+        registerResponse.EnsureSuccessStatusCode();
+
+        // Login with the new user to get a token
+        var loginRequest = new AuthRequestDto
+        {
+            Username = registerRequest.Username,
+            Password = registerRequest.Password
+        };
+        var loginResponse = await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
+        loginResponse.EnsureSuccessStatusCode();        var authResponse = await loginResponse.Content.ReadFromJsonAsync<AuthResponseDto>();
+        return authResponse?.Token ?? throw new InvalidOperationException("Failed to get authentication token");
     }
 }

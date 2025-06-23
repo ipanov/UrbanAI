@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting; // Required for IHostBuilder
 using Microsoft.AspNetCore.Authentication; // Required for AuthenticationSchemeOptions
 using Microsoft.Extensions.DependencyInjection.Extensions; // Required for RemoveAll
+using UrbanAI.Domain.Interfaces; // Required for IRegulationRepository
+using Moq; // Required for Mock
 
 namespace UrbanAI.API.IntegrationTests
 {    public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
@@ -91,6 +93,23 @@ namespace UrbanAI.API.IntegrationTests
                 .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.SchemeName, options => { });
                 
                 services.AddAuthorization();
+
+                // Mock IRegulationRepository to prevent MongoDB connection during tests
+                services.RemoveAll(typeof(IRegulationRepository));
+                var mockRegulationRepository = new Mock<IRegulationRepository>();
+                mockRegulationRepository.Setup(repo => repo.GetByLocationAsync(It.IsAny<string>()))
+                    .ReturnsAsync((string location) =>
+                    {
+                        if (location == "TestLocation")
+                        {
+                            return new List<UrbanAI.Domain.Entities.Regulation>
+                            {
+                                new UrbanAI.Domain.Entities.Regulation { Id = Guid.NewGuid(), Title = "Test Regulation", Content = "Content", Location = "TestLocation", EffectiveDate = DateTime.UtcNow, Jurisdiction = "Test", Keywords = new List<string> { "Test" }, SourceUrl = "http://test.com", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
+                            };
+                        }
+                        return new List<UrbanAI.Domain.Entities.Regulation>();
+                    });
+                services.AddSingleton(mockRegulationRepository.Object);
             });
 
             // Ensure the environment is set to Development for tests, so Program.cs conditional logic works
