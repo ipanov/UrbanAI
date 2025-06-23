@@ -90,9 +90,8 @@ namespace UrbanAI.Application.Tests
         public async Task GetIssueByIdAsync_ShouldReturnNull_WhenIssueDoesNotExist()
         {
             // Arrange
-            var issueId = Guid.NewGuid();
-            _mockIssueRepository.Setup(repo => repo.GetByIdAsync(issueId))
-                                .ReturnsAsync((Issue)null);
+            var issueId = Guid.NewGuid();            _mockIssueRepository.Setup(repo => repo.GetByIdAsync(issueId))
+                                .ReturnsAsync((Issue?)null);
 
             // Act
             var result = await _issueService.GetIssueByIdAsync(issueId);
@@ -186,10 +185,8 @@ namespace UrbanAI.Application.Tests
                 Latitude = 0.0, // Added missing required property
                 Longitude = 0.0, // Added missing required property
                 Status = "Open"
-            };
-
-            _mockIssueRepository.Setup(repo => repo.GetByIdAsync(request.Id))
-                                .ReturnsAsync((Issue)null);
+            };            _mockIssueRepository.Setup(repo => repo.GetByIdAsync(request.Id))
+                                .ReturnsAsync((Issue?)null);
 
             // Act
             var result = await _issueService.UpdateIssueAsync(request);
@@ -218,20 +215,19 @@ namespace UrbanAI.Application.Tests
             // Assert
             _mockIssueRepository.Verify(repo => repo.GetByIdAsync(issueId), Times.Once);
             _mockIssueRepository.Verify(repo => repo.DeleteAsync(mockIssue), Times.Once);
-        }
-
-        [Fact]
-        public async Task DeleteIssueAsync_ShouldNotCallDelete_WhenIssueDoesNotExist()
+        }        [Fact]
+        public async Task DeleteIssueAsync_ShouldThrowException_WhenIssueDoesNotExist()
         {
             // Arrange
             var issueId = Guid.NewGuid();
             _mockIssueRepository.Setup(repo => repo.GetByIdAsync(issueId))
-                                .ReturnsAsync((Issue)null);
+                                .ReturnsAsync((Issue?)null);
 
-            // Act
-            await _issueService.DeleteIssueAsync(issueId);
-
-            // Assert
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => _issueService.DeleteIssueAsync(issueId));
+            
+            Assert.Equal($"Issue with ID {issueId} not found.", exception.Message);
             _mockIssueRepository.Verify(repo => repo.GetByIdAsync(issueId), Times.Once);
             _mockIssueRepository.Verify(repo => repo.DeleteAsync(It.IsAny<Issue>()), Times.Never);
         }

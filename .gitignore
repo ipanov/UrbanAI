@@ -490,3 +490,4 @@ $RECYCLE.BIN/
 # Explicitly ignore test results and coverage reports
 TestResults/
 coverage_reports/
+CoverageReport/
