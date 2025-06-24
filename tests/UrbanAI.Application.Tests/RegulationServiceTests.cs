@@ -1,9 +1,4 @@
-using Xunit;
 using Moq;
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Linq;
 using UrbanAI.Application.Services;
 using UrbanAI.Domain.Interfaces;
 using UrbanAI.Domain.Entities;
@@ -26,7 +21,15 @@ namespace UrbanAI.Application.Tests
         {
             // Arrange
             var id = "regulation-123";
-            var regulation = new Regulation { Id = Guid.NewGuid(), Title = "Test Regulation" };
+            var regulation = new Regulation { 
+                Id = Guid.NewGuid(), 
+                Title = "Test Regulation",
+                Content = "Test Content",
+                Location = "Test Location",
+                Keywords = new List<string>(),
+                SourceUrl = "http://example.com",
+                Jurisdiction = "Test Jurisdiction"
+            };
             _mockRegulationRepository.Setup(repo => repo.GetByIdAsync(id))
                                      .ReturnsAsync(regulation);
 
@@ -45,8 +48,24 @@ namespace UrbanAI.Application.Tests
             var location = "New York";
             var regulations = new List<Regulation>
             {
-                new Regulation { Id = Guid.NewGuid(), Title = "Regulation 1", Location = location },
-                new Regulation { Id = Guid.NewGuid(), Title = "Regulation 2", Location = location }
+                new Regulation { 
+                    Id = Guid.NewGuid(), 
+                    Title = "Regulation 1", 
+                    Content = "Test Content 1",
+                    Location = location,
+                    Keywords = new List<string>(),
+                    SourceUrl = "http://example.com",
+                    Jurisdiction = "Test Jurisdiction"
+                },
+                new Regulation { 
+                    Id = Guid.NewGuid(), 
+                    Title = "Regulation 2", 
+                    Content = "Test Content 2",
+                    Location = location,
+                    Keywords = new List<string>(),
+                    SourceUrl = "http://example.com",
+                    Jurisdiction = "Test Jurisdiction"
+                }
             };
             _mockRegulationRepository.Setup(repo => repo.GetByLocationAsync(location))
                                      .ReturnsAsync(regulations);

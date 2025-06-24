@@ -491,3 +491,5 @@ $RECYCLE.BIN/
 TestResults/
 coverage_reports/
 CoverageReport/
+# Script for running tests and coverage
+/scripts/run-tests.ps1

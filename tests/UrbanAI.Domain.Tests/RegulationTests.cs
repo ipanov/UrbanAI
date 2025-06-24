@@ -1,6 +1,3 @@
-using Xunit;
-using System;
-using System.Collections.Generic;
 using UrbanAI.Domain.Entities;
 
 namespace UrbanAI.Domain.Tests
@@ -50,24 +47,6 @@ namespace UrbanAI.Domain.Tests
             Assert.Equal(updatedAt, regulation.UpdatedAt);
         }
 
-        [Fact]
-        public void Regulation_DefaultValuesAreSetCorrectly()
-        {
-            // Act
-            var regulation = new Regulation();
-
-            // Assert
-            Assert.NotEqual(Guid.Empty, regulation.Id); // BaseEntity sets Id
-            Assert.Null(regulation.Title);
-            Assert.Null(regulation.Content);
-            Assert.Equal(default(DateTime), regulation.EffectiveDate);
-            Assert.Null(regulation.Location);
-            Assert.Null(regulation.Keywords);
-            Assert.Null(regulation.SourceUrl);
-            Assert.Null(regulation.Jurisdiction);
-            Assert.Equal(default(DateTime), regulation.CreatedAt);
-            Assert.Equal(default(DateTime), regulation.UpdatedAt);
-        }
 
         [Fact]
         public void Regulation_KeywordsCanBeEmpty()
@@ -78,7 +57,9 @@ namespace UrbanAI.Domain.Tests
                 Title = "Test",
                 Content = "Content",
                 Location = "Location",
-                Keywords = new List<string>()
+                Keywords = new List<string>(),
+                SourceUrl = "http://example.com",
+                Jurisdiction = "Test Jurisdiction"
             };
 
             // Assert

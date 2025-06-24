@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UrbanAI.Application.DTOs;
 
 namespace UrbanAI.Application.Interfaces

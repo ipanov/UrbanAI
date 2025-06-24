@@ -1,21 +1,16 @@
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using UrbanAI.Infrastructure.Data;
-using System.Linq;
 using Microsoft.Data.Sqlite; // For SqliteConnection
-using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting; // Required for IHostBuilder
 using Microsoft.AspNetCore.Authentication; // Required for AuthenticationSchemeOptions
 using Microsoft.Extensions.DependencyInjection.Extensions; // Required for RemoveAll
 using UrbanAI.Domain.Interfaces; // Required for IRegulationRepository
 using Moq; // Required for Mock
 
 namespace UrbanAI.API.IntegrationTests
-{    public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
+{
+    public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
         private DbConnection _dbConnection = null!;
 
@@ -30,7 +25,7 @@ namespace UrbanAI.API.IntegrationTests
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 // EnsureCreatedAsync creates the database schema based on the model
-                await dbContext.Database.EnsureCreatedAsync(); 
+                await dbContext.Database.EnsureCreatedAsync();
             }
 
             HttpClient = CreateClient(); // Create client last
@@ -40,7 +35,8 @@ namespace UrbanAI.API.IntegrationTests
         {
             await _dbConnection.DisposeAsync();
             // No container to dispose for in-memory SQLite
-        }        public async Task ResetDatabaseAsync()
+        }
+        public async Task ResetDatabaseAsync()
         {
             // For in-memory SQLite, a full reset means recreating the schema
             // This is handled by InitializeAsync for the entire collection,
@@ -70,13 +66,13 @@ namespace UrbanAI.API.IntegrationTests
                 }                // Add the in-memory SQLite DbContext
                 services.AddDbContext<ApplicationDbContext>(options =>
                 {
-                    options.UseSqlite(_dbConnection); 
+                    options.UseSqlite(_dbConnection);
                     options.ConfigureWarnings(x => x.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
                 });
 
                 // Remove existing authentication
-                var authServices = services.Where(s => 
-                    s.ServiceType.FullName != null && 
+                var authServices = services.Where(s =>
+                    s.ServiceType.FullName != null &&
                     s.ServiceType.FullName.Contains("Authentication")).ToList();
                 foreach (var service in authServices)
                 {
@@ -91,7 +87,7 @@ namespace UrbanAI.API.IntegrationTests
                     options.DefaultScheme = TestAuthHandler.SchemeName;
                 })
                 .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.SchemeName, options => { });
-                
+
                 services.AddAuthorization();
 
                 // Mock IRegulationRepository to prevent MongoDB connection during tests

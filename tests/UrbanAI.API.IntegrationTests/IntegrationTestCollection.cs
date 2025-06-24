@@ -1,5 +1,3 @@
-using Xunit;
-
 namespace UrbanAI.API.IntegrationTests
 {
     [CollectionDefinition("Integration Tests")]

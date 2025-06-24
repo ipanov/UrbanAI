@@ -4,11 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Configuration;
 using UrbanAI.Domain.Entities;
 using UrbanAI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using BCrypt.Net;
 using System.Text.Json;
 
 namespace UrbanAI.API.Controllers

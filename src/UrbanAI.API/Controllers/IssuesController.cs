@@ -1,10 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Threading.Tasks;
 using UrbanAI.Application.Interfaces;
 using UrbanAI.Application.DTOs;
-using System.Collections.Generic;
 using UrbanAI.Domain.Entities;
 
 namespace UrbanAI.API.Controllers
@@ -37,7 +34,8 @@ namespace UrbanAI.API.Controllers
                 return NotFound();
             }
             return Ok(issue);
-        }        [HttpPost]
+        }
+        [HttpPost]
         public async Task<ActionResult<CreateIssueResponseDto>> CreateIssue([FromBody] CreateIssueRequestDto request)
         {
             if (string.IsNullOrEmpty(request.Title))
@@ -46,7 +44,8 @@ namespace UrbanAI.API.Controllers
             }
             var response = await _issueService.CreateIssueAsync(request);
             return CreatedAtAction(nameof(GetIssueById), new { id = response.Id }, response);
-        }        [HttpPut("{id}")]
+        }
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateIssue(Guid id, [FromBody] UpdateIssueRequestDto request)
         {
             if (string.IsNullOrEmpty(request.Title))
@@ -73,7 +72,8 @@ namespace UrbanAI.API.Controllers
                 return NotFound();
             }
             return NoContent();
-        }[HttpDelete("{id}")]
+        }
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteIssue(Guid id)
         {
             try

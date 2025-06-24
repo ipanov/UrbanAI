@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <ExcludeByFile>
+            <!-- Exclude test assemblies from coverage -->
+            <Exclude>**/tests/**</Exclude>
+            <!-- Exclude migration files -->
+            <Exclude>**/Migrations/**</Exclude>
+            <!-- Exclude auto-generated designer files -->
+            <Exclude>**/*.Designer.cs</Exclude>
+            <Exclude>**/*.designer.cs</Exclude>
+            <!-- Exclude Program.cs (bootstrapping code) -->
+            <Exclude>**/Program.cs</Exclude>
+            <!-- Exclude Startup.cs (configuration code) -->
+            <Exclude>**/Startup.cs</Exclude>
+            <!-- Exclude assembly info -->
+            <Exclude>**/AssemblyInfo.cs</Exclude>
+            <!-- Exclude auto-generated temporary files -->
+            <Exclude>**/obj/**</Exclude>
+            <Exclude>**/bin/**</Exclude>
+            <!-- Exclude Global.asax files -->
+            <Exclude>**/Global.asax.cs</Exclude>
+            <!-- Exclude razor generated files -->
+            <Exclude>**/*.g.cs</Exclude>
+            <Exclude>**/*.g.i.cs</Exclude>
+            <!-- Exclude Entity Framework generated files -->
+            <Exclude>**/*DbContext.cs</Exclude>
+            <Exclude>**/*ModelSnapshot.cs</Exclude>
+            <!-- Exclude configuration classes -->
+            <Exclude>**/Configuration/**</Exclude>
+            <!-- Exclude DTOs and models (simple data containers) -->
+            <Exclude>**/DTOs/**</Exclude>
+            <Exclude>**/Models/**</Exclude>
+          </ExcludeByFile>
+          <ExcludeByAttribute>
+            <!-- Exclude methods/classes marked with these attributes -->
+            <Exclude>System.Diagnostics.DebuggerNonUserCodeAttribute</Exclude>
+            <Exclude>System.Runtime.CompilerServices.CompilerGeneratedAttribute</Exclude>
+            <Exclude>System.CodeDom.Compiler.GeneratedCodeAttribute</Exclude>
+            <Exclude>System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute</Exclude>
+            <Exclude>Obsolete</Exclude>
+            <Exclude>GeneratedCodeAttribute</Exclude>
+            <Exclude>DebuggerNonUserCodeAttribute</Exclude>
+          </ExcludeByAttribute>
+          <IncludeDirectory>src</IncludeDirectory>
+          <!-- Only include application assemblies -->
+          <ModulePaths>
+            <Include>**/UrbanAI.Application.dll</Include>
+            <Include>**/UrbanAI.Domain.dll</Include>
+            <Include>**/UrbanAI.Infrastructure.dll</Include>
+            <Include>**/UrbanAI.API.dll</Include>
+          </ModulePaths>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

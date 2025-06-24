@@ -1,21 +1,16 @@
-using Xunit;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using UrbanAI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Bogus;
 using UrbanAI.Domain.Entities;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using Microsoft.AspNetCore.Mvc.Testing;
 using UrbanAI.Application.DTOs;
 
 namespace UrbanAI.API.IntegrationTests;
 
 [Collection("Integration Tests")]
 public abstract class TestBase : IAsyncLifetime
-{    protected readonly CustomWebApplicationFactory _factory;
+{
+    protected readonly CustomWebApplicationFactory _factory;
     protected readonly HttpClient _client;
     protected IServiceScope _scope = null!;
     protected ApplicationDbContext _dbContext = null!;
@@ -44,7 +39,8 @@ public abstract class TestBase : IAsyncLifetime
         // For in-memory SQLite, the connection is closed and the database is lost on dispose.
         // No need for explicit database reset here.
         await Task.CompletedTask; // To satisfy IAsyncLifetime interface
-    }    protected virtual async Task ClearDatabaseAsync()
+    }
+    protected virtual async Task ClearDatabaseAsync()
     {
         // Clear all data from tables
         _dbContext.Issues.RemoveRange(_dbContext.Issues);
@@ -95,7 +91,7 @@ public abstract class TestBase : IAsyncLifetime
             Password = registerRequest.Password
         };
         var loginResponse = await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
-        loginResponse.EnsureSuccessStatusCode();        var authResponse = await loginResponse.Content.ReadFromJsonAsync<AuthResponseDto>();
+        loginResponse.EnsureSuccessStatusCode(); var authResponse = await loginResponse.Content.ReadFromJsonAsync<AuthResponseDto>();
         return authResponse?.Token ?? throw new InvalidOperationException("Failed to get authentication token");
     }
 }

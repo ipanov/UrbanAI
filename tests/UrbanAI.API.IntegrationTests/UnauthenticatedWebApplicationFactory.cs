@@ -1,11 +1,8 @@
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using UrbanAI.Infrastructure.Data;
 using Microsoft.Data.Sqlite;
 using System.Data.Common;
-using Microsoft.Extensions.Configuration;
 
 namespace UrbanAI.API.IntegrationTests
 {

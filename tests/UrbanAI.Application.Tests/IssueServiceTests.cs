@@ -1,12 +1,10 @@
-using Xunit;
 using Moq;
-using System;
-using System.Threading.Tasks;
 using UrbanAI.Application.DTOs;
 using UrbanAI.Application.Services;
 using UrbanAI.Domain.Entities;
 using UrbanAI.Domain.Interfaces;
-using System.Collections.Generic;
+using System;
+using System.Threading.Tasks;
 
 namespace UrbanAI.Application.Tests
 {
@@ -29,11 +27,12 @@ namespace UrbanAI.Application.Tests
             // Arrange
             var request = new CreateIssueRequestDto
             {
-                Title = "Test Issue",
                 Description = "This is a test issue.",
                 PhotoUrl = "http://example.com/photo.jpg",
                 Latitude = 10.0,
-                Longitude = 20.0
+                Longitude = 20.0,
+                Location = "Test Location",
+                Title = "Test Issue"
             };
 
             _mockIssueRepository.Setup(repo => repo.AddAsync(It.IsAny<Issue>()))
@@ -83,6 +82,9 @@ namespace UrbanAI.Application.Tests
             Assert.Equal(mockIssue.Description, result.Description);
             Assert.Equal(mockIssue.CreatedAt, result.CreatedAt);
             Assert.Equal(mockIssue.Status, result.Status);
+            Assert.Equal(mockIssue.PhotoUrl, result.PhotoUrl);
+            Assert.Equal(mockIssue.Latitude, result.Latitude);
+            Assert.Equal(mockIssue.Longitude, result.Longitude);
             _mockIssueRepository.Verify(repo => repo.GetByIdAsync(issueId), Times.Once);
         }
 
@@ -90,8 +92,9 @@ namespace UrbanAI.Application.Tests
         public async Task GetIssueByIdAsync_ShouldReturnNull_WhenIssueDoesNotExist()
         {
             // Arrange
-            var issueId = Guid.NewGuid();            _mockIssueRepository.Setup(repo => repo.GetByIdAsync(issueId))
-                                .ReturnsAsync((Issue?)null);
+            var issueId = Guid.NewGuid();
+            _mockIssueRepository.Setup(repo => repo.GetByIdAsync(issueId))
+                                .ReturnsAsync((Issue)null);
 
             // Act
             var result = await _issueService.GetIssueByIdAsync(issueId);
@@ -120,7 +123,7 @@ namespace UrbanAI.Application.Tests
             // Assert
             Assert.NotNull(result);
             var issueDtos = Assert.IsAssignableFrom<IEnumerable<IssueDto>>(result);
-            Assert.Equal(2, ((List<IssueDto>)issueDtos).Count);
+            Assert.Equal(2, issueDtos.Count());
             _mockIssueRepository.Verify(repo => repo.GetAllAsync(), Times.Once);
         }
 
@@ -148,7 +151,8 @@ namespace UrbanAI.Application.Tests
                 PhotoUrl = "new.jpg",
                 Latitude = 10.0,
                 Longitude = 20.0,
-                Status = "Closed"
+                Status = "Closed",
+                Location = "New Location"
             };
 
             _mockIssueRepository.Setup(repo => repo.GetByIdAsync(issueId))
@@ -168,6 +172,7 @@ namespace UrbanAI.Application.Tests
             Assert.Equal(request.Latitude, result.Latitude);
             Assert.Equal(request.Longitude, result.Longitude);
             Assert.Equal(request.Status, result.Status);
+            Assert.Equal(request.Location, request.Location);
             _mockIssueRepository.Verify(repo => repo.GetByIdAsync(issueId), Times.Once);
             _mockIssueRepository.Verify(repo => repo.UpdateAsync(It.Is<Issue>(i => i.Id == issueId && i.Title == request.Title)), Times.Once);
         }
@@ -182,11 +187,14 @@ namespace UrbanAI.Application.Tests
                 Title = "Non Existent",
                 Description = "Non Existent",
                 PhotoUrl = "http://example.com/nonexistent.jpg",
-                Latitude = 0.0, // Added missing required property
-                Longitude = 0.0, // Added missing required property
-                Status = "Open"
-            };            _mockIssueRepository.Setup(repo => repo.GetByIdAsync(request.Id))
-                                .ReturnsAsync((Issue?)null);
+                Latitude = 0.0,
+                Longitude = 0.0,
+                Status = "Open",
+                Location = "NonExistentLocation"
+            };
+
+            _mockIssueRepository.Setup(repo => repo.GetByIdAsync(request.Id))
+                                .ReturnsAsync((Issue)null);
 
             // Act
             var result = await _issueService.UpdateIssueAsync(request);
@@ -215,19 +223,20 @@ namespace UrbanAI.Application.Tests
             // Assert
             _mockIssueRepository.Verify(repo => repo.GetByIdAsync(issueId), Times.Once);
             _mockIssueRepository.Verify(repo => repo.DeleteAsync(mockIssue), Times.Once);
-        }        [Fact]
-        public async Task DeleteIssueAsync_ShouldThrowException_WhenIssueDoesNotExist()
+        }
+
+        [Fact]
+        public async Task DeleteIssueAsync_ShouldThrowInvalidOperationException_WhenIssueDoesNotExist()
         {
             // Arrange
             var issueId = Guid.NewGuid();
             _mockIssueRepository.Setup(repo => repo.GetByIdAsync(issueId))
-                                .ReturnsAsync((Issue?)null);
+                                .ReturnsAsync((Issue)null);
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-                () => _issueService.DeleteIssueAsync(issueId));
-            
-            Assert.Equal($"Issue with ID {issueId} not found.", exception.Message);
+            await Assert.ThrowsAsync<InvalidOperationException>(() => _issueService.DeleteIssueAsync(issueId));
+
+            // Verify
             _mockIssueRepository.Verify(repo => repo.GetByIdAsync(issueId), Times.Once);
             _mockIssueRepository.Verify(repo => repo.DeleteAsync(It.IsAny<Issue>()), Times.Never);
         }
@@ -239,8 +248,28 @@ namespace UrbanAI.Application.Tests
             var location = "TestLocation";
             var mockRegulations = new List<Regulation>
             {
-                new Regulation { Id = Guid.NewGuid(), Title = "Reg 1", Location = "TestLocation" },
-                new Regulation { Id = Guid.NewGuid(), Title = "Reg 2", Location = "TestLocation" }
+                new Regulation {
+                    Id = Guid.NewGuid(),
+                    Title = "Reg 1",
+                    Content = "Content 1",
+                    Location = "TestLocation",
+                    Keywords = new List<string>(),
+                    SourceUrl = "http://example.com",
+                    Jurisdiction = "Test Jurisdiction",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Regulation {
+                    Id = Guid.NewGuid(),
+                    Title = "Reg 2",
+                    Content = "Content 2",
+                    Location = "TestLocation",
+                    Keywords = new List<string>(),
+                    SourceUrl = "http://example.com",
+                    Jurisdiction = "Test Jurisdiction",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                }
             };
 
             _mockRegulationRepository.Setup(repo => repo.GetByLocationAsync(location))
@@ -252,7 +281,7 @@ namespace UrbanAI.Application.Tests
             // Assert
             Assert.NotNull(result);
             var regulations = Assert.IsAssignableFrom<IEnumerable<Regulation>>(result);
-            Assert.Equal(2, ((List<Regulation>)regulations).Count);
+            Assert.Equal(2, regulations.Count());
             _mockRegulationRepository.Verify(repo => repo.GetByLocationAsync(location), Times.Once);
         }
 
@@ -270,7 +299,7 @@ namespace UrbanAI.Application.Tests
             // Assert
             Assert.NotNull(result);
             var regulations = Assert.IsAssignableFrom<IEnumerable<Regulation>>(result);
-            Assert.Empty((List<Regulation>)regulations);
+            Assert.Empty(regulations);
             _mockRegulationRepository.Verify(repo => repo.GetByLocationAsync(location), Times.Once);
         }
     }

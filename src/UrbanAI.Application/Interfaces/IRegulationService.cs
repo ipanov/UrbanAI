@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using UrbanAI.Domain.Entities;
 
 namespace UrbanAI.Application.Interfaces

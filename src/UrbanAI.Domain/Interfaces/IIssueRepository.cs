@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UrbanAI.Domain.Entities;
 
 namespace UrbanAI.Domain.Interfaces

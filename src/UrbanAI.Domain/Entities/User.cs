@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 using UrbanAI.Domain.Common;
 
 namespace UrbanAI.Domain.Entities

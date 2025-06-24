@@ -6,10 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using UrbanAI.Infrastructure.Data;
 using UrbanAI.Domain.Interfaces;
 using UrbanAI.Infrastructure.Repositories;
-using UrbanAI.Application.Interfaces;
-using UrbanAI.Application.Services;
-using UrbanAI.Infrastructure.Data.Models; // Assuming MongoDbContext is here or in a related namespace
-using Microsoft.AspNetCore.Authentication; // Required for AuthenticationSchemeOptions
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -24,7 +20,7 @@ if (!builder.Environment.IsEnvironment("Testing"))
     {
         throw new InvalidOperationException("DefaultConnection connection string is not configured.");
     }
-    
+
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString));
 }
@@ -57,10 +53,10 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    var jwtSecret = builder.Configuration["Jwt:Secret"] ?? 
+    var jwtSecret = builder.Configuration["Jwt:Secret"] ??
         throw new InvalidOperationException("JWT Secret is not configured.");
     var key = Encoding.ASCII.GetBytes(jwtSecret);
-    
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
@@ -75,23 +71,23 @@ builder.Services.AddAuthentication(options =>
 })
 .AddGoogle(options =>
 {
-    options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? 
+    options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ??
         throw new InvalidOperationException("Google ClientId is not configured.");
-    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? 
+    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ??
         throw new InvalidOperationException("Google ClientSecret is not configured.");
 })
 .AddMicrosoftAccount(options =>
 {
-    options.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"] ?? 
+    options.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"] ??
         throw new InvalidOperationException("Microsoft ClientId is not configured.");
-    options.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"] ?? 
+    options.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"] ??
         throw new InvalidOperationException("Microsoft ClientSecret is not configured.");
 })
 .AddFacebook(options =>
 {
-    options.AppId = builder.Configuration["Authentication:Facebook:AppId"] ?? 
+    options.AppId = builder.Configuration["Authentication:Facebook:AppId"] ??
         throw new InvalidOperationException("Facebook AppId is not configured.");
-    options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"] ?? 
+    options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"] ??
         throw new InvalidOperationException("Facebook AppSecret is not configured.");
 });
 
@@ -100,7 +96,6 @@ builder.Services.AddAuthorization();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 builder.Services.AddScoped<UrbanAI.Application.Interfaces.IIssueService, UrbanAI.Application.Services.IssueService>();
-builder.Services.AddScoped<UrbanAI.Application.Features.Users.IUserService, UrbanAI.Application.Features.Users.UserService>();
 
 var app = builder.Build();
 

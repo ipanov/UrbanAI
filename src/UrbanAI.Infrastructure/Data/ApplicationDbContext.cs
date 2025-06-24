@@ -8,7 +8,8 @@ namespace UrbanAI.Infrastructure.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-        }        public DbSet<Issue> Issues { get; set; }
+        }
+        public DbSet<Issue> Issues { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Regulation> Regulations { get; set; }
         public DbSet<ExternalLogin> ExternalLogins { get; set; }
@@ -22,7 +23,7 @@ namespace UrbanAI.Infrastructure.Data
                 entity.Property(e => e.Id).HasColumnType("uuid"); // Explicitly map Guid to uuid for PostgreSQL
                 entity.Property(e => e.Username).IsRequired();
                 entity.Property(e => e.Role).IsRequired();
-                
+
                 // Configure the relationship with ExternalLogins
                 entity.HasMany(u => u.ExternalLogins)
                       .WithOne(el => el.User)

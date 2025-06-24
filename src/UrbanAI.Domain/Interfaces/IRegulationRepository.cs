@@ -1,6 +1,4 @@
 using UrbanAI.Domain.Entities;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace UrbanAI.Domain.Interfaces
 {

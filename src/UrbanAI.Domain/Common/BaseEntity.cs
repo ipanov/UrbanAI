@@ -1,5 +1,3 @@
-using System;
-
 namespace UrbanAI.Domain.Common
 {
     public abstract class BaseEntity
