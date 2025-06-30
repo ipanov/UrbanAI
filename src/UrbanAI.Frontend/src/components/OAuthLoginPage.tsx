@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Shield, Lock, Users, Building, TrendingUp } from 'lucide-react';
-import UrbanAILogo, { UrbanAILogoPlaceholder } from './UrbanAILogo';
+import { UrbanAILogoPlaceholder } from './UrbanAILogo';
 import CookieConsentBanner from './CookieConsentBanner';
 import { BRAND_COLORS } from '../assets/brand';
 import './OAuthLoginPage.css';
