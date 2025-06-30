@@ -1,0 +1,213 @@
+/* UrbanAI Logo Component Styles */
+
+.urbanai-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.urbanai-logo__image {
+  max-width: 100%;
+  height: auto;
+  transition: opacity 0.2s ease;
+}
+
+.urbanai-logo__image:hover {
+  opacity: 0.9;
+}
+
+/* Logo variant styles */
+.urbanai-logo__image--primary {
+  /* Default styling for primary logo */
+}
+
+.urbanai-logo__image--black {
+  /* Styling for black logo on light backgrounds */
+}
+
+.urbanai-logo__image--white {
+  /* Styling for white logo on dark backgrounds */
+  filter: brightness(0) invert(1);
+}
+
+.urbanai-logo__image--icon {
+  /* Styling for icon-only version */
+  aspect-ratio: 1;
+}
+
+/* Logo Text Component */
+.urbanai-logo-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  line-height: 1;
+  user-select: none;
+}
+
+.urbanai-logo-text__urban {
+  font-weight: 400;
+}
+
+.urbanai-logo-text__ai {
+  font-weight: 700;
+  color: #2563EB; /* Always blue for AI emphasis */
+}
+
+/* Placeholder Logo */
+.urbanai-logo-placeholder {
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  transition: transform 0.2s ease;
+}
+
+.urbanai-logo-placeholder:hover {
+  transform: scale(1.02);
+}
+
+/* Responsive logo sizing */
+@media (max-width: 768px) {
+  .urbanai-logo {
+    max-width: 200px;
+  }
+  
+  .urbanai-logo__image {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .urbanai-logo {
+    max-width: 160px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .urbanai-logo__image--white {
+    filter: none; /* Remove invert filter for print */
+  }
+  
+  .urbanai-logo-placeholder {
+    background: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .urbanai-logo__image {
+    filter: contrast(1.2);
+  }
+  
+  .urbanai-logo-text__ai {
+    font-weight: 900;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .urbanai-logo__image,
+  .urbanai-logo-placeholder {
+    transition: none;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .urbanai-logo__image--primary {
+    /* Automatically switch to white logo in dark mode */
+    filter: brightness(0) invert(1);
+  }
+  
+  .urbanai-logo-text__urban {
+    color: #F9FAFB;
+  }
+  
+  .urbanai-logo-text__ai {
+    color: #60A5FA; /* Lighter blue for dark mode */
+  }
+}
+
+/* Focus styles for accessibility */
+.urbanai-logo:focus-within {
+  outline: 2px solid #2563EB;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Animation for logo loading */
+@keyframes logoFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.urbanai-logo__image {
+  animation: logoFadeIn 0.6s ease-out;
+}
+
+/* Logo hover effect for interactive contexts */
+.urbanai-logo--interactive {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.urbanai-logo--interactive:hover {
+  transform: scale(1.05);
+}
+
+.urbanai-logo--interactive:active {
+  transform: scale(0.98);
+}
+
+/* Size variations */
+.urbanai-logo--small {
+  max-width: 80px;
+}
+
+.urbanai-logo--medium {
+  max-width: 120px;
+}
+
+.urbanai-logo--large {
+  max-width: 200px;
+}
+
+.urbanai-logo--extra-large {
+  max-width: 300px;
+}
+
+/* Brand compliance - ensure minimum sizes */
+.urbanai-logo__image {
+  min-width: 64px; /* Minimum for brand compliance */
+  min-height: 16px;
+}
+
+/* Special styling for header/navigation usage */
+.urbanai-logo--header {
+  height: 40px;
+  width: auto;
+}
+
+.urbanai-logo--header .urbanai-logo__image {
+  height: 100%;
+  width: auto;
+}
+
+/* Footer logo styling */
+.urbanai-logo--footer {
+  opacity: 0.8;
+  height: 32px;
+}
+
+.urbanai-logo--footer:hover {
+  opacity: 1;
+}

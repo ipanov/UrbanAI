@@ -1,13 +1,20 @@
 # UrbanAI Authentication UI Design
 
 ## Overview
-The authentication system for UrbanAI supports multi-provider login with a focus on accessibility, GDPR compliance, and clear user guidance for citizens, investors, and municipal authorities.
+The authentication system for UrbanAI uses **OAuth-only authentication** (Microsoft, Google, Facebook) with **maximum privacy protection**. User names and personal data are displayed client-side from OAuth claims but **never stored on UrbanAI servers**. Only OAuth provider GUIDs are stored for linking user cases and data.
+
+## Privacy-First Architecture
+- **Server Storage**: Only OAuth `sub` (GUID) + role/preferences - **zero PII**
+- **Client Personalization**: Names, emails, avatars from OAuth claims (never transmitted to server)
+- **Case Attribution**: Anonymous on server, personalized in client UI
+- **GDPR Compliant**: Ultimate data minimization - only GUIDs stored
 
 ## Design Principles
 - **Trust & Authority**: Professional design that conveys reliability for municipal reporting
 - **Accessibility**: WCAG 2.1 AA compliant with clear contrast ratios
 - **Multi-User Support**: Clear role identification (Citizen, Investor, Authority)
-- **GDPR Compliant**: Transparent data handling with explicit consent
+- **Maximum Privacy**: Zero PII storage, client-side personalization only
+- **MVP Focus**: OAuth-only authentication - no credential management
 
 ## Authentication Flow Screens
 
@@ -17,7 +24,8 @@ The authentication system for UrbanAI supports multi-provider login with a focus
 - Hero section with construction/environmental imagery
 - Clear value proposition: "Report. Analyze. Resolve."
 - Three user type cards: Citizens, Investors, Authorities
-- Primary CTA: "Get Started" → leads to Sign In/Sign Up choice
+- Primary CTA: "Get Started" → leads to OAuth provider selection
+- Privacy messaging: "Your data stays private - we only store anonymous case links"
 
 **Layout**:
 ```
@@ -35,229 +43,271 @@ The authentication system for UrbanAI supports multi-provider login with a focus
   └─────────────┘  └─────────────┘  └─────────────┘
 
                   [Get Started →]
+
+    🔒 Maximum Privacy: Only anonymous links stored, 
+       your identity stays with trusted providers
 ```
 
-### 2. Sign In / Sign Up Choice Screen
-**Purpose**: Clear GDPR-compliant choice between existing users and new registrations
+### 2. OAuth Provider Selection Screen
+**Purpose**: Secure third-party authentication selection
 
 **Layout**:
 ```
               Welcome to UrbanAI
 
   ┌─────────────────────────────────────────────┐
-  │              Returning User?                │
+  │              Choose Login Method            │
   │                                             │
-  │           [Sign In to Account]              │
+  │     [🟦 Continue with Microsoft]            │
+  │     [🔵 Continue with Google]               │
+  │     [🟦 Continue with Facebook]             │
   │                                             │
-  │    Access your reports and case history     │
+  │  ─────────── Why This Way? ──────────       │
+  │                                             │
+  │  ✓ Maximum Privacy - No data stored         │
+  │  ✓ Secure - Your existing trusted account  │
+  │  ✓ Personalized - Your name stays local    │
+  │                                             │
+  │                [Continue as Guest]         │
+  │          (Limited reporting features)      │
   └─────────────────────────────────────────────┘
 
-  ┌─────────────────────────────────────────────┐
-  │               New to UrbanAI?               │
-  │                                             │
-  │            [Create Account]                 │
-  │                                             │
-  │  Join thousands helping improve urban safety│
-  └─────────────────────────────────────────────┘
-
-                [Continue as Guest]
-          (Limited reporting features)
+    🔒 Privacy Guarantee: We only store an anonymous ID
+       to link your cases. Your name and email stay with
+       your chosen provider and are never transmitted to us.
 ```
 
-### 3. Multi-Provider Sign In Screen
-**Purpose**: Streamlined authentication with popular providers
+### 3. OAuth Consent & Redirect
+**Purpose**: Clear explanation of data flow before OAuth redirect
 
 **Layout**:
 ```
-                Sign In to UrbanAI
+              Redirecting to [Provider]...
 
   ┌─────────────────────────────────────────────┐
   │                                             │
-  │     [🌐 Sign in with Microsoft]             │
-  │     [🔵 Sign in with Google]                │
-  │     [📧 Sign in with Email]                 │
+  │    [Provider Logo] Secure Authentication    │
   │                                             │
-  │  ─────────── or ──────────                  │
+  │    You'll sign in with your [Provider]     │
+  │    account. UrbanAI will receive:          │
   │                                             │
-  │  Email: [________________]                  │
-  │  Password: [________________]               │
+  │    ✓ Anonymous ID (for linking your cases) │
+  │    ✗ Your name (stays in your browser)     │
+  │    ✗ Your email (stays in your browser)    │
+  │    ✗ Your profile picture (stays local)    │
   │                                             │
-  │  ☐ Remember me    [Forgot password?]       │
+  │    This gives you a personalized experience│
+  │    while keeping maximum privacy.          │
   │                                             │
-  │              [Sign In]                      │
-  │                                             │
-  │  Don't have an account? [Sign up here]     │
+  │    [🔐 Continue to [Provider]]              │
+  │    [← Back to Provider Selection]          │
   └─────────────────────────────────────────────┘
 
-    🔒 Your data is encrypted and GDPR compliant
+  📋 Technical Note:
+  Your personal info never leaves your device or the
+  OAuth provider. Only an anonymous link is created.
 ```
 
-### 4. Registration Screen with GDPR Compliance
-**Purpose**: Account creation with clear consent and data handling
+### 4. Post-Authentication Role Setup
+**Purpose**: Role selection only - no personal data collection
 
 **Layout**:
 ```
-              Create Your UrbanAI Account
+              Complete Your UrbanAI Setup
 
-  User Type: [Citizen ▼] [Investor] [Authority]
+  Welcome! (Name displayed from your [Provider] account)
 
   ┌─────────────────────────────────────────────┐
   │                                             │
-  │     [🌐 Sign up with Microsoft]             │
-  │     [🔵 Sign up with Google]                │
-  │     [📧 Sign up with Email]                 │
+  │  Select Your Primary Role:                  │
   │                                             │
-  │  ─────────── or ──────────                  │
+  │  ○ Citizen - Report issues in my area      │
+  │  ○ Investor - Monitor project compliance   │
+  │  ○ Authority - Review and resolve cases    │
   │                                             │
-  │  Full Name: [________________]              │
-  │  Email: [________________]                  │
-  │  Password: [________________]               │
-  │  Confirm: [________________]                │
+  │  Organization (Optional):                   │
+  │  [________________]                         │
+  │  (Only stored for authorities)              │
   │                                             │
-  │  Organization: [________________]           │
-  │  (Optional for Citizens)                    │
+  │  Notification Preferences:                  │
+  │  ☑ Case status updates                      │
+  │  ☐ Weekly community reports                │
+  │  ☐ Regulatory news updates                 │
   │                                             │
-  │  ☑ I agree to the Terms of Service          │
-  │  ☑ I accept the Privacy Policy              │
-  │  ☐ Send me updates on case resolutions      │
+  │  ☑ I understand the Privacy Policy         │
+  │  ☑ I agree to the Terms of Service         │
   │                                             │
-  │              [Create Account]               │
-  │                                             │
-  │  Already registered? [Sign in here]        │
+  │              [Complete Setup]               │
   └─────────────────────────────────────────────┘
 
-  📋 Data Collection Notice:
-  We collect your information to enable issue reporting,
-  communicate with authorities, and track case resolution.
-  [Learn more about data handling]
+  📋 Privacy Reminder:
+  Your name and profile are displayed from [Provider]
+  claims. We only store your role and preferences.
+```
+
+### 5. Personalized Dashboard (Client-Side)
+**Purpose**: Show how personalization works without server PII storage
+
+**Layout**:
+```
+              UrbanAI Dashboard
+
+  Welcome back, [Name from OAuth claim]!    [Profile from OAuth] 👤
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │  📊 Your Activity                                          │
+  │  • 3 Cases Reported                                        │
+  │  • 1 Under Review                                          │
+  │  • 2 Resolved                                              │
+  │                                                             │
+  │  🏗️ Recent Cases:                                          │
+  │  • Case #001 - Reported by You - [Status]                 │
+  │  • Case #002 - Reported by You - [Status]                 │
+  │                                              [View All →] │
+  └─────────────────────────────────────────────────────────────┘
+
+  Note: All personalization (name, avatar) comes from your
+        OAuth provider. Your cases are linked anonymously.
 ```
 
 ## Mobile-First Design Adaptations
 
-### Mobile Sign In (360px width)
+### Mobile OAuth Selection (360px width)
 ```
     UrbanAI
     ═══════
 
- [🌐 Microsoft]
- [🔵 Google]
- [📧 Email]
+ Choose Login:
 
- ──── or ────
+ [🟦 Microsoft]
+ [🔵 Google   ]
+ [🟦 Facebook ]
 
- Email:
- [____________]
+ ──── Why? ────
 
- Password:
- [____________]
+ ✓ Max Privacy
+ ✓ Your Data Safe
+ ✓ Personalized
 
- ☐ Remember me
+ [Guest Mode]
 
-    [Sign In]
-
- [Forgot password?]
- [Sign up here]
+ 🔒 Anonymous ID only
 ```
 
 ## Design Tokens
 
-### Spacing
-- **xs**: 4px
-- **sm**: 8px  
-- **md**: 16px
-- **lg**: 24px
-- **xl**: 32px
-- **2xl**: 48px
-
-### Typography
-- **Heading 1**: Inter 32px Bold (Desktop) / 24px (Mobile)
-- **Heading 2**: Inter 24px SemiBold
-- **Body**: Inter 16px Regular
-- **Caption**: Inter 14px Regular
-- **Button Text**: Inter 16px Medium
-
-### Button Styles
-- **Primary**: Background #2563EB, Text White, Height 48px
-- **Secondary**: Border #2563EB, Text #2563EB, Height 48px  
-- **Social**: Custom per provider, Height 48px
+### OAuth Button Styles
+- **Microsoft**: Background #0078D4, Text White, Height 48px
+- **Google**: Background #4285F4, Text White, Height 48px  
+- **Facebook**: Background #1877F2, Text White, Height 48px
 - **Border Radius**: 8px
 - **Hover**: Darken background 10%
+- **Focus**: 2px outline for accessibility
 
-### Form Elements
-- **Input Height**: 48px
-- **Border**: 1px solid #E5E7EB
-- **Focus Border**: 2px solid #2563EB
-- **Border Radius**: 6px
-- **Placeholder**: #9CA3AF
+### Privacy Indicators
+- **Lock Icon**: Consistent privacy messaging
+- **Shield Icon**: Maximum privacy protection
+- **Check/X Icons**: Clear data flow explanations
 
-## Accessibility Features
+## Technical Implementation
 
-### WCAG 2.1 AA Compliance
-- **Color Contrast**: Minimum 4.5:1 for normal text, 3:1 for large text
-- **Focus Indicators**: 2px blue outline on all interactive elements
-- **Keyboard Navigation**: Tab order follows logical flow
-- **Screen Reader**: Proper ARIA labels and descriptions
+### Data Architecture
+```
+Server Database:
+┌─────────────┐
+│    Users    │
+├─────────────┤
+│ UserGuid    │ ← OAuth 'sub' claim only
+│ Role        │ ← Citizen/Investor/Authority
+│ OrgName     │ ← Optional for authorities
+│ Preferences │ ← Notification settings
+│ CreatedAt   │
+│ LastLogin   │
+└─────────────┘
 
-### Inclusive Design
-- **Error Messages**: Clear, actionable guidance
-- **Password Requirements**: Visible checklist during input
-- **Loading States**: Progress indicators with text descriptions
-- **Multiple Authentication Options**: Reduces barrier for users with disabilities
+Client-Side (from OAuth Claims):
+{
+  "name": "John Doe",           // Never sent to server
+  "given_name": "John",        // Never sent to server
+  "email": "john@example.com",  // Never sent to server
+  "picture": "https://...",     // Never sent to server
+  "sub": "oauth-guid-123"       // Only this sent to server
+}
+```
 
-## Privacy & GDPR Elements
+### API Design
+```javascript
+// Request - Only GUID in headers
+Authorization: Bearer jwt-with-sub-claim
 
-### Required Legal Components
-- **Terms of Service Link**: Prominently placed, opens in new tab
-- **Privacy Policy Link**: Accessible before account creation
-- **Cookie Consent**: Separate banner with granular controls
-- **Data Deletion**: Clear process explained in account settings
-- **Export Data**: One-click download of user data
+// Response - No PII ever returned
+{
+  "userGuid": "oauth-guid-123",
+  "role": "citizen",
+  "cases": [
+    {
+      "id": "case-001",
+      "title": "Broken sidewalk",
+      "reportedBy": "You",  // Client determines this
+      "status": "under-review"
+    }
+  ]
+}
+```
 
-### Consent Language
-- Clear, jargon-free explanations
-- Separate checkboxes for required vs. optional data processing
-- Easy opt-out mechanisms
-- Regular consent renewal prompts
+## GDPR Excellence
 
-## Error States & Validation
+### Data Minimization (Ultimate Implementation)
+- **Personal Data Stored**: None (only OAuth GUIDs)
+- **Right to Erasure**: Delete GUID → cascade delete all cases
+- **Data Portability**: Export user's cases by GUID
+- **Consent**: Only for role and notification preferences
 
-### Form Validation
-- **Real-time**: Email format, password strength
-- **Server Errors**: Clear messaging with resolution steps
-- **Network Issues**: Offline capability messaging
-- **Rate Limiting**: Clear explanation with retry timing
+### Privacy Policy Highlights
+- "We never store your name, email, or personal information"
+- "Personalization happens in your browser using your trusted provider"
+- "Only anonymous case links stored for municipal tracking"
+- "Delete your account = immediate data erasure"
 
-### Example Error Messages
-- ✗ "Please enter a valid email address"
-- ✗ "Password must be at least 8 characters with one number"
-- ✗ "This email is already registered. [Sign in instead?]"
-- ✗ "Connection error. Check your internet and try again."
+## Error States & Fallbacks
+
+### OAuth Failures
+- ✗ "Authentication failed. Please try another provider."
+- ✗ "Provider temporarily unavailable. Try Guest mode?"
+- ✗ "Network error. Check connection and retry."
+
+### Privacy Fallbacks
+- If OAuth claims unavailable: "Welcome back!" (generic)
+- If provider profile missing: Default avatar placeholder
+- Guest mode: Full functionality without personalization
 
 ## Implementation Notes for Figma
 
 ### Component Library Structure
 ```
-🎨 UrbanAI Design System
+🎨 UrbanAI Privacy-First Design System
 ├── 🎯 Foundations
 │   ├── Colors
 │   ├── Typography  
 │   ├── Spacing
-│   └── Icons
+│   ├── Privacy Icons
+│   └── OAuth Branding
 ├── 🧩 Components
-│   ├── Buttons
-│   ├── Form Inputs
-│   ├── Cards
-│   └── Navigation
+│   ├── OAuth Buttons (Microsoft, Google, Facebook)
+│   ├── Privacy Notices
+│   ├── Role Selectors
+│   ├── Anonymous Case Cards
+│   └── Personalized Headers (client-side)
 └── 📱 Templates
-    ├── Auth Screens
-    ├── Dashboard
+    ├── OAuth Flow Screens
+    ├── Privacy-First Dashboard
     └── Mobile Views
 ```
 
-### Figma Plugin Integrations
-- **Design Tokens**: Export to CSS custom properties
-- **Accessibility Checker**: Ensure contrast compliance
-- **Component Documentation**: Auto-generate style guide
-- **Prototype Testing**: User flow validation
+### Design Annotations
+- Mark personalized elements as "From OAuth Claims (Client-Side)"
+- Highlight privacy guarantees in all authentication flows
+- Show data flow diagrams (OAuth → Client → Anonymous Server)
+- Include fallback states for missing OAuth data
 
-This authentication system balances professional municipal trust with modern UX patterns, ensuring all user types (citizens, investors, authorities) can easily access UrbanAI's construction and environmental reporting capabilities.
+This authentication system provides the ultimate in privacy protection while maintaining excellent user experience. Users get full personalization through their trusted OAuth providers while UrbanAI stores only the minimum data needed for municipal issue tracking and compliance.

@@ -1,0 +1,512 @@
+/* UrbanAI OAuth Login Page Styles */
+
+.oauth-login-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.login-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  max-width: 480px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Brand accent bar */
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #2563eb 0%, #059669 50%, #ea580c 100%);
+}
+
+/* Header Section */
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-logo {
+  margin-bottom: 16px;
+}
+
+.header-text h1 {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tagline {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* User Type Selection */
+.user-type-section {
+  margin-bottom: 32px;
+}
+
+.user-type-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+.user-type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.user-type-card {
+  background: #f8fafc;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.user-type-card:hover {
+  border-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+.user-type-card.selected {
+  background: #eff6ff;
+  border-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.user-type-card.selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, currentColor 0%, currentColor 100%);
+}
+
+.user-type-icon {
+  margin-bottom: 8px;
+}
+
+.user-type-card h3 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.user-type-card p {
+  margin: 0;
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.3;
+}
+
+/* OAuth Section */
+.oauth-section {
+  margin-bottom: 32px;
+}
+
+.oauth-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 20px 0;
+  text-align: center;
+}
+
+.oauth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.oauth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+
+.oauth-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.oauth-btn:hover::before {
+  left: 100%;
+}
+
+.oauth-btn:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.oauth-btn--microsoft {
+  background: linear-gradient(135deg, #0078d4 0%, #106ebe 100%);
+}
+
+.oauth-btn--microsoft:hover {
+  background: linear-gradient(135deg, #106ebe 0%, #005a9e 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+}
+
+.oauth-btn--google {
+  background: linear-gradient(135deg, #4285f4 0%, #3367d6 100%);
+}
+
+.oauth-btn--google:hover {
+  background: linear-gradient(135deg, #3367d6 0%, #2851a3 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+}
+
+.oauth-btn--facebook {
+  background: linear-gradient(135deg, #1877f2 0%, #166fe5 100%);
+}
+
+.oauth-btn--facebook:hover {
+  background: linear-gradient(135deg, #166fe5 0%, #1557b2 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3);
+}
+
+.oauth-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Privacy Section */
+.privacy-section {
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+  border: 1px solid #d1fae5;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.privacy-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.privacy-icon {
+  color: #059669;
+}
+
+.privacy-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #065f46;
+}
+
+.privacy-description {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #047857;
+  line-height: 1.5;
+}
+
+.privacy-benefits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.privacy-benefits li {
+  font-size: 13px;
+  color: #059669;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+/* Guest Section */
+.guest-section {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.guest-link {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.guest-link:hover {
+  color: #2563eb;
+}
+
+.guest-note {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Footer */
+.login-footer {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.gdpr-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.gdpr-links a {
+  color: #6b7280;
+  font-size: 12px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.gdpr-links a:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.separator {
+  color: #d1d5db;
+  font-size: 12px;
+}
+
+.compliance-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f3f4f6;
+  color: #374151;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.badge-icon {
+  color: #059669;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 640px) {
+  .oauth-login-page {
+    padding: 10px;
+  }
+  
+  .login-container {
+    padding: 24px;
+    margin: 10px;
+  }
+  
+  .header-text h1 {
+    font-size: 24px;
+  }
+  
+  .user-type-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .user-type-card {
+    padding: 12px;
+  }
+  
+  .oauth-btn {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+  
+  .gdpr-links {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .separator {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-type-card h3 {
+    font-size: 13px;
+  }
+  
+  .user-type-card p {
+    font-size: 11px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .oauth-login-page {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  }
+  
+  .login-container {
+    background: #1f2937;
+    border: 1px solid #374151;
+  }
+  
+  .header-text h1 {
+    color: #f9fafb;
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .tagline {
+    color: #d1d5db;
+  }
+  
+  .user-type-section h2,
+  .oauth-section h2 {
+    color: #f3f4f6;
+  }
+  
+  .user-type-card {
+    background: #374151;
+    border-color: #4b5563;
+    color: #f3f4f6;
+  }
+  
+  .user-type-card.selected {
+    background: #1e40af;
+    border-color: #3b82f6;
+  }
+  
+  .privacy-section {
+    background: #065f46;
+    border-color: #047857;
+  }
+  
+  .privacy-header h3 {
+    color: #d1fae5;
+  }
+  
+  .privacy-description {
+    color: #a7f3d0;
+  }
+  
+  .privacy-benefits li {
+    color: #6ee7b7;
+  }
+  
+  .login-footer {
+    border-top-color: #374151;
+  }
+  
+  .gdpr-links a {
+    color: #d1d5db;
+  }
+  
+  .compliance-badge {
+    background: #374151;
+    color: #f3f4f6;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .login-container {
+    border: 2px solid #000;
+  }
+  
+  .oauth-btn {
+    border: 2px solid rgba(0, 0, 0, 0.2);
+  }
+  
+  .user-type-card {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .oauth-btn,
+  .user-type-card,
+  .guest-link {
+    transition: none;
+  }
+  
+  .oauth-btn::before {
+    display: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .oauth-login-page {
+    background: white;
+  }
+  
+  .login-container {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+  
+  .oauth-btn {
+    background: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+  }
+}
