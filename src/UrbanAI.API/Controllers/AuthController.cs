@@ -11,6 +11,9 @@ using System.Text.Json;
 
 namespace UrbanAI.API.Controllers
 {
+    /// <summary>
+    /// Controller for authentication and user management.
+    /// </summary>
     [ApiController]
     [Route("api/auth")]
     public class AuthController : ControllerBase
@@ -22,6 +25,12 @@ namespace UrbanAI.API.Controllers
         private readonly string _jwtIssuer;
         private readonly string _jwtAudience;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthController"/> class.
+        /// </summary>
+        /// <param name="httpClientFactory">The HTTP client factory.</param>
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="dbContext">The application database context.</param>
         public AuthController(
             IHttpClientFactory httpClientFactory,
             IConfiguration configuration,
@@ -35,6 +44,11 @@ namespace UrbanAI.API.Controllers
             _jwtAudience = configuration["Jwt:Audience"] ?? throw new InvalidOperationException("JWT Audience not configured");
         }
 
+        /// <summary>
+        /// Registers a new user.
+        /// </summary>
+        /// <param name="request">The authentication request containing username and password.</param>
+        /// <returns>An authentication response with a JWT token.</returns>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] AuthRequestDto request)
         {
@@ -67,6 +81,11 @@ namespace UrbanAI.API.Controllers
             return Ok(new AuthResponseDto { Token = token });
         }
 
+        /// <summary>
+        /// Logs in an existing user.
+        /// </summary>
+        /// <param name="request">The authentication request containing username and password.</param>
+        /// <returns>An authentication response with a JWT token.</returns>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] AuthRequestDto request)
         {
@@ -86,6 +105,11 @@ namespace UrbanAI.API.Controllers
             return Ok(new AuthResponseDto { Token = token });
         }
 
+        /// <summary>
+        /// Exchanges an external provider token for an internal JWT token.
+        /// </summary>
+        /// <param name="request">The authentication request containing provider and external token.</param>
+        /// <returns>An authentication response with a JWT token.</returns>
         [HttpPost("exchange-token")]
         public async Task<IActionResult> ExchangeToken([FromBody] AuthRequestDto request)
         {

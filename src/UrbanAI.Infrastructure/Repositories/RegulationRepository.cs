@@ -33,7 +33,7 @@ namespace UrbanAI.Infrastructure.Repositories
             await _context.Regulations.InsertOneAsync(regulationDocument);
         }
 
-        public async Task<Regulation> GetByIdAsync(string id)
+        public async Task<Regulation?> GetByIdAsync(string id)
         {
             var regulationDocument = await _context.Regulations.Find(r => r.Id == id).FirstOrDefaultAsync();
             if (regulationDocument == null)

@@ -4,7 +4,7 @@ namespace UrbanAI.Application.DTOs
     {
         public Guid Id { get; set; }
         public string? Title { get; set; }
-        public string Description { get; set; }
+        public required string Description { get; set; }
         public DateTime CreatedAt { get; set; }
         public required string Status { get; set; }
         public string? PhotoUrl { get; set; }

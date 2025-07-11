@@ -22,7 +22,7 @@ namespace UrbanAI.Application.Services
             var issue = new Issue
             {
                 Id = Guid.NewGuid(),
-                Title = string.IsNullOrEmpty(request.Title) ? GenerateTitleFromDescription(request.Description) : request.Title,
+                Title = string.IsNullOrEmpty(request.Title) ? GenerateTitleFromDescription(request.Description) : request.Title ?? string.Empty,
                 Description = request.Description,
                 PhotoUrl = request.PhotoUrl,
                 Latitude = request.Latitude,

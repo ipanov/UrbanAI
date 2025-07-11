@@ -117,4 +117,7 @@ app.MapControllers(); // Map controller endpoints
 
 app.Run();
 
+/// <summary>
+/// Main entry point for the application.
+/// </summary>
 public partial class Program { }
