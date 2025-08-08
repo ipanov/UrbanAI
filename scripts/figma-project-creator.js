@@ -4,7 +4,10 @@ const path = require('path');
 
 class FigmaProjectCreator {
     constructor() {
-        this.apiKey = 'figd_Yo3KxsQasPbkD8r0k43UhcaPGUnL_IwU4Ye7JYOv';
+        this.apiKey = process.env.FIGMA_API_KEY || '';
+        if(!this.apiKey) {
+            console.error('FIGMA_API_KEY environment variable not set. Create .env and set FIGMA_API_KEY.');
+        }
         this.baseUrl = 'api.figma.com';
     }
 

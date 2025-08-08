@@ -9,12 +9,17 @@ class FigmaMCPClient {
 
     async connect() {
         // Start the Figma MCP server process
+        const apiKey = process.env.FIGMA_API_KEY;
+        if(!apiKey) {
+            throw new Error('FIGMA_API_KEY environment variable not set. Create a .env file and set FIGMA_API_KEY=your_token');
+        }
+
         this.mcpProcess = spawn('cmd', [
             '/c',
             'npx',
             '-y',
             'figma-developer-mcp',
-            '--figma-api-key=figd_Yo3KxsQasPbkD8r0k43UhcaPGUnL_IwU4Ye7JYOv',
+            `--figma-api-key=${apiKey}`,
             '--stdio'
         ], {
             stdio: ['pipe', 'pipe', 'pipe']
