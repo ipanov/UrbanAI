@@ -1,5 +1,0 @@
-# pack-refs with: peeled fully-peeled sorted 
-770baef03a844cbed4319e64f7d0b3f49a319236 refs/heads/develop
-68f6064434a222dead37e56651aa0ae0827f1681 refs/heads/feature/week3-integration-tests
-f8c760aa5633f9aa971a0608d826ba8f30ae8cef refs/heads/main
-f8c760aa5633f9aa971a0608d826ba8f30ae8cef refs/heads/master
