@@ -1,11 +1,8 @@
+using MongoDB.Driver;
 using UrbanAI.Domain.Entities;
 using UrbanAI.Domain.Interfaces;
 using UrbanAI.Infrastructure.Data;
 using UrbanAI.Infrastructure.Data.Models;
-using MongoDB.Driver;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace UrbanAI.Infrastructure.Repositories
 {
@@ -36,7 +33,7 @@ namespace UrbanAI.Infrastructure.Repositories
             await _context.Regulations.InsertOneAsync(regulationDocument);
         }
 
-        public async Task<Regulation> GetByIdAsync(string id)
+        public async Task<Regulation?> GetByIdAsync(string id)
         {
             var regulationDocument = await _context.Regulations.Find(r => r.Id == id).FirstOrDefaultAsync();
             if (regulationDocument == null)
@@ -45,7 +42,7 @@ namespace UrbanAI.Infrastructure.Repositories
             }
             return new Regulation
             {
-                Id = System.Guid.Parse(regulationDocument.Id),
+                Id = Guid.Parse(regulationDocument.Id),
                 Title = regulationDocument.Title,
                 Content = regulationDocument.Content,
                 SourceUrl = regulationDocument.SourceUrl,
@@ -63,7 +60,7 @@ namespace UrbanAI.Infrastructure.Repositories
             var regulationDocuments = await _context.Regulations.Find(_ => true).ToListAsync();
             return regulationDocuments.Select(rd => new Regulation
             {
-                Id = System.Guid.Parse(rd.Id),
+                Id = Guid.Parse(rd.Id),
                 Title = rd.Title,
                 Content = rd.Content,
                 SourceUrl = rd.SourceUrl,
@@ -105,9 +102,9 @@ namespace UrbanAI.Infrastructure.Repositories
             // Safely check if Keywords is not null before searching within it
             var filter = filterBuilder.Where(r => r.Title.Contains(query) || r.Content.Contains(query) || (r.Keywords != null && r.Keywords.Any(k => k.Contains(query))));
             var regulationDocuments = await _context.Regulations.Find(filter).ToListAsync();
-             return regulationDocuments.Select(rd => new Regulation
+            return regulationDocuments.Select(rd => new Regulation
             {
-                Id = System.Guid.Parse(rd.Id),
+                Id = Guid.Parse(rd.Id),
                 Title = rd.Title,
                 Content = rd.Content,
                 SourceUrl = rd.SourceUrl,
@@ -126,7 +123,7 @@ namespace UrbanAI.Infrastructure.Repositories
             var regulationDocuments = await _context.Regulations.Find(filter).ToListAsync();
             return regulationDocuments.Select(rd => new Regulation
             {
-                Id = System.Guid.Parse(rd.Id),
+                Id = Guid.Parse(rd.Id),
                 Title = rd.Title,
                 Content = rd.Content,
                 SourceUrl = rd.SourceUrl,
@@ -145,7 +142,7 @@ namespace UrbanAI.Infrastructure.Repositories
             var regulationDocuments = await _context.Regulations.Find(filter).ToListAsync();
             return regulationDocuments.Select(rd => new Regulation
             {
-                Id = System.Guid.Parse(rd.Id),
+                Id = Guid.Parse(rd.Id),
                 Title = rd.Title,
                 Content = rd.Content,
                 SourceUrl = rd.SourceUrl,

@@ -4,83 +4,253 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Configuration;
+using UrbanAI.Domain.Entities;
+using UrbanAI.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace UrbanAI.API.Controllers
 {
+    /// <summary>
+    /// Controller for authentication and user management.
+    /// </summary>
     [ApiController]
-    [Route("v1/auth")]
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
-        private const string JwtSecret = "c97b177d-55c8-4c02-a258-30b6e1f92301"; // Replace with a strong secret
-        private const string JwtIssuer = "UrbanAI";
-
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _dbContext;
+        private readonly string _jwtSecret;
+        private readonly string _jwtIssuer;
+        private readonly string _jwtAudience;
 
-        public AuthController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthController"/> class.
+        /// </summary>
+        /// <param name="httpClientFactory">The HTTP client factory.</param>
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="dbContext">The application database context.</param>
+        public AuthController(
+            IHttpClientFactory httpClientFactory,
+            IConfiguration configuration,
+            ApplicationDbContext dbContext)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
+            _dbContext = dbContext;
+            _jwtSecret = configuration["Jwt:Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");
+            _jwtIssuer = configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("JWT Issuer not configured");
+            _jwtAudience = configuration["Jwt:Audience"] ?? throw new InvalidOperationException("JWT Audience not configured");
         }
 
+        /// <summary>
+        /// Registers a new user.
+        /// </summary>
+        /// <param name="request">The authentication request containing username and password.</param>
+        /// <returns>An authentication response with a JWT token.</returns>
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] AuthRequestDto request)
+        {
+            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+            {
+                return BadRequest("Username and Password are required.");
+            }
+
+            if (request.Password.Length < 8)
+            {
+                return BadRequest("Password must be at least 8 characters long.");
+            }
+
+            if (await _dbContext.Users.AnyAsync(u => u.Username == request.Username))
+            {
+                return Conflict("Username already exists.");
+            }
+
+            var user = new User
+            {
+                Username = request.Username,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                Role = "User"
+            };
+
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
+
+            var token = GenerateJwtToken(user);
+            return Ok(new AuthResponseDto { Token = token });
+        }
+
+        /// <summary>
+        /// Logs in an existing user.
+        /// </summary>
+        /// <param name="request">The authentication request containing username and password.</param>
+        /// <returns>An authentication response with a JWT token.</returns>
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] AuthRequestDto request)
+        {
+            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+            {
+                return BadRequest("Username and Password are required.");
+            }
+
+            var user = await _dbContext.Users.SingleOrDefaultAsync(u => u.Username == request.Username);
+
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            {
+                return Unauthorized("Invalid credentials.");
+            }
+
+            var token = GenerateJwtToken(user);
+            return Ok(new AuthResponseDto { Token = token });
+        }
+
+        /// <summary>
+        /// Exchanges an external provider token for an internal JWT token.
+        /// </summary>
+        /// <param name="request">The authentication request containing provider and external token.</param>
+        /// <returns>An authentication response with a JWT token.</returns>
         [HttpPost("exchange-token")]
         public async Task<IActionResult> ExchangeToken([FromBody] AuthRequestDto request)
         {
-            if (request.Provider == "google")
+            if (string.IsNullOrEmpty(request.Provider) || string.IsNullOrEmpty(request.Token))
             {
-                var googleToken = request.Token;
-                if (string.IsNullOrEmpty(googleToken))
+                return BadRequest("Provider and token are required.");
+            }
+
+            switch (request.Provider.ToLower())
+            {
+                case "google":
+                    return await HandleGoogleToken(request.Token);
+                case "microsoft":
+                    return await HandleMicrosoftToken(request.Token);
+                case "facebook":
+                    return await HandleFacebookToken(request.Token);
+                default:
+                    return BadRequest("Unsupported provider.");
+            }
+        }
+
+        private async Task<IActionResult> HandleGoogleToken(string token)
+        {
+            var httpClient = _httpClientFactory.CreateClient();
+            var response = await httpClient.GetAsync($"https://www.googleapis.com/oauth2/v3/tokeninfo?id_token={token}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return Unauthorized("Invalid Google token.");
+            }
+
+            var content = await response.Content.ReadAsStringAsync();
+            var payload = JsonSerializer.Deserialize<JsonDocument>(content);
+            var sub = payload?.RootElement.GetProperty("sub").GetString();
+
+            if (string.IsNullOrEmpty(sub))
+            {
+                return Unauthorized("Invalid token payload.");
+            }
+
+            return await HandleExternalLogin("google", sub);
+        }
+
+        private async Task<IActionResult> HandleMicrosoftToken(string token)
+        {
+            var httpClient = _httpClientFactory.CreateClient();
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var response = await httpClient.GetAsync("https://graph.microsoft.com/v1.0/me");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return Unauthorized("Invalid Microsoft token.");
+            }
+
+            var content = await response.Content.ReadAsStringAsync();
+            var payload = JsonSerializer.Deserialize<JsonDocument>(content);
+            var id = payload?.RootElement.GetProperty("id").GetString();
+
+            if (string.IsNullOrEmpty(id))
+            {
+                return Unauthorized("Invalid token payload.");
+            }
+
+            return await HandleExternalLogin("microsoft", id);
+        }
+
+        private async Task<IActionResult> HandleFacebookToken(string token)
+        {
+            var httpClient = _httpClientFactory.CreateClient();
+            var response = await httpClient.GetAsync($"https://graph.facebook.com/me?access_token={token}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return Unauthorized("Invalid Facebook token.");
+            }
+
+            var content = await response.Content.ReadAsStringAsync();
+            var payload = JsonSerializer.Deserialize<JsonDocument>(content);
+            var id = payload?.RootElement.GetProperty("id").GetString();
+
+            if (string.IsNullOrEmpty(id))
+            {
+                return Unauthorized("Invalid token payload.");
+            }
+
+            return await HandleExternalLogin("facebook", id);
+        }
+
+        private async Task<IActionResult> HandleExternalLogin(string provider, string externalId)
+        {
+            var user = await _dbContext.Users.SingleOrDefaultAsync(u =>
+                u.ExternalLogins.Any(l => l.Provider == provider && l.ExternalId == externalId));
+
+            if (user == null)
+            {
+                // Create new user with external login
+                user = new User
                 {
-                    return BadRequest("Google token is required.");
-                }
-
-                // Check if Google token validation is disabled
-                var disableGoogleTokenValidation = _configuration.GetValue<bool>("Authentication:DisableGoogleTokenValidation");
-
-                if (!disableGoogleTokenValidation)
-                {
-                    // Validate the Google token
-                    var httpClient = _httpClientFactory.CreateClient();
-                    var googleValidationUrl = $"https://www.googleapis.com/oauth2/v3/tokeninfo?id_token={googleToken}";
-                    var googleResponse = await httpClient.GetAsync(googleValidationUrl);
-
-                    if (!googleResponse.IsSuccessStatusCode)
+                    Username = $"{provider}_{externalId}",
+                    Role = "User",
+                    ExternalLogins = new List<ExternalLogin>
                     {
-                        return Unauthorized("Invalid Google token.");
+                        new ExternalLogin
+                        {
+                            Provider = provider,
+                            ExternalId = externalId
+                        }
                     }
-                }
-
-                // Token is valid (or validation is disabled), generate anonymous JWT
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(JwtSecret);
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(new Claim[]
-                    {
-                        new Claim(ClaimTypes.Name, "anonymous"), // No PII
-                        new Claim("isAuthenticated", "true"),
-                        new Claim(ClaimTypes.Role, "reporter")
-                    }),
-                    Issuer = JwtIssuer,
-                    Audience = JwtIssuer,
-                    Expires = DateTime.UtcNow.AddHours(1), // Short-lived token
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                };
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                var accessToken = tokenHandler.WriteToken(token);
-
-                var response = new AuthResponseDto
-                {
-                    AccessToken = accessToken
                 };
 
-                return Ok(response);
+                _dbContext.Users.Add(user);
+                await _dbContext.SaveChangesAsync();
             }
-            else
+
+            var token = GenerateJwtToken(user);
+            return Ok(new AuthResponseDto { Token = token });
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_jwtSecret);
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
-                return BadRequest("Unsupported provider.");
-            }
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, user.Role),
+                    new Claim("auth_time", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
+                    new Claim("iss", _jwtIssuer),
+                    new Claim("aud", _jwtAudience)
+                }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }

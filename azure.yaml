@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: urbanai
+metadata:
+  template: urbanai@0.0.1-beta
+
+# Services to be deployed
+services:
+  api:
+    project: src/UrbanAI.API
+    language: dotnet
+    host: appservice
+    
+# Infrastructure configuration
+infra:
+  provider: bicep
+  path: infra
+
+# Hooks for deployment
+hooks:
+  postprovision:
+    windows:
+      shell: pwsh
+      run: |
+        echo "Infrastructure provisioned successfully"
+        echo "SQL Server FQDN: $(azd env get-values --output json | jq -r .AZURE_SQL_SERVER_FQDN)"
+        echo "Running database migrations..."
+        cd src/UrbanAI.API
+        dotnet ef database update --connection "$(azd env get-values --output json | jq -r .AZURE_SQL_CONNECTION_STRING)"
+    posix:
+      shell: sh
+      run: |
+        echo "Infrastructure provisioned successfully"
+        echo "SQL Server FQDN: $(azd env get-values --output json | jq -r .AZURE_SQL_SERVER_FQDN)"
+        echo "Running database migrations..."
+        cd src/UrbanAI.API
+        dotnet ef database update --connection "$(azd env get-values --output json | jq -r .AZURE_SQL_CONNECTION_STRING)"

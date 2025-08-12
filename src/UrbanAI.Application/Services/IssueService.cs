@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UrbanAI.Application.DTOs;
 using UrbanAI.Application.Interfaces;
 using UrbanAI.Domain.Entities;
 using UrbanAI.Domain.Interfaces;
+using System;
+using System.Threading.Tasks;
 
 namespace UrbanAI.Application.Services
 {
@@ -18,19 +17,18 @@ namespace UrbanAI.Application.Services
             _issueRepository = issueRepository;
             _regulationRepository = regulationRepository;
         }
-
         public async Task<CreateIssueResponseDto> CreateIssueAsync(CreateIssueRequestDto request)
         {
             var issue = new Issue
             {
                 Id = Guid.NewGuid(),
-                Title = request.Title,
+                Title = string.IsNullOrEmpty(request.Title) ? GenerateTitleFromDescription(request.Description) : request.Title ?? string.Empty,
                 Description = request.Description,
                 PhotoUrl = request.PhotoUrl,
                 Latitude = request.Latitude,
                 Longitude = request.Longitude,
                 CreatedAt = DateTime.UtcNow,
-                Status = "Open" // Initial status
+                Status = request.Status ?? "Open" // Use provided status or default to "Open"
             };
 
             await _issueRepository.AddAsync(issue);
@@ -38,6 +36,7 @@ namespace UrbanAI.Application.Services
             var response = new CreateIssueResponseDto
             {
                 Id = issue.Id,
+                Title = issue.Title ?? "No Title",
                 Description = issue.Description,
                 PhotoUrl = issue.PhotoUrl,
                 Latitude = issue.Latitude,
@@ -49,13 +48,13 @@ namespace UrbanAI.Application.Services
             return response;
         }
 
-        public async Task<IssueDto> GetIssueByIdAsync(Guid id)
+        public async Task<IssueDto?> GetIssueByIdAsync(Guid id)
         {
             var issue = await _issueRepository.GetByIdAsync(id);
 
             if (issue == null)
             {
-                return null; // Or throw a specific exception
+                return null;
             }
 
             var issueDto = new IssueDto
@@ -95,7 +94,7 @@ namespace UrbanAI.Application.Services
             return issueDtos;
         }
 
-        public async Task<IssueDto> UpdateIssueAsync(UpdateIssueRequestDto request)
+        public async Task<IssueDto?> UpdateIssueAsync(UpdateIssueRequestDto request)
         {
             var issue = await _issueRepository.GetByIdAsync(request.Id);
             if (issue == null)
@@ -124,21 +123,35 @@ namespace UrbanAI.Application.Services
                 Status = issue.Status
             };
         }
-
         public async Task DeleteIssueAsync(Guid id)
         {
             var issue = await _issueRepository.GetByIdAsync(id);
-            if (issue != null)
+            if (issue == null)
             {
-                await _issueRepository.DeleteAsync(issue);
+                throw new InvalidOperationException($"Issue with ID {id} not found.");
             }
+            await _issueRepository.DeleteAsync(issue);
         }
 
         public async Task<IEnumerable<UrbanAI.Domain.Entities.Regulation>> GetRegulationsByLocationAsync(string location)
         {
             // Assuming the RegulationRepository has a method to get regulations by location
             // The location parameter might need to be parsed or used differently depending on the repository implementation
-            return await _regulationRepository.GetByLocationAsync(location);
+            var regulations = await _regulationRepository.GetByLocationAsync(location);
+            return regulations ?? Enumerable.Empty<UrbanAI.Domain.Entities.Regulation>();
+        }
+
+        private string GenerateTitleFromDescription(string description)
+        {
+            // Simple title generation logic: take the first 10 words of the description
+            if (string.IsNullOrEmpty(description))
+            {
+                return "No Description Provided";
+            }
+
+            var words = description.Split(' ');
+            var title = string.Join(" ", words.Take(10));
+            return title.Length > 50 ? title.Substring(0, 50) + "..." : title;
         }
     }
 }

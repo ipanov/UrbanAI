@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <Include>
+            <ModulePath>src/UrbanAI.API/UrbanAI.API.dll</ModulePath>
+          </Include>
+          <ExcludeByFile>
+            <!-- Exclude migration files -->
+            <Exclude>**/Migrations/**</Exclude>
+            <!-- Exclude auto-generated designer files -->
+            <Exclude>**/*.Designer.cs</Exclude>
+            <!-- Exclude Program.cs (bootstrapping code) -->
+            <Exclude>**/Program.cs</Exclude>
+            <!-- Exclude assembly info -->
+            <Exclude>**/AssemblyInfo.cs</Exclude>
+            <!-- Exclude auto-generated temporary files -->
+            <Exclude>**/obj/**</Exclude>
+            <Exclude>**/bin/**</Exclude>
+          </ExcludeByFile>
+          <ExcludeByAttribute>
+            <!-- Exclude methods/classes marked with these attributes -->
+            <Exclude>System.Diagnostics.DebuggerNonUserCodeAttribute</Exclude>
+            <Exclude>System.Runtime.CompilerServices.CompilerGeneratedAttribute</Exclude>
+            <Exclude>System.CodeDom.Compiler.GeneratedCodeAttribute</Exclude>
+            <Exclude>System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute</Exclude>
+          </ExcludeByAttribute>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

@@ -1,7 +1,5 @@
-using System.Threading.Tasks;
 using UrbanAI.Application.Interfaces;
 using UrbanAI.Domain.Entities;
-using System.Linq;
 using UrbanAI.Domain.Interfaces;
 
 namespace UrbanAI.Application.Services
@@ -15,17 +13,19 @@ namespace UrbanAI.Application.Services
             _regulationRepository = regulationRepository;
         }
 
-        public async Task<Regulation> GetRegulationByIdAsync(string id)
+        public async Task<Regulation?> GetRegulationByIdAsync(string id)
         {
             // Basic implementation - delegate to repository
-            return await _regulationRepository.GetByIdAsync(id);
+            var regulation = await _regulationRepository.GetByIdAsync(id);
+            return regulation;
         }
 
-        public async Task<Regulation> GetRegulationByLocationAsync(string location)
+        public async Task<Regulation?> GetRegulationByLocationAsync(string location)
         {
             // Basic implementation - delegate to repository
             // This will need more sophisticated logic later for actual location-based search
-            return (await _regulationRepository.GetByLocationAsync(location)).FirstOrDefault();
+            var regulations = await _regulationRepository.GetByLocationAsync(location);
+            return regulations?.FirstOrDefault();
         }
 
         // Implement other necessary methods from IRegulationService

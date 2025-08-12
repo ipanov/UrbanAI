@@ -1,13 +1,11 @@
 using UrbanAI.Domain.Entities;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace UrbanAI.Domain.Interfaces
 {
     public interface IRegulationRepository
     {
         Task AddAsync(Regulation regulation);
-        Task<Regulation> GetByIdAsync(string id);
+        Task<Regulation?> GetByIdAsync(string id);
         Task<IEnumerable<Regulation>> GetAllAsync();
         Task UpdateAsync(Regulation regulation);
         Task DeleteAsync(string id);

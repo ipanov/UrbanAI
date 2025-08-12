@@ -1,10 +1,9 @@
-# ASP.NET
-# Build and test ASP.NET projects.
-# Add steps that publish symbols, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+# .NET CI for UrbanAI
+# Build, test, and publish with coverage for ASP.NET/Core solutions
 
 trigger:
 - main
+- develop
 
 pool:
   vmImage: 'windows-latest'
@@ -32,3 +31,17 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+    testAssemblyVer2: |
+      **\$(BuildConfiguration)\**\*.Tests.dll
+      !**\obj\**
+    codeCoverageEnabled: true
+    publishTestResults: true
+    testRunTitle: 'Unit Tests with Coverage'
+    otherConsoleOptions: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/cobertura.xml'
+
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(Build.SourcesDirectory)/TestResults/Coverage/cobertura.xml'
+    reportDirectory: '$(Build.SourcesDirectory)/TestResults/Coverage'
+    failIfCoverageLessThan: '95'

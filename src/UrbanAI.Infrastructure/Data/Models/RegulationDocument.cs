@@ -7,16 +7,16 @@ namespace UrbanAI.Infrastructure.Data.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
-        public string Title { get; set; }
-        public string Content { get; set; }
-        public string SourceUrl { get; set; }
-        public string Jurisdiction { get; set; }
+        public required string Title { get; set; }
+        public required string Content { get; set; }
+        public required string SourceUrl { get; set; }
+        public required string Jurisdiction { get; set; }
         public DateTime EffectiveDate { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public string Location { get; set; }
-        public List<string> Keywords { get; set; }
+        public required string Location { get; set; }
+        public required List<string> Keywords { get; set; }
         public DateTime UpdatedAt { get; set; }
     }
 }
