@@ -493,3 +493,9 @@ coverage_reports/
 CoverageReport/
 # Script for running tests and coverage
 /scripts/run-tests.ps1
+# Housekeeping
+temp/
+UrbanAI.git/
+scripts/
+dist/
+src/UrbanAI.Frontend/dist/
