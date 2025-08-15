@@ -95,8 +95,43 @@ This ensures UI quality and prevents visual regressions across all UrbanAI inter
 - Keep AI Agent integrations behind Application abstractions for future evolution
 - Documentation-first: diagrams and OpenAPI define contracts
 
+## OAuth Authentication Patterns
+
+### Production OAuth Implementation
+- **Privacy-First Architecture**: Anonymous GUID storage, zero PII on servers
+- **PKCE Security**: Proof Key for Code Exchange for all OAuth flows
+- **Provider Support**: Google, Microsoft, Facebook with real OAuth applications
+- **Token Exchange**: Authorization code → access token → user info → JWT
+- **State Parameter**: CSRF protection for all OAuth flows
+
+### OAuth Service Architecture
+```csharp
+public interface IOAuthService
+{
+    string GenerateCodeVerifier();           // PKCE code verifier generation
+    string GenerateCodeChallenge(string);    // SHA256 challenge from verifier
+    string GenerateState();                  // CSRF protection state
+    string BuildAuthorizationUrl(...);       // Provider-specific auth URLs
+    Task<OAuthTokenResponse> ExchangeCodeForTokenAsync(...);  // Code → token
+    Task<OAuthUserInfo> GetUserInfoAsync(...);               // Token → user info
+}
+```
+
+### OAuth Controller Patterns
+- **OAuthCallbackController**: Handles provider callbacks and token exchange
+- **AuthController**: Manages JWT generation and user registration
+- **Security**: PKCE validation, state verification, provider validation
+- **Error Handling**: Comprehensive logging and user-friendly error responses
+
+### Testing Patterns for OAuth
+- **React Unit Tests**: Mock OAuth flows, test legal agreement modal
+- **Backend Unit Tests**: Mock HTTP responses, test PKCE generation
+- **E2E Tests**: Full OAuth flow testing with Playwright
+- **Integration Tests**: OAuth callback endpoint testing
+
 ## References
 - Component diagram: `docs/component_diagram.md`
-- Sequence diagram: `docs/sequence_diagram.md`
+- Sequence: `docs/sequence_diagram.md`
 - OpenAPI: `docs/api/openapi.yaml`
 - Architecture overview: `docs/architecture-overview.md`
+- OAuth Setup: `docs/oauth-setup/` (Google, Microsoft, Facebook)

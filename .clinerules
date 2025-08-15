@@ -137,6 +137,62 @@ For ANY change to HTML, CSS, or frontend assets:
 
 This protocol ensures UI quality and prevents visual regressions across all UrbanAI interfaces.
 
+## Testing Policies: MANDATORY REQUIREMENTS
+
+**CRITICAL REQUIREMENT**: ALL code changes MUST include comprehensive testing before completion.
+
+### Testing Framework Standards
+- **React Unit Tests**: React Testing Library + Vitest (minimum 80% coverage)
+- **Backend Unit Tests**: xUnit + Moq (minimum 80% coverage)
+- **E2E Browser Tests**: Playwright (cross-browser: Chrome, Firefox, Safari, Mobile)
+- **Integration Tests**: Custom WebApplicationFactory for API testing
+
+### Mandatory Testing Workflow
+For ANY code change (frontend or backend):
+
+1. **IMPLEMENT** the code changes
+2. **CREATE** corresponding unit tests
+3. **RUN** unit tests and verify 80%+ coverage
+4. **CREATE** integration/E2E tests if applicable
+5. **RUN** full test suite and verify all tests pass
+6. **UPDATE** existing tests if functionality changed
+7. **DOCUMENT** test results and coverage metrics
+
+### Testing Requirements Checklist
+- ✅ Unit tests created for new components/services
+- ✅ Unit tests updated for modified components/services
+- ✅ Integration tests created for new API endpoints
+- ✅ E2E tests created for new user flows
+- ✅ All tests pass without errors
+- ✅ Coverage thresholds met (80% minimum)
+- ✅ Accessibility testing included for UI components
+- ✅ Responsive design testing for mobile/desktop
+
+### Non-Negotiable Testing Rules
+- **NO COMPLETION** of tasks without comprehensive test coverage
+- **NO MERGE** of code changes without passing tests
+- **ALWAYS** update tests when fixing bugs
+- **MANDATORY** test creation for OAuth, authentication, and security features
+- **REQUIRED** browser testing for all UI changes
+- **ENFORCE** 80% minimum coverage thresholds
+
+### Test Organization Standards
+- React tests: `src/components/__tests__/ComponentName.test.tsx`
+- E2E tests: `tests/e2e/feature-name.spec.ts`
+- Backend tests: `tests/ProjectName.Tests/ServiceTests.cs`
+- Test utilities: `src/test/` for React, `tests/Shared/` for backend
+
+### Post-Completion Testing Policy
+After completing any feature implementation:
+1. **FULL TEST SUITE EXECUTION**: Run all unit, integration, and E2E tests
+2. **COVERAGE VERIFICATION**: Ensure 80%+ coverage across all test types
+3. **BROWSER VALIDATION**: Validate UI changes in embedded browser testing
+4. **MEMORY BANK UPDATE**: Document completed implementation and test results
+5. **SECURITY REVIEW**: Verify OAuth flows and authentication mechanisms
+6. **ACCESSIBILITY CHECK**: Confirm WCAG compliance for new UI components
+
+This ensures code quality, prevents regressions, and maintains system reliability across all UrbanAI development.
+
 ## Tooling & Safety
 
 - Shell: Windows (cmd.exe). Prefer project-root commands.

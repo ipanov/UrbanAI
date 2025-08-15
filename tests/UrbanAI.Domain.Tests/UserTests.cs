@@ -25,23 +25,17 @@ namespace UrbanAI.Domain.Tests
         {
             // Arrange
             var user = new User();
-            var username = "testuser";
-            var email = "test@example.com";
-            var passwordHash = "hashedpassword";
+            var username = "google_12345";
             var role = "Admin";
             var createdAt = DateTime.UtcNow;
 
             // Act
             user.Username = username;
-            user.Email = email;
-            user.PasswordHash = passwordHash;
             user.Role = role;
             user.CreatedAt = createdAt;
 
             // Assert
             Assert.Equal(username, user.Username);
-            Assert.Equal(email, user.Email);
-            Assert.Equal(passwordHash, user.PasswordHash);
             Assert.Equal(role, user.Role);
             Assert.Equal(createdAt, user.CreatedAt);
         }
