@@ -55,6 +55,35 @@
 - Design system and UX specs in `docs/design-system/*` and `docs/figma_project.md`
 - Frontend should consume REST API as source of truth
 
+## Frontend UI Validation: MANDATORY WORKFLOW
+**CRITICAL**: ALL frontend/UI changes MUST be validated using embedded browser testing.
+
+### Required Validation Steps
+1. **IMPLEMENT** changes to HTML/CSS/frontend files
+2. **LAUNCH** embedded browser using `browser_action` tool
+3. **NAVIGATE** to modified pages/components
+4. **CAPTURE** screenshots for visual verification
+5. **TEST** interactive elements (hover, focus, click states)
+6. **VERIFY** responsive behavior across screen sizes
+7. **DOCUMENT** validation results in task completion
+8. **CLOSE** browser before proceeding to other tools
+
+### Validation Checklist
+- ✅ Visual elements display correctly
+- ✅ Brand assets appear as intended
+- ✅ Interactive states work properly
+- ✅ Responsive design functions across screen sizes
+- ✅ Accessibility features are functional
+- ✅ No console errors or warnings
+
+### Non-Negotiable Rules
+- **NO COMPLETION** of frontend tasks without browser validation
+- **NO MERGE** of UI changes without documented testing
+- **ALWAYS** test before marking tasks complete
+- **DOCUMENT** any visual discrepancies or issues found
+
+This ensures UI quality and prevents visual regressions across all UrbanAI interfaces.
+
 ## DevOps/Infra
 - Azure Pipelines (`azure-pipelines.yml`) builds, tests, publishes coverage
 - Bicep IaC under `infra/` for Azure resource provisioning
