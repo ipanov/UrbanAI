@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanAI - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #1E293B;
+            background: #F8FAFC;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Header Section */
+        .header {
+            background: #FFFFFF;
+            border-bottom: 1px solid #E2E8F0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2563EB;
+        }
+
+        .search-bar {
+            width: 320px;
+            height: 40px;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 0 16px;
+            font-size: 14px;
+            background: #F8FAFC;
+        }
+
+        .search-bar:focus {
+            outline: 2px solid #2563EB;
+            outline-offset: 2px;
+            background: #FFFFFF;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #94A3B8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            color: #64748B;
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 16px;
+            height: 16px;
+            background: #EA580C;
+            border-radius: 50%;
+            font-size: 10px;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dropdown-arrow {
+            width: 16px;
+            height: 16px;
+            color: #64748B;
+        }
+
+        .user-menu-item {
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .user-menu-item:hover {
+            background: #F8FAFC;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #FFFFFF;
+            border-right: 1px solid #E2E8F0;
+            position: fixed;
+            left: 0;
+            top: 64px;
+            bottom: 0;
+            z-index: 90;
+            overflow-y: auto;
+        }
+
+        .user-profile {
+            background: #F8FAFC;
+            padding: 16px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .profile-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .profile-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #94A3B8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 4px;
+        }
+
+        .profile-role {
+            font-size: 12px;
+            color: #64748B;
+        }
+
+        .nav-menu {
+            padding: 24px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            font-size: 16px;
+            color: #64748B;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #F8FAFC;
+        }
+
+        .nav-item.active {
+            background: #EBF5FF;
+            border-left: 4px solid #2563EB;
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            margin-top: 64px;
+            padding: 32px;
+        }
+
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #64748B;
+        }
+
+        /* Stats Cards Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #64748B;
+            margin-bottom: 8px;
+        }
+
+        .stat-change {
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .change-positive {
+            color: #059669;
+        }
+
+        .change-neutral {
+            color: #64748B;
+        }
+
+        /* Recent Reports Section */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .view-all-button {
+            background: #FFFFFF;
+            color: #1E293B;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .view-all-button:hover {
+            background: #F8FAFC;
+        }
+
+        .reports-table {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1.5fr 1fr 1fr;
+            padding: 16px 24px;
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1.5fr 1fr 1fr;
+            padding: 16px 24px;
+            border-bottom: 1px solid #F1F5F9;
+            font-size: 14px;
+            color: #1E293B;
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .status-in-progress {
+            background: #F59E0B;
+            color: #FFFFFF;
+        }
+
+        .status-resolved {
+            background: #059669;
+            color: #FFFFFF;
+        }
+
+        .status-under-review {
+            background: #6B7280;
+            color: #FFFFFF;
+        }
+
+        .status-rejected {
+            background: #DC2626;
+            color: #FFFFFF;
+        }
+
+        /* Quick Actions Section */
+        .quick-actions-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .action-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .action-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .action-icon {
+            width: 40px;
+            height: 40px;
+        }
+
+        .action-text {
+            flex: 1;
+        }
+
+        .action-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 8px;
+        }
+
+        .action-description {
+            font-size: 14px;
+            color: #64748B;
+            line-height: 20px;
+        }
+
+        .action-button {
+            margin-top: 16px;
+        }
+
+        .primary-button {
+            background: #2563EB;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+            height: 48px;
+        }
+
+        .primary-button:hover {
+            background: #1E40AF;
+        }
+
+        .secondary-button {
+            background: #FFFFFF;
+            color: #1E293B;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            height: 48px;
+        }
+
+        .secondary-button:hover {
+            background: #F8FAFC;
+        }
+
+        /* Focus states for accessibility */
+        .search-bar:focus,
+        .nav-item:focus,
+        .view-all-button:focus,
+        .primary-button:focus,
+        .secondary-button:focus {
+            outline: 2px solid #2563EB;
+            outline-offset: 2px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .main-content {
+                margin-left: 240px;
+            }
+            
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .quick-actions-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            
+            .main-content {
+                margin-left: 200px;
+                padding: 24px 16px;
+            }
+            
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-header,
+            .table-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+            
+            .table-header div:nth-child(3),
+            .table-header div:nth-child(4),
+            .table-header div:nth-child(5),
+            .table-row div:nth-child(3),
+            .table-row div:nth-child(4),
+            .table-row div:nth-child(5) {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 12px;
+                padding: 12px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div style="width: 32px; height: 32px; background: #2563EB; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;">U</div>
+                <span class="logo-text">UrbanAI</span>
+            </div>
+            
+            <input type="text" class="search-bar" placeholder="Search reports, locations, issues...">
+            
+            <div class="user-menu">
+                <div class="user-menu-item">
+                    <div class="notification-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                        </svg>
+                        <div class="notification-badge">3</div>
+                    </div>
+                </div>
+                <div class="user-menu-item">
+                    <div class="user-avatar">JD</div>
+                </div>
+                <div class="user-menu-item">
+                    <div class="dropdown-arrow">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <!-- User Profile Section -->
+        <div class="user-profile">
+            <div class="profile-content">
+                <div class="profile-avatar">JD</div>
+                <div class="profile-info">
+                    <div class="profile-name">John Doe</div>
+                    <div class="profile-role">Citizen Reporter</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active">
+                <div class="nav-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg>
+                </div>
+                Dashboard
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                    </svg>
+                </div>
+                Report Issue
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                    </svg>
+                </div>
+                My Reports
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                    </svg>
+                </div>
+                Settings
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-subtitle">Overview of your municipal reports</p>
+            </div>
+
+            <!-- Stats Cards Row -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" style="color: #2563EB;">
+                                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Total Reports</div>
+                    <div class="stat-change change-positive">+2 this month</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" style="color: #D97706;">
+                                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">In Progress</div>
+                    <div class="stat-change change-neutral">1 updated today</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" style="color: #059669;">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-number">9</div>
+                    <div class="stat-label">Resolved</div>
+                    <div class="stat-change change-positive">+1 this week</div>
+                </div>
+            </div>
+
+            <!-- Recent Reports Section -->
+            <div class="section-header">
+                <h2 class="section-title">Recent Reports</h2>
+                <button class="view-all-button">View All</button>
+            </div>
+
+            <div class="reports-table">
+                <div class="table-header">
+                    <div>Date</div>
+                    <div>Type</div>
+                    <div>Location</div>
+                    <div>Status</div>
+                    <div>Actions</div>
+                </div>
+                
+                <div class="table-row">
+                    <div>2024-01-15</div>
+                    <div>Construction</div>
+                    <div>123 Main St</div>
+                    <div><span class="status-badge status-resolved">Resolved</span></div>
+                    <div><a href="#" style="color: #2563EB; text-decoration: none;">View</a></div>
+                </div>
+                
+                <div class="table-row">
+                    <div>2024-01-14</div>
+                    <div>Environmental</div>
+                    <div>456 Oak Ave</div>
+                    <div><span class="status-badge status-in-progress">In Progress</span></div>
+                    <div><a href="#" style="color: #2563EB; text-decoration: none;">View</a></div>
+                </div>
+                
+                <div class="table-row">
+                    <div>2024-01-13</div>
+                    <div>Construction</div>
+                    <div>789 Pine Rd</div>
+                    <div><span class="status-badge status-under-review">Under Review</span></div>
+                    <div><a href="#" style="color: #2563EB; text-decoration: none;">View</a></div>
+                </div>
+                
+                <div class="table-row">
+                    <div>2024-01-12</div>
+                    <div>Environmental</div>
+                    <div>321 Elm St</div>
+                    <div><span class="status-badge status-resolved">Resolved</span></div>
+                    <div><a href="#" style="color: #2563EB; text-decoration: none;">View</a></div>
+                </div>
+                
+                <div class="table-row">
+                    <div>2024-01-11</div>
+                    <div>Construction</div>
+                    <div>654 Maple Dr</div>
+                    <div><span class="status-badge status-rejected">Rejected</span></div>
+                    <div><a href="#" style="color: #2563EB; text-decoration: none;">View</a></div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Section -->
+            <div class="section-header">
+                <h2 class="section-title">Quick Actions</h2>
+            </div>
+
+            <div class="quick-actions-row">
+                <div class="action-card">
+                    <div class="action-content">
+                        <div class="action-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" style="color: #2563EB;">
+                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                            </svg>
+                        </div>
+                        <div class="action-text">
+                            <h3 class="action-title">Report New Issue</h3>
+                            <p class="action-description">Submit a new municipal compliance report</p>
+                        </div>
+                    </div>
+                    <button class="primary-button action-button">Get Started</button>
+                </div>
+
+                <div class="action-card">
+                    <div class="action-content">
+                        <div class="action-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" style="color: #059669;">
+                                <path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/>
+                            </svg>
+                        </div>
+                        <div class="action-text">
+                            <h3 class="action-title">View Guidelines</h3>
+                            <p class="action-description">Learn about effective issue reporting</p>
+                        </div>
+                    </div>
+                    <button class="secondary-button action-button">Learn More</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

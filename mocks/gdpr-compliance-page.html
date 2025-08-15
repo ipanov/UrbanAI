@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanAI - Privacy & Data Protection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #1E293B;
+            background: #FFFFFF;
+        }
+
+        /* Header Section */
+        .header {
+            background: #FFFFFF;
+            border-bottom: 1px solid #E2E8F0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2563EB;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748B;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #2563EB;
+        }
+
+        .cta-button {
+            background: #2563EB;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+            width: 120px;
+            height: 48px;
+        }
+
+        .cta-button:hover {
+            background: #1E40AF;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 48px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 16px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            line-height: 28px;
+            color: #64748B;
+            margin-bottom: 24px;
+        }
+
+        .last-updated {
+            font-size: 12px;
+            color: #94A3B8;
+        }
+
+        /* Content Section */
+        .content-section {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 32px;
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 16px;
+        }
+
+        .section-content {
+            font-size: 16px;
+            line-height: 28px;
+            color: #1E293B;
+        }
+
+        .section-content p {
+            margin-bottom: 16px;
+        }
+
+        .section-content ul {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .section-content li {
+            margin-bottom: 12px;
+            line-height: 28px;
+        }
+
+        .section-content li::marker {
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        .highlight {
+            background: #F0FDF4;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #059669;
+        }
+
+        .legal-text {
+            font-size: 14px;
+            line-height: 22px;
+            color: #64748B;
+        }
+
+        .action-box {
+            background: #F8FAFC;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 16px 0;
+        }
+
+        .email-link {
+            color: #2563EB;
+            text-decoration: underline;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            margin: 48px 0;
+        }
+
+        .cta-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 16px;
+        }
+
+        .primary-button {
+            background: #2563EB;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+            height: 48px;
+        }
+
+        .primary-button:hover {
+            background: #1E40AF;
+        }
+
+        /* Footer Section */
+        .footer {
+            background: #1E293B;
+            padding: 40px 0;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .footer-logo {
+            color: #FFFFFF;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: #94A3B8;
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #FFFFFF;
+        }
+
+        .footer-copyright {
+            color: #94A3B8;
+            font-size: 12px;
+        }
+
+        /* Focus states for accessibility */
+        .nav-links a:focus,
+        .cta-button:focus,
+        .primary-button:focus,
+        .footer-links a:focus {
+            outline: 2px solid #2563EB;
+            outline-offset: 2px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                height: auto;
+                padding: 16px 20px;
+                gap: 16px;
+            }
+
+            .nav-links {
+                gap: 16px;
+            }
+
+            .main-content {
+                padding: 40px 20px;
+            }
+
+            .page-title {
+                font-size: 28px;
+                line-height: 36px;
+            }
+
+            .content-section {
+                padding: 24px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .footer-links {
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <div style="width: 32px; height: 32px; background: #2563EB; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;">U</div>
+                <span class="logo-text">UrbanAI</span>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="#">Features</a></li>
+                <li><a href="#">Privacy</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+            
+            <button class="cta-button">Get Started</button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Privacy & Data Protection</h1>
+            <p class="page-subtitle">Your privacy rights and how we protect your data</p>
+            <div class="last-updated">Last updated: January 2024</div>
+        </div>
+
+        <!-- Your GDPR Rights Section -->
+        <section class="content-section">
+            <h2 class="section-title">Your GDPR Rights</h2>
+            <div class="section-content">
+                <ul>
+                    <li><strong>The right to be informed</strong> - You have the right to know how your personal data is being used</li>
+                    <li><strong>The right of access</strong> - You can request a copy of the personal data we hold about you</li>
+                    <li><strong>The right to rectification</strong> - You can request correction of inaccurate personal data</li>
+                    <li><strong>The right to erasure</strong> - You can request deletion of your personal data in certain circumstances</li>
+                    <li><strong>The right to restrict processing</strong> - You can request limitation of how your data is used</li>
+                    <li><strong>The right to data portability</strong> - You can obtain and reuse your data across different services</li>
+                    <li><strong>The right to object</strong> - You can object to processing based on legitimate interests</li>
+                    <li><strong>Rights in relation to automated decision making</strong> - You can request human intervention in automated decisions</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Data We Collect Section -->
+        <section class="content-section">
+            <h2 class="section-title">What Data We Collect</h2>
+            <div class="section-content">
+                <p>UrbanAI operates on a privacy-first principle with our OAuth-only authentication approach. We collect only the minimum data necessary to provide our services:</p>
+                
+                <div class="action-box">
+                    <p><strong>Zero PII Storage</strong> - We never store personally identifiable information such as names, email addresses, or phone numbers. Your identity remains with your chosen authentication provider.</p>
+                </div>
+                
+                <p>We only store:</p>
+                <ul>
+                    <li>Anonymous case identifiers and report data</li>
+                    <li>Timestamps for report creation and updates</li>
+                    <li>Location data associated with municipal issues (not personal locations)</li>
+                    <li>Photographs and descriptions of reported issues</li>
+                    <li>Technical logs for service improvement and security</li>
+                </ul>
+                
+                <p>All data is encrypted at rest and in transit, ensuring your information remains secure.</p>
+            </div>
+        </section>
+
+        <!-- Legal Basis Section -->
+        <section class="content-section">
+            <h2 class="section-title">Legal Basis for Processing</h2>
+            <div class="section-content">
+                <p>We process your data under the following legal bases:</p>
+                
+                <ul>
+                    <li><strong>Contract performance</strong> - To provide the UrbanAI service you've requested</li>
+                    <li><strong>Legitimate interests</strong> - To improve our service, ensure security, and prevent abuse</li>
+                    <li><strong>Legal compliance</strong> - To meet our obligations under applicable laws</li>
+                </ul>
+                
+                <p class="legal-text">Our legitimate interests include maintaining the security and integrity of our platform, improving user experience, and ensuring compliance with municipal reporting requirements. We always balance these interests against your privacy rights.</p>
+            </div>
+        </section>
+
+        <!-- Your Choices Section -->
+        <section class="content-section">
+            <h2 class="section-title">Your Data Rights & Choices</h2>
+            <div class="section-content">
+                <p>You maintain full control over your data:</p>
+                
+                <div class="action-box">
+                    <p><strong>Account Deletion</strong> - You can request complete deletion of your account and associated data at any time through our support portal.</p>
+                </div>
+                
+                <div class="action-box">
+                    <p><strong>Data Access</strong> - Request a complete export of your data in machine-readable format through your account settings.</p>
+                </div>
+                
+                <div class="action-box">
+                    <p><strong>Opt-Out</strong> - Disable analytics tracking and marketing communications at any time in your preferences.</p>
+                </div>
+                
+                <p>The account deletion process:</p>
+                <ol>
+                    <li>Submit deletion request through the support portal</li>
+                    <li>Verification email sent to confirm your identity</li>
+                    <li>Data removal completed within 30 days</li>
+                    <li>Confirmation email sent upon completion</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Contact Information Section -->
+        <section class="content-section">
+            <h2 class="section-title">Contact Our Privacy Team</h2>
+            <div class="section-content">
+                <p>If you have questions about your privacy or data protection rights, please contact our Data Protection Officer:</p>
+                
+                <p>Email: <a href="mailto:privacy@urbanai.app" class="email-link">privacy@urbanai.app</a></p>
+                
+                <p>Postal Address:<br>
+                UrbanAI Privacy Team<br>
+                123 Municipal Plaza<br>
+                City, State 12345<br>
+                United States</p>
+                
+                <p>We respond to all privacy inquiries within 48 hours during business days.</p>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <h3 class="cta-text">Questions about your privacy?</h3>
+            <button class="primary-button">Contact Our Privacy Team</button>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">UrbanAI</div>
+            
+            <ul class="footer-links">
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+            
+            <div class="footer-copyright">© 2024 UrbanAI. All rights reserved.</div>
+        </div>
+    </footer>
+</body>
+</html>
