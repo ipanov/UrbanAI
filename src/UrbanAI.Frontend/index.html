@@ -1,13 +1,650 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UrbanAI - Municipal Issue Reporting Platform</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanAI - Report Municipal Issues with Confidence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #1E293B;
+            background: #FFFFFF;
+        }
+
+        /* Header Section */
+        .header {
+            background: #FFFFFF;
+            border-bottom: 1px solid #E2E8F0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 32px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .building {
+            background: #2563EB;
+            border-radius: 1px 1px 0 0;
+        }
+
+        .building-1 { width: 4px; height: 12px; }
+        .building-2 { width: 6px; height: 18px; }
+        .building-3 { width: 5px; height: 24px; }
+        .building-4 { width: 7px; height: 20px; }
+        .building-5 { width: 4px; height: 16px; }
+        .building-6 { width: 6px; height: 28px; }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2563EB;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748B;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #2563EB;
+        }
+
+        .cta-button {
+            background: #2563EB;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+            width: 120px;
+            height: 48px;
+        }
+
+        .cta-button:hover {
+            background: #1E40AF;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%),
+                        linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 100%);
+            background-blend-mode: overlay;
+            position: relative;
+            padding: 80px 0;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 0.67fr;
+            gap: 60px;
+            align-items: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 720px;
+        }
+
+        .hero-headline {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 56px;
+            color: #FFFFFF;
+            margin-bottom: 24px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hero-subheadline {
+            font-size: 18px;
+            line-height: 28px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 32px;
+        }
+
+.download-buttons {
+    display: flex;
+    gap: 10px;
+    width: auto;
+}
+
+.download-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0;
+    background: transparent;
+    color: #1E293B;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    width: auto;
+    height: auto;
+    transition: transform 0.2s, box-shadow 0.2s;
+    backdrop-filter: none;
+    border: none;
+}
+
+/* Ensure SVGs size to their artwork and remove internal SVG whitespace */
+.download-button svg {
+    display: block;
+    width: auto;
+    height: 24px;
+}
+
+/* Give the store buttons a tight visual background and consistent padding */
+.app-store-button,
+.google-play-button {
+    background: #000;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: inline-flex;
+    align-items: center;
+}
+
+.download-button:hover {
+    transform: translateY(-2px);
+}
+.download-button:hover svg {
+    filter: drop-shadow(0 8px 20px rgba(0,0,0,0.15));
+}
+
+        .hero-illustration {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-illustration::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Features Section */
+        .features {
+            background: #FFFFFF;
+            padding: 100px 0;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .features-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .features-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1E293B;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #F1F5F9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .feature-icon svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 8px;
+        }
+
+        .feature-description {
+            font-size: 14px;
+            line-height: 22px;
+            color: #64748B;
+        }
+
+        /* Privacy Section */
+        .privacy {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 80px 0;
+        }
+
+        .privacy-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .privacy-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 16px;
+        }
+
+        .privacy-description {
+            font-size: 16px;
+            line-height: 24px;
+            color: #64748B;
+            margin-bottom: 24px;
+        }
+
+        .privacy-link {
+            font-size: 16px;
+            font-weight: 500;
+            color: #2563EB;
+            text-decoration: underline;
+        }
+
+        /* Footer Section */
+        .footer {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            padding: 40px 0;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .footer-logo {
+            color: #FFFFFF;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-logo-icon {
+            width: 24px;
+            height: 20px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 1px;
+        }
+
+        .footer-building {
+            background: #FFFFFF;
+            border-radius: 1px 1px 0 0;
+        }
+
+        .footer-building-1 { width: 2px; height: 8px; }
+        .footer-building-2 { width: 3px; height: 12px; }
+        .footer-building-3 { width: 3px; height: 16px; }
+        .footer-building-4 { width: 4px; height: 14px; }
+        .footer-building-5 { width: 2px; height: 10px; }
+        .footer-building-6 { width: 3px; height: 18px; }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: #94A3B8;
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #FFFFFF;
+        }
+
+        .footer-copyright {
+            color: #94A3B8;
+            font-size: 12px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                height: auto;
+                padding: 16px 20px;
+                gap: 16px;
+            }
+
+            .nav-links {
+                gap: 16px;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+
+            .hero-headline {
+                font-size: 36px;
+                line-height: 44px;
+            }
+
+            .download-buttons {
+                justify-content: center;
+                margin: 0 auto;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .footer-links {
+                gap: 16px;
+            }
+        }
+
+        /* Focus states for accessibility */
+        .cta-button:focus,
+        .download-button:focus,
+        .nav-links a:focus,
+        .privacy-link:focus,
+        .footer-links a:focus {
+            outline: 2px solid #2563EB;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <div class="building building-1"></div>
+                    <div class="building building-2"></div>
+                    <div class="building building-3"></div>
+                    <div class="building building-4"></div>
+                    <div class="building building-5"></div>
+                    <div class="building building-6"></div>
+                </div>
+                <span class="logo-text">UrbanAI</span>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#privacy">Privacy</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            
+            <button class="cta-button" id="get-started">Get Started</button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-headline">Your Eyes on the City. Your Voice for Change.</h1>
+                <p class="hero-subheadline">Report urban issues in seconds. Our AI analyzes, verifies, and sends reports to the right authorities, so you see real impact.</p>
+                <div class="download-buttons">
+                    <a href="#" class="download-button app-store-button" aria-label="Download UrbanAI for iOS">
+                        <svg width="120" height="40" viewBox="0 0 120 40" fill="none" aria-hidden="true" focusable="false">
+                            <path d="M24.769 20.301c-.047-3.225 2.615-4.771 2.734-4.841-1.49-2.18-3.815-2.477-4.634-2.507-1.97-.207-3.846 1.177-4.845 1.177-.999 0-2.544-1.157-4.18-1.123-2.14.033-4.142 1.272-5.24 3.196-2.266 3.923-.576 9.688 1.595 12.859 1.086 1.553 2.355 3.287 4.016 3.226 1.625-.067 2.232-1.036 4.193-1.036 1.943 0 2.513 1.036 4.207.997 1.744-.033 2.855-1.565 3.918-3.129 1.29-1.821 1.81-3.618 1.828-3.708-.04-.015-3.495-1.338-3.542-5.311z" fill="white"/>
+                            <path d="M22.037 12.211c.874-1.093 1.472-2.58 1.306-4.089-1.265.056-2.847.875-3.758 1.944-.819.956-1.53 2.486-1.34 3.938 1.421.106 2.88-.717 3.792-1.793z" fill="white"/>
+                            <text x="40" y="13" fill="white" font-family="SF Pro Display, -apple-system, sans-serif" font-size="9" font-weight="400">Download on the</text>
+                            <text x="40" y="26" fill="white" font-family="SF Pro Display, -apple-system, sans-serif" font-size="17" font-weight="600">App Store</text>
+                        </svg>
+                    </a><a href="#" class="download-button google-play-button" aria-label="Download UrbanAI for Android">
+                        <svg width="135" height="40" viewBox="0 0 135 40" fill="none" aria-hidden="true" focusable="false">
+                            <path d="M47.42 10.389c0 .967-.284 1.737-.853 2.306-.681.681-1.547 1.022-2.598 1.022-.967 0-1.794-.341-2.481-1.022-.686-.681-1.03-1.547-1.03-2.598 0-1.051.344-1.917 1.03-2.598.687-.681 1.514-1.022 2.481-1.022.483 0 .948.095 1.394.284.446.189.817.446 1.111.77l-.625.625c-.511-.608-1.19-.912-2.037-.912-.739 0-1.371.256-1.896.767-.525.511-.788 1.143-.788 1.896s.263 1.385.788 1.896c.525.511 1.157.767 1.896.767.767 0 1.413-.256 1.938-.767.341-.341.54-.825.597-1.452h-2.535v-.853h3.388c.033.189.05.378.05.568z" fill="white"/>
+                            <path d="M52.219 7.188v1.705h3.835v.853h-3.835v1.705h4.318v.853h-5.171V6.335h5.171v.853h-4.318z" fill="white"/>
+                            <path d="M60.156 12.304h-.853V7.188h-1.534v-.853h3.92v.853h-1.533v5.116z" fill="white"/>
+                            <path d="M67.969 12.304V6.335h.853v5.969h-.853z" fill="white"/>
+                            <path d="M72.656 12.304h-.853V7.188h-1.534v-.853h3.92v.853h-1.533v5.116z" fill="white"/>
+                            <path d="M81.25 11.451c-.681.681-1.514 1.022-2.5 1.022s-1.819-.341-2.5-1.022c-.681-.681-1.022-1.514-1.022-2.5s.341-1.819 1.022-2.5c.681-.681 1.514-1.022 2.5-1.022s1.819.341 2.5 1.022c.681.681 1.022 1.514 1.022 2.5s-.341 1.819-1.022 2.5zm-4.375-.625c.511.511 1.143.767 1.875.767s1.364-.256 1.875-.767c.511-.511.767-1.143.767-1.875s-.256-1.364-.767-1.875c-.511-.511-1.143-.767-1.875-.767s-1.364.256-1.875.767c-.511.511-.767 1.143-.767 1.875s.256 1.364.767 1.875z" fill="white"/>
+                            <path d="M84.375 12.304V6.335h1.193l3.693 5.398h.028V6.335h.853v5.969h-1.193L85.256 6.906h-.028v5.398h-.853z" fill="white"/>
+                            <text x="40" y="32" fill="white" font-family="Roboto, sans-serif" font-size="11" font-weight="400">GET IT ON</text>
+                            <text x="40" y="24" fill="white" font-family="Roboto, sans-serif" font-size="6.5" font-weight="400">Google Play</text>
+                            <path d="M10.02 7.072c-.26.26-.42.72-.42 1.285v22.286c0 .565.16 1.025.42 1.285l.066.064L21.54 20.538v-.076L10.086 7.008l-.066.064z" fill="url(#paint0_linear)"/>
+                            <path d="M25.314 24.312l-3.774-3.774v-.076l3.774-3.774.085.048 4.47 2.54c1.275.725 1.275 1.91 0 2.635l-4.47 2.54-.085.048-.085-.187z" fill="url(#paint1_linear)"/>
+                            <path d="M25.399 24.125L21.54 20.462 10.02 31.982c.42.44 1.105.495 1.87.055l13.509-7.912z" fill="url(#paint2_linear)"/>
+                            <path d="M25.399 16.837L11.89 8.925c-.765-.44-1.45-.385-1.87.055L21.54 20.5l3.859-3.663z" fill="url(#paint3_linear)"/>
+                            <defs>
+                                <linearGradient id="paint0_linear" x1="20.843" y1="8.935" x2="5.017" y2="24.761" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#00A0FF"/>
+                                    <stop offset="0.007" stop-color="#00A1FF"/>
+                                    <stop offset="0.26" stop-color="#00BEFF"/>
+                                    <stop offset="0.512" stop-color="#00D2FF"/>
+                                    <stop offset="0.76" stop-color="#00DFFF"/>
+                                    <stop offset="1" stop-color="#00E3FF"/>
+                                </linearGradient>
+                                <linearGradient id="paint1_linear" x1="33.834" y1="20.5" x2="9.637" y2="20.5" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#FFE000"/>
+                                    <stop offset="0.409" stop-color="#FFBD00"/>
+                                    <stop offset="0.775" stop-color="#FFA500"/>
+                                    <stop offset="1" stop-color="#FF9C00"/>
+                                </linearGradient>
+                                <linearGradient id="paint2_linear" x1="24.827" y1="22.296" x2="2.069" y2="45.054" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#FF3A44"/>
+                                    <stop offset="1" stop-color="#C31162"/>
+                                </linearGradient>
+                                <linearGradient id="paint3_linear" x1="7.297" y1="-0.176" x2="17.46" y2="10.987" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#32A071"/>
+                                    <stop offset="0.069" stop-color="#2DA771"/>
+                                    <stop offset="0.476" stop-color="#15CF74"/>
+                                    <stop offset="0.801" stop-color="#06E775"/>
+                                    <stop offset="1" stop-color="#00F076"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-illustration">
+                <span>UrbanAI App Preview</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <div class="features-header">
+                <h2 class="features-title">Why Choose UrbanAI</h2>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Privacy First</h3>
+                    <p class="feature-description">Your data stays private with OAuth-only authentication and no PII storage</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2">
+                            <path d="M3 21h18"/>
+                            <path d="M5 21V7l8-4v18"/>
+                            <path d="M19 21V11l-6-4"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Municipal Focus</h3>
+                    <p class="feature-description">Specialized for construction and environmental compliance reporting</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <path d="M9 12l2 2 4-4"/>
+                            <circle cx="12" cy="12" r="9"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">GDPR Compliant</h3>
+                    <p class="feature-description">Fully compliant with European privacy regulations</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section class="privacy" id="privacy">
+        <div class="privacy-container">
+            <h2 class="privacy-title">Your Privacy, Our Priority</h2>
+            <p class="privacy-description">We use OAuth authentication and store no personal information. Your reports are anonymous and secure.</p>
+            <a href="#" class="privacy-link">Read our Privacy Policy</a>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <div class="footer-logo-icon">
+                    <div class="footer-building footer-building-1"></div>
+                    <div class="footer-building footer-building-2"></div>
+                    <div class="footer-building footer-building-3"></div>
+                    <div class="footer-building footer-building-4"></div>
+                    <div class="footer-building footer-building-5"></div>
+                    <div class="footer-building footer-building-6"></div>
+                </div>
+                UrbanAI
+            </div>
+            
+            <ul class="footer-links">
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#" id="contact">Contact</a></li>
+            </ul>
+            
+            <div class="footer-copyright">© 2024 UrbanAI. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <!-- Include landing page JavaScript -->
+    <script src="/landing.js"></script>
+</body>
 </html>
