@@ -114,11 +114,11 @@ namespace UrbanAI.Application.Services
 
         public async Task<string> GenerateJwtTokenAsync(UserDto user)
         {
-            var jwtKey = _configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT key not configured");
+            var jwtSecret = _configuration["Jwt:Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");
             var jwtIssuer = _configuration["Jwt:Issuer"] ?? "UrbanAI";
             var jwtAudience = _configuration["Jwt:Audience"] ?? "UrbanAI";
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]

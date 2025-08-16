@@ -81,10 +81,10 @@ jobs:
     - name: Deploy to Azure Container Apps
       uses: azure/container-apps-deploy-action@v1
       with:
-        app-name: 'urbanai-api'
-        resource-group: ${{ secrets.RESOURCE_GROUP }}
-        environment-name: ${{ secrets.ENVIRONMENT_NAME }}
-        image: ${{ secrets.ACR_NAME }}.azurecr.io/urbanai-api:latest
+        containerAppName: urbanai-api
+        resourceGroup: ${{ secrets.RESOURCE_GROUP }}
+        imageToDeploy: ${{ secrets.ACR_NAME }}.azurecr.io/urbanai-api:latest
+        containerAppEnvironment: ${{ secrets.ENVIRONMENT_NAME }}
     
     - name: Publish Artifacts
       uses: actions/upload-artifact@v3

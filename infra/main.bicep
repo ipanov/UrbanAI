@@ -289,6 +289,25 @@ resource productionAppService 'Microsoft.Web/sites@2024-04-01' = {
   }
 }
 
+// Include Azure Functions infrastructure
+module functions './functions.bicep' = {
+  name: 'functions-deployment'
+  params: {
+    environmentName: environmentName
+    location: location
+    resourceToken: resourceToken
+    sqlServerName: sqlServerName
+    sqlDatabaseName: sqlDatabaseName
+    sqlAdminLogin: sqlAdminLogin
+    sqlAdminPassword: sqlAdminPassword
+    cosmosDatabaseName: cosmosDatabaseName
+    stagingCosmosAccountName: stagingCosmosAccountName
+    productionCosmosAccountName: productionCosmosAccountName
+    managedIdentityId: managedIdentity.id
+    managedIdentityPrincipalId: managedIdentity.properties.principalId
+  }
+}
+
 // Custom domain binding for production App Service (root domain)
 resource productionCustomDomainBinding 'Microsoft.Web/sites/hostNameBindings@2024-04-01' = if (enableProductionCustomDomain && productionCustomDomain != '') {
   parent: productionAppService
@@ -375,6 +394,18 @@ output stagingAppServiceName string = stagingAppService.name
 
 @description('The production App Service name')
 output productionAppServiceName string = productionAppService.name
+
+@description('The staging Function App URL')
+output stagingFunctionAppUrl string = functions.outputs.stagingFunctionAppUrl
+
+@description('The production Function App URL')
+output productionFunctionAppUrl string = functions.outputs.productionFunctionAppUrl
+
+@description('The staging Function App name')
+output stagingFunctionAppName string = functions.outputs.stagingFunctionAppName
+
+@description('The production Function App name')
+output productionFunctionAppName string = functions.outputs.productionFunctionAppName
 
 @description('Resource group ID')
 output RESOURCE_GROUP_ID string = resourceGroup().id

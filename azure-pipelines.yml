@@ -1,5 +1,5 @@
-# .NET CI for UrbanAI
-# Build, test, and publish with coverage for ASP.NET/Core solutions
+# .NET CI/CD for UrbanAI
+# Build, test, and deploy ASP.NET Core API and Azure Functions
 
 trigger:
 - main
@@ -12,14 +12,17 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  functionProject: 'src/UrbanAI.Functions/UrbanAI.Functions.csproj'
 
 steps:
+# Restore NuGet packages
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
 
+# Build the main solution
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
@@ -27,6 +30,15 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+# Build Azure Functions project
+- task: DotNetCoreCLI@2
+  displayName: 'Build Azure Functions'
+  inputs:
+    command: 'build'
+    projects: '$(functionProject)'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/functions'
+
+# Run tests with code coverage
 - task: VSTest@2
   inputs:
     platform: '$(buildPlatform)'
@@ -39,9 +51,43 @@ steps:
     testRunTitle: 'Unit Tests with Coverage'
     otherConsoleOptions: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/cobertura.xml'
 
+# Publish code coverage results
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: 'Cobertura'
     summaryFileLocation: '$(Build.SourcesDirectory)/TestResults/Coverage/cobertura.xml'
     reportDirectory: '$(Build.SourcesDirectory)/TestResults/Coverage'
     failIfCoverageLessThan: '95'
+
+# Publish build artifacts
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifacts'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+# Deploy to Azure (only for main branch)
+- task: AzureRmWebAppDeployment@4
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  displayName: 'Deploy to Azure App Service'
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Your-Azure-Subscription'
+    appType: 'webApp'
+    WebAppName: 'urbanai-api-production-$(resourceToken)'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+    enableCustomDeployment: true
+    RemoveAdditionalFilesFlag: true
+    ExcludeFilesFromAppDataFlag: true
+
+# Deploy Azure Functions (only for main branch)
+- task: AzureFunctionApp@1
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  displayName: 'Deploy Azure Functions'
+  inputs:
+    azureSubscription: 'Your-Azure-Subscription'
+    appType: 'functionApp'
+    appName: 'urbanai-func-production-$(resourceToken)'
+    package: '$(Build.ArtifactStagingDirectory)/functions'
+    deploymentMethod: 'zipDeploy'

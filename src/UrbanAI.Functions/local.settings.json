@@ -1,0 +1,19 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "Jwt:Secret": "your-jwt-secret-key-here",
+    "Jwt:Issuer": "UrbanAI",
+    "Jwt:Audience": "UrbanAIUsers",
+    "ConnectionStrings:DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=UrbanAI;Trusted_Connection=true;MultipleActiveResultSets=true",
+    "MongoDbSettings:ConnectionString": "mongodb://localhost:27017",
+    "MongoDbSettings:DatabaseName": "UrbanAI",
+    "Authentication:Google:ClientId": "your-google-client-id",
+    "Authentication:Google:ClientSecret": "your-google-client-secret",
+    "Authentication:Microsoft:ClientId": "your-microsoft-client-id",
+    "Authentication:Microsoft:ClientSecret": "your-microsoft-client-secret",
+    "Authentication:Facebook:AppId": "your-facebook-app-id",
+    "Authentication:Facebook:AppSecret": "your-facebook-app-secret"
+  }
+}
