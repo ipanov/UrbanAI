@@ -11,9 +11,6 @@
     "sqlAdminLogin": {
       "value": "urbanai-admin"
     },
-    "sqlAdminPassword": {
-      "value": "ComplexPassword123!"
-    },
     "enableCosmosServerless": {
       "value": true
     },

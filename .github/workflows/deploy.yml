@@ -1,0 +1,126 @@
+name: UrbanAI CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+
+env:
+  RESOURCE_TOKEN: ${{ secrets.RESOURCE_TOKEN }}
+  SUBSCRIPTION_ID: "184eb9b3-615b-424a-9270-8703af01c717"
+  PRODUCTION_DOMAIN: "urbanai.site"
+
+jobs:
+  build-test:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Backend build
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Build solution
+      run: dotnet build UrbanAI.sln --configuration Release
+      
+    - name: Run tests
+      run: dotnet test --configuration Release --settings coverlet.runsettings --collect:"XPlat Code Coverage"
+      
+    - name: Check coverage
+      run: |
+        # Coverage verification script
+        ./.github/scripts/check-coverage.ps1
+
+    # Frontend build
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        
+    - name: Install frontend dependencies
+      working-directory: src/UrbanAI.Frontend
+      run: npm install
+      
+    - name: Build frontend
+      working-directory: src/UrbanAI.Frontend
+      run: npm run build
+
+  deploy-staging:
+    needs: build-test
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        subscription-id: ${{ env.SUBSCRIPTION_ID }}
+
+    - name: Deploy infrastructure
+      run: azd up -e staging --no-prompt
+      env:
+        SQL_ADMIN_PASSWORD: ${{ secrets.SQL_ADMIN_PASSWORD }}
+
+    - name: Deploy API
+      uses: Azure/functions-action@v1
+      with:
+        app-name: urbanai-api-staging-${{ env.RESOURCE_TOKEN }}
+        package: src/UrbanAI.API
+
+    - name: Deploy Frontend
+      run: |
+        az storage blob upload-batch \
+          --account-name urbanaiweb${{ env.RESOURCE_TOKEN }} \
+          -s src/UrbanAI.Frontend/dist \
+          -d '$web' \
+          --overwrite
+
+  deploy-production:
+    needs: build-test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        subscription-id: ${{ env.SUBSCRIPTION_ID }}
+
+    - name: Deploy infrastructure
+      run: azd up -e production --no-prompt
+      env:
+        SQL_ADMIN_PASSWORD: ${{ secrets.SQL_ADMIN_PASSWORD }}
+
+    - name: Deploy API
+      uses: Azure/functions-action@v1
+      with:
+        app-name: urbanai-api-production-${{ env.RESOURCE_TOKEN }}
+        package: src/UrbanAI.API
+
+    - name: Deploy Frontend
+      run: |
+        az storage blob upload-batch \
+          --account-name urbanaiweb${{ env.RESOURCE_TOKEN }} \
+          -s src/UrbanAI.Frontend/dist \
+          -d '$web' \
+          --overwrite
+        az storage account update \
+          --name urbanaiweb${{ env.RESOURCE_TOKEN }} \
+          --custom-domain ${{ env.PRODUCTION_DOMAIN }}
+
+  security-scan:
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+    - name: OWASP ZAP Scan
+      uses: zaproxy/action-full-scan@v0.6.0
+      with:
+        target: 'https://staging.urbanai.site'
