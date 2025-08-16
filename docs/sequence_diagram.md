@@ -2,33 +2,50 @@
 
 ```mermaid
 sequenceDiagram
-    participant Client
-    participant API as UrbanAI.API
+    participant U as User
+    participant F as Frontend (React)
+    participant Func as Azure Functions
     participant App as UrbanAI.Application
     participant Infra as UrbanAI.Infrastructure
-    participant DB as Database
+    participant DB as Relational Database
+    participant Mongo as MongoDB
+    participant AI as AI Agent
 
-    Client->>API: POST /v1/issues (CreateIssueRequestDto)
-    API->>App: CreateIssueAsync(requestDto)
-    App->>Domain: Map DTO to Entity
+    U->>F: Report Issue (photo + location)
+    F->>Func: POST /api/issues (CreateIssueRequestDto)
+    Func->>App: CreateIssueAsync(requestDto)
     App->>Infra: AddIssueAsync(issueEntity)
     Infra->>DB: INSERT INTO Issues (...)
     DB-->>Infra: Issue created (with ID)
     Infra-->>App: Created Issue Entity
+    App->>Infra: Store Photo (Blob)
+    Infra->>Mongo: Save Photo
+    Mongo-->>Infra: Photo URL
+    Infra-->>App: Photo URL
+    App->>AI: Analyze Image (Photo URL)
+    AI-->>App: Analysis Results
+    App->>Infra: Update Issue (Regulations)
+    Infra->>Mongo: Update Issue Regulations
+    Mongo-->>Infra: Update Confirmation
+    Infra-->>App: Updated Issue
     App->>Domain: Map Entity to DTO
-    App-->>API: CreateIssueResponseDto
-    API-->>Client: 201 Created (CreateIssueResponseDto)
+    App-->>Func: CreateIssueResponseDto
+    Func-->>F: 201 Created (CreateIssueResponseDto)
+    F->>U: Display Success + Regulations
 ```
 
 **Explanation:**
 
-1.  **Client** sends a POST request to the `/v1/issues` endpoint on the **UrbanAI.API** with the issue details in the request body.
-2.  The **API** controller receives the request and calls the `CreateIssueAsync` method in the **UrbanAI.Application** layer, passing the `CreateIssueRequestDto`.
-3.  The **Application** layer maps the `CreateIssueRequestDto` to a `Issue` entity from the **UrbanAI.Domain** layer.
-4.  The **Application** layer calls the `AddIssueAsync` method in the **UrbanAI.Infrastructure** layer, passing the `Issue` entity.
-5.  The **Infrastructure** layer's repository implementation interacts with the **Database** to insert the new issue record.
-6.  The **Database** confirms the creation and returns the created issue (including the generated ID) to the **Infrastructure** layer.
-7.  The **Infrastructure** layer returns the created `Issue` entity to the **Application** layer.
-8.  The **Application** layer maps the created `Issue` entity back to a `CreateIssueResponseDto`.
-9.  The **Application** layer returns the `CreateIssueResponseDto` to the **API** controller.
-10. The **API** controller returns a `201 Created` response to the **Client**, including the `CreateIssueResponseDto` and a `Location` header pointing to the newly created resource.
+1. **User** reports an issue through the **Frontend** application
+2. **Frontend** sends POST request to Azure **Functions** endpoint
+3. **Functions** HTTP trigger calls **Application** layer's `CreateIssueAsync` method
+4. **Application** layer calls **Infrastructure** to add issue to **Database**
+5. **Database** confirms issue creation and returns generated ID
+6. **Infrastructure** stores photo in **MongoDB** and gets photo URL
+7. **Application** sends photo to **AI Agent** for analysis
+8. **AI Agent** returns analysis results with applicable regulations
+9. **Application** updates issue with regulations via **Infrastructure**
+10. **Infrastructure** updates **MongoDB** with regulation data
+11. **Application** maps final entity to response DTO
+12. **Functions** returns 201 Created response to **Frontend**
+13. **Frontend** displays success message with regulations to **User**

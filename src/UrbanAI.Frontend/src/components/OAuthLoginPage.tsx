@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Shield, Lock, Users, Building, TrendingUp } from 'lucide-react';
 import { UrbanAILogoPlaceholder } from './UrbanAILogo';
 import CookieConsentBanner from './CookieConsentBanner';
+import LegalAgreementModal from './LegalAgreementModal';
 import { BRAND_COLORS } from '../assets/brand';
 import './OAuthLoginPage.css';
 
@@ -10,15 +11,29 @@ interface OAuthLoginPageProps {
   onGuestAccess?: () => void;
 }
 
+/**
+ * OAuthLoginPage
+ *
+ * For MVP this implements a development-friendly mock flow:
+ * - On provider button click we generate a mock external id locally (no real OAuth handshake).
+ * - We show the LegalAgreementModal before calling backend `register-external`.
+ * - After acceptance we call POST /api/auth/register-external { provider, externalId }
+ *   and store the returned JWT in localStorage under "urbanai_token".
+ *
+ * This flow is clearly marked and should be replaced by a proper OAuth redirect/callback flow
+ * for production (using real provider tokens).
+ */
+
 const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
   onOAuthLogin,
   onGuestAccess
 }) => {
   const [selectedUserType, setSelectedUserType] = useState<'citizen' | 'investor' | 'authority' | null>(null);
-
-  const handleOAuthClick = (provider: 'microsoft' | 'google' | 'facebook') => {
-    onOAuthLogin?.(provider);
-  };
+  const [modalOpen, setModalOpen] = useState(false);
+  const [pendingProvider, setPendingProvider] = useState<'microsoft' | 'google' | 'facebook' | null>(null);
+  const [pendingExternalId, setPendingExternalId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const userTypes = [
     {
@@ -44,6 +59,76 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
     }
   ];
 
+  // Generate a short mock external id for dev/testing
+  const makeMockExternalId = (provider: string) =>
+    `${provider}_${Math.random().toString(36).slice(2, 9)}`;
+
+  // Called when user clicks provider button
+  const handleOAuthClick = async (provider: 'microsoft' | 'google' | 'facebook') => {
+    // For production: start real OAuth redirect here.
+    // For MVP/dev: generate mock external id then show legal modal before registration.
+    setError(null);
+    const externalId = makeMockExternalId(provider);
+    setPendingProvider(provider);
+    setPendingExternalId(externalId);
+    setModalOpen(true);
+  };
+
+  const registerExternal = async (provider: string, externalId: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const resp = await fetch('/api/auth/register-external', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ provider, externalId })
+      });
+
+      if (!resp.ok) {
+        const text = await resp.text();
+        throw new Error(text || `Registration failed (${resp.status})`);
+      }
+
+      const json = await resp.json();
+      const token = json?.token ?? json?.Token ?? json?.Token ?? (json as any).token;
+      if (!token) {
+        throw new Error('No token returned from server');
+      }
+
+      // Store token locally (no PII stored)
+      localStorage.setItem('urbanai_token', token);
+
+      // Optionally notify parent
+      onOAuthLogin?.(provider as 'microsoft' | 'google' | 'facebook');
+
+      // Redirect to dashboard or reload app to reflect authenticated state
+      window.location.href = '/dashboard';
+    } catch (err: any) {
+      console.error('registerExternal error', err);
+      setError(err?.message ?? 'Registration failed');
+    } finally {
+      setLoading(false);
+      setModalOpen(false);
+      setPendingProvider(null);
+      setPendingExternalId(null);
+    }
+  };
+
+  const handleModalAccept = () => {
+    if (!pendingProvider || !pendingExternalId) {
+      setError('Missing provider/external id');
+      setModalOpen(false);
+      return;
+    }
+    registerExternal(pendingProvider, pendingExternalId);
+  };
+
+  const handleModalDecline = () => {
+    setModalOpen(false);
+    setPendingProvider(null);
+    setPendingExternalId(null);
+  };
+
   return (
     <div className="oauth-login-page">
       <div className="login-container">
@@ -51,7 +136,7 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
         <header className="login-header">
           <UrbanAILogoPlaceholder variant="primary" size={32} className="login-logo" />
           <div className="header-text">
-            <h1>Welcome to UrbanAI</h1>
+            <h1>Welcome to <span>UrbanAI</span></h1>
             <p className="tagline">Municipal Issue Reporting with AI-Powered Analysis</p>
           </div>
         </header>
@@ -65,16 +150,14 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
               return (
                 <button
                   key={type.id}
-                  className={`user-type-card ${
-                    selectedUserType === type.id ? 'selected' : ''
-                  }`}
+                  className={`user-type-card ${selectedUserType === type.id ? 'selected' : ''}`}
                   onClick={() => setSelectedUserType(type.id)}
                   style={{
                     borderColor: selectedUserType === type.id ? type.color : undefined
                   }}
                 >
-                  <Icon 
-                    size={24} 
+                  <Icon
+                    size={24}
                     style={{ color: type.color }}
                     className="user-type-icon"
                   />
@@ -90,30 +173,38 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
         <section className="oauth-section">
           <h2>Choose Your Login Method</h2>
           <div className="oauth-buttons">
-            <button 
+            <button
               className="oauth-btn oauth-btn--microsoft"
               onClick={() => handleOAuthClick('microsoft')}
+              aria-label="Continue with Microsoft"
+              disabled={loading}
             >
               <div className="oauth-icon">🏢</div>
               <span>Continue with Microsoft</span>
             </button>
-            
-            <button 
+
+            <button
               className="oauth-btn oauth-btn--google"
               onClick={() => handleOAuthClick('google')}
+              aria-label="Continue with Google"
+              disabled={loading}
             >
               <div className="oauth-icon">🔵</div>
               <span>Continue with Google</span>
             </button>
-            
-            <button 
+
+            <button
               className="oauth-btn oauth-btn--facebook"
               onClick={() => handleOAuthClick('facebook')}
+              aria-label="Continue with Facebook"
+              disabled={loading}
             >
               <div className="oauth-icon">🟦</div>
               <span>Continue with Facebook</span>
             </button>
           </div>
+
+          {error && <div className="oauth-error" role="alert">{error}</div>}
         </section>
 
         {/* Privacy Guarantee Section */}
@@ -124,7 +215,7 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
           </div>
           <div className="privacy-content">
             <p className="privacy-description">
-              Your personal information never leaves your OAuth provider. 
+              Your personal information never leaves your OAuth provider.
               We only store an anonymous identifier to link your issue reports.
             </p>
             <ul className="privacy-benefits">
@@ -138,7 +229,7 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
 
         {/* Guest Access */}
         <section className="guest-section">
-          <button 
+          <button
             className="guest-link"
             onClick={onGuestAccess}
           >
@@ -166,7 +257,7 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
               Terms of Service
             </a>
           </div>
-          
+
           <div className="compliance-badge">
             <Lock size={12} className="badge-icon" />
             <span>GDPR Compliant • EU Privacy Standards</span>
@@ -176,6 +267,15 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
 
       {/* Cookie Consent Banner */}
       <CookieConsentBanner />
+
+      {/* Legal modal: shown before creating anonymous account */}
+      <LegalAgreementModal
+        open={modalOpen}
+        provider={pendingProvider}
+        displayName={pendingProvider ? `${pendingProvider} user` : null}
+        onAccept={handleModalAccept}
+        onDecline={handleModalDecline}
+      />
     </div>
   );
 };

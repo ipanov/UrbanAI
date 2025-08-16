@@ -12,7 +12,11 @@ using System.Text.Json;
 namespace UrbanAI.API.Controllers
 {
     /// <summary>
-    /// Controller for authentication and user management.
+    /// Controller for OAuth-only authentication and user management.
+    /// Implements: external token exchange (Google/Microsoft/Facebook) and a registration 
+    /// endpoint for external providers that requires explicit legal acceptance on the frontend 
+    /// before creating an anonymous, PII-free user record. Local username/password authentication 
+    /// has been removed for security and privacy compliance.
     /// </summary>
     [ApiController]
     [Route("api/auth")]
@@ -25,12 +29,6 @@ namespace UrbanAI.API.Controllers
         private readonly string _jwtIssuer;
         private readonly string _jwtAudience;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AuthController"/> class.
-        /// </summary>
-        /// <param name="httpClientFactory">The HTTP client factory.</param>
-        /// <param name="configuration">The application configuration.</param>
-        /// <param name="dbContext">The application database context.</param>
         public AuthController(
             IHttpClientFactory httpClientFactory,
             IConfiguration configuration,
@@ -44,72 +42,10 @@ namespace UrbanAI.API.Controllers
             _jwtAudience = configuration["Jwt:Audience"] ?? throw new InvalidOperationException("JWT Audience not configured");
         }
 
-        /// <summary>
-        /// Registers a new user.
-        /// </summary>
-        /// <param name="request">The authentication request containing username and password.</param>
-        /// <returns>An authentication response with a JWT token.</returns>
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] AuthRequestDto request)
-        {
-            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
-            {
-                return BadRequest("Username and Password are required.");
-            }
 
-            if (request.Password.Length < 8)
-            {
-                return BadRequest("Password must be at least 8 characters long.");
-            }
-
-            if (await _dbContext.Users.AnyAsync(u => u.Username == request.Username))
-            {
-                return Conflict("Username already exists.");
-            }
-
-            var user = new User
-            {
-                Username = request.Username,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                Role = "User"
-            };
-
-            _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
-
-            var token = GenerateJwtToken(user);
-            return Ok(new AuthResponseDto { Token = token });
-        }
-
-        /// <summary>
-        /// Logs in an existing user.
-        /// </summary>
-        /// <param name="request">The authentication request containing username and password.</param>
-        /// <returns>An authentication response with a JWT token.</returns>
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] AuthRequestDto request)
-        {
-            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
-            {
-                return BadRequest("Username and Password are required.");
-            }
-
-            var user = await _dbContext.Users.SingleOrDefaultAsync(u => u.Username == request.Username);
-
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-            {
-                return Unauthorized("Invalid credentials.");
-            }
-
-            var token = GenerateJwtToken(user);
-            return Ok(new AuthResponseDto { Token = token });
-        }
-
-        /// <summary>
-        /// Exchanges an external provider token for an internal JWT token.
-        /// </summary>
-        /// <param name="request">The authentication request containing provider and external token.</param>
-        /// <returns>An authentication response with a JWT token.</returns>
+        // -------------------------
+        // External provider exchange
+        // -------------------------
         [HttpPost("exchange-token")]
         public async Task<IActionResult> ExchangeToken([FromBody] AuthRequestDto request)
         {
@@ -118,7 +54,14 @@ namespace UrbanAI.API.Controllers
                 return BadRequest("Provider and token are required.");
             }
 
-            switch (request.Provider.ToLower())
+            // Developer convenience: support tokens like "mock:alice123" for local testing
+            if (request.Token.StartsWith("mock:"))
+            {
+                var externalId = request.Token.Substring("mock:".Length);
+                return await HandleExternalLogin(request.Provider.ToLowerInvariant(), externalId);
+            }
+
+            switch (request.Provider.ToLowerInvariant())
             {
                 case "google":
                     return await HandleGoogleToken(request.Token);
@@ -198,36 +141,93 @@ namespace UrbanAI.API.Controllers
             return await HandleExternalLogin("facebook", id);
         }
 
+        /// <summary>
+        /// Lookup an existing user by provider+externalId and return our internal JWT.
+        /// If no user exists, return 404 with requiresRegistration = true so the frontend can
+        /// present the legal agreement and then call register-external.
+        /// </summary>
         private async Task<IActionResult> HandleExternalLogin(string provider, string externalId)
         {
-            var user = await _dbContext.Users.SingleOrDefaultAsync(u =>
-                u.ExternalLogins.Any(l => l.Provider == provider && l.ExternalId == externalId));
+            var user = await _dbContext.Users
+                .Include(u => u.ExternalLogins)
+                .SingleOrDefaultAsync(u =>
+                    u.ExternalLogins.Any(l => l.Provider == provider && l.ExternalId == externalId));
 
             if (user == null)
             {
-                // Create new user with external login
-                user = new User
-                {
-                    Username = $"{provider}_{externalId}",
-                    Role = "User",
-                    ExternalLogins = new List<ExternalLogin>
-                    {
-                        new ExternalLogin
-                        {
-                            Provider = provider,
-                            ExternalId = externalId
-                        }
-                    }
-                };
-
-                _dbContext.Users.Add(user);
-                await _dbContext.SaveChangesAsync();
+                // Inform frontend that registration (with explicit legal acceptance) is required
+                return NotFound(new { requiresRegistration = true, provider, externalId });
             }
 
             var token = GenerateJwtToken(user);
             return Ok(new AuthResponseDto { Token = token });
         }
 
+        // -------------------------
+        // Registration for external providers (after legal acceptance)
+        // -------------------------
+        /// <summary>
+        /// DTO for register-external
+        /// </summary>
+        public class ExternalRegisterDto
+        {
+            public string? Provider { get; set; }
+            public string? ExternalId { get; set; }
+        }
+
+        /// <summary>
+        /// Registers an anonymous user linked to an external provider identifier.
+        /// Idempotent: if a user already exists for the provider+externalId returns existing token.
+        /// IMPORTANT: This endpoint MUST only be called after the user has explicitly accepted
+        /// the legal agreement in the frontend.
+        /// </summary>
+        [HttpPost("register-external")]
+        public async Task<IActionResult> RegisterExternal([FromBody] ExternalRegisterDto dto)
+        {
+            if (dto == null || string.IsNullOrEmpty(dto.Provider) || string.IsNullOrEmpty(dto.ExternalId))
+            {
+                return BadRequest("Provider and ExternalId are required.");
+            }
+
+            var provider = dto.Provider.ToLowerInvariant();
+            var externalId = dto.ExternalId;
+
+            // Check existing user
+            var existing = await _dbContext.Users
+                .Include(u => u.ExternalLogins)
+                .SingleOrDefaultAsync(u => u.ExternalLogins.Any(l => l.Provider == provider && l.ExternalId == externalId));
+
+            if (existing != null)
+            {
+                var existingToken = GenerateJwtToken(existing);
+                return Ok(new AuthResponseDto { Token = existingToken });
+            }
+
+            // Create anonymous user linked only to provider+externalId (no PII)
+            var user = new User
+            {
+                Username = $"{provider}_{externalId}",
+                Role = "User",
+                ExternalLogins = new List<ExternalLogin>
+                {
+                    new ExternalLogin
+                    {
+                        Provider = provider,
+                        ExternalId = externalId
+                    }
+                }
+            };
+
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
+
+            var token = GenerateJwtToken(user);
+            return Ok(new AuthResponseDto { Token = token });
+        }
+
+        // -------------------------
+        // JWT generation
+        // -------------------------
         private string GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

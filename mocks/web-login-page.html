@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanAI - Welcome Back</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #1E293B;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* Login Card */
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.15);
+            width: 480px;
+            max-width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header Area */
+        .header-area {
+            padding: 32px;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 0 auto 24px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 32px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .building {
+            background: #2563EB;
+            border-radius: 1px 1px 0 0;
+        }
+
+        .building-1 { width: 4px; height: 12px; }
+        .building-2 { width: 6px; height: 18px; }
+        .building-3 { width: 5px; height: 24px; }
+        .building-4 { width: 7px; height: 20px; }
+        .building-5 { width: 4px; height: 16px; }
+        .building-6 { width: 6px; height: 28px; }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2563EB;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #64748B;
+        }
+
+        /* OAuth Buttons Section */
+        .oauth-section {
+            padding: 0 32px 24px;
+        }
+
+        .oauth-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            height: 56px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+            padding: 16px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .oauth-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .oauth-button:hover::before {
+            left: 100%;
+        }
+
+        .oauth-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .oauth-button:focus {
+            outline: 2px solid #2563EB;
+            outline-offset: 2px;
+        }
+
+        .microsoft-button {
+            background: linear-gradient(135deg, #0078D4 0%, #106ebe 100%);
+            color: #FFFFFF;
+        }
+
+        .google-button {
+            background: #FFFFFF;
+            color: #1E293B;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .facebook-button {
+            background: linear-gradient(135deg, #1877F2 0%, #166fe5 100%);
+            color: #FFFFFF;
+        }
+
+        .oauth-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        /* New User Section */
+        .new-user-section {
+            padding: 0 32px 24px;
+            text-align: center;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #E2E8F0, transparent);
+            margin: 0 0 24px;
+        }
+
+        .new-user-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 12px;
+        }
+
+        .new-user-description {
+            font-size: 14px;
+            color: #64748B;
+            line-height: 20px;
+            margin-bottom: 16px;
+        }
+
+        /* Privacy Notice Section */
+        .privacy-notice {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.8) 100%);
+            border-radius: 8px;
+            padding: 32px;
+            margin: 0 32px 24px;
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .privacy-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .privacy-icon {
+            width: 20px;
+            height: 20px;
+            color: #059669;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .privacy-text-content {
+            flex: 1;
+        }
+
+        .privacy-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 4px;
+        }
+
+        .privacy-description {
+            font-size: 14px;
+            line-height: 20px;
+            color: #64748B;
+        }
+
+        /* Footer Section */
+        .footer-section {
+            padding: 32px;
+        }
+
+        .footer-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #E2E8F0, transparent);
+            margin-bottom: 24px;
+        }
+
+        .privacy-text {
+            font-size: 12px;
+            line-height: 18px;
+            color: #64748B;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .privacy-links {
+            display: inline;
+            color: #2563EB;
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+
+        .privacy-links:hover {
+            color: #1E40AF;
+        }
+
+        .back-link {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2563EB;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+            color: #1E40AF;
+        }
+
+        /* Focus states for accessibility */
+        .oauth-button:focus,
+        .back-link:focus,
+        .privacy-links:focus {
+            outline: 2px solid #2563EB;
+            outline-offset: 2px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 480px) {
+            .login-card {
+                margin: 10px;
+                width: calc(100% - 20px);
+            }
+            
+            .header-area,
+            .oauth-section,
+            .new-user-section,
+            .privacy-notice,
+            .footer-section {
+                padding: 24px;
+            }
+            
+            .oauth-button {
+                padding: 12px 16px;
+                font-size: 14px;
+                height: 48px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .logo-text {
+                font-size: 20px;
+            }
+        }
+
+        /* Animation for card entrance */
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .login-card {
+            animation: cardEntrance 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <!-- Header Area -->
+        <div class="header-area">
+            <div class="logo">
+                <div class="logo-icon">
+                    <div class="building building-1"></div>
+                    <div class="building building-2"></div>
+                    <div class="building building-3"></div>
+                    <div class="building building-4"></div>
+                    <div class="building building-5"></div>
+                    <div class="building building-6"></div>
+                </div>
+                <span class="logo-text">UrbanAI</span>
+            </div>
+            <h1 class="title">Welcome Back</h1>
+            <p class="subtitle">Report municipal issues securely</p>
+        </div>
+
+        <!-- OAuth Buttons Section -->
+        <div class="oauth-section">
+            <button class="oauth-button microsoft-button" aria-label="Continue with Microsoft">
+                <div class="oauth-icon">
+                    <svg width="21" height="21" viewBox="0 0 21 21" fill="none">
+                        <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+                        <rect x="11" y="1" width="9" height="9" fill="#00a4ef"/>
+                        <rect x="1" y="11" width="9" height="9" fill="#ffb900"/>
+                        <rect x="11" y="11" width="9" height="9" fill="#7fba00"/>
+                    </svg>
+                </div>
+                Continue with Microsoft
+            </button>
+
+            <button class="oauth-button google-button" aria-label="Continue with Google">
+                <div class="oauth-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                </div>
+                Continue with Google
+            </button>
+
+            <button class="oauth-button facebook-button" aria-label="Continue with Facebook">
+                <div class="oauth-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                </div>
+                Continue with Facebook
+            </button>
+        </div>
+
+        <!-- New User Section -->
+        <div class="new-user-section">
+            <div class="divider"></div>
+            <h3 class="new-user-title">New to UrbanAI?</h3>
+            <p class="new-user-description">
+                Create an account using your trusted OAuth provider.<br>
+                We never store your personal information.
+            </p>
+        </div>
+
+        <!-- Privacy Notice Section -->
+        <div class="privacy-notice">
+            <div class="privacy-content">
+                <div class="privacy-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                    </svg>
+                </div>
+                <div class="privacy-text-content">
+                    <h3 class="privacy-title">Maximum Privacy</h3>
+                    <p class="privacy-description">Only anonymous case links stored. Your identity stays with trusted providers.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="footer-section">
+            <div class="footer-divider"></div>
+            <p class="privacy-text">
+                By signing in, you agree to our <a href="#" class="privacy-links">Privacy Policy</a> and <a href="#" class="privacy-links">Terms of Service</a>.
+            </p>
+            <a href="#" class="back-link">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

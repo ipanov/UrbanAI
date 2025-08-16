@@ -60,9 +60,16 @@ public abstract class TestBase : IAsyncLifetime
         var testUser = new User
         {
             Username = faker.Internet.UserName(),
-            Email = faker.Internet.Email(),
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"), // Hash the password
-            Role = "User"
+            Role = "User",
+            ExternalLogins = new List<ExternalLogin>
+            {
+                new ExternalLogin
+                {
+                    Provider = "google",
+                    ExternalId = faker.Random.Guid().ToString(),
+                    CreatedAt = DateTime.UtcNow
+                }
+            }
         };
 
         if (!await _dbContext.Users.AnyAsync(u => u.Username == testUser.Username))
@@ -74,24 +81,16 @@ public abstract class TestBase : IAsyncLifetime
 
     protected async Task<string> GetUserTokenAsync()
     {
-        // Register a new user
-        var registerRequest = new AuthRequestDto
+        // Create a mock external user registration
+        var registerRequest = new
         {
-            Username = "testuser_" + Guid.NewGuid().ToString().Substring(0, 8),
-            Email = "test_" + Guid.NewGuid().ToString().Substring(0, 8) + "@example.com",
-            Password = "Password123!"
+            Provider = "google",
+            ExternalId = "test_" + Guid.NewGuid().ToString().Substring(0, 8)
         };
-        var registerResponse = await _client.PostAsJsonAsync("/api/auth/register", registerRequest);
+        var registerResponse = await _client.PostAsJsonAsync("/api/auth/register-external", registerRequest);
         registerResponse.EnsureSuccessStatusCode();
 
-        // Login with the new user to get a token
-        var loginRequest = new AuthRequestDto
-        {
-            Username = registerRequest.Username,
-            Password = registerRequest.Password
-        };
-        var loginResponse = await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
-        loginResponse.EnsureSuccessStatusCode(); var authResponse = await loginResponse.Content.ReadFromJsonAsync<AuthResponseDto>();
+        var authResponse = await registerResponse.Content.ReadFromJsonAsync<AuthResponseDto>();
         return authResponse?.Token ?? throw new InvalidOperationException("Failed to get authentication token");
     }
 }

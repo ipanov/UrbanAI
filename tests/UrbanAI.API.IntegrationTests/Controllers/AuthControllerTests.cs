@@ -24,38 +24,20 @@ namespace UrbanAI.API.IntegrationTests.Controllers
         }
 
         [Fact]
-        public async Task Register_ShouldReturnBadRequest_WhenModelIsInvalid()
+        public async Task RegisterExternal_ShouldReturnOk_WhenValidDataProvided()
         {
             // Arrange
-            var request = new AuthRequestDto
+            var request = new
             {
-                Username = "TestUser",
-                Email = "invalid-email",
-                Password = ""
+                Provider = "google",
+                ExternalId = "test123"
             };
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/auth/register", request);
+            var response = await _client.PostAsJsonAsync("/api/auth/register-external", request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task Login_ShouldReturnUnauthorized_WhenCredentialsAreInvalid()
-        {
-            // Arrange
-            var request = new AuthRequestDto
-            {
-                Username = "InvalidUser",
-                Password = "InvalidPassword"
-            };
-
-            // Act
-            var response = await _client.PostAsJsonAsync("/api/auth/login", request);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
@@ -73,6 +55,23 @@ namespace UrbanAI.API.IntegrationTests.Controllers
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task ExchangeToken_WithMockToken_ShouldReturnNotFound_WhenUserDoesNotExist()
+        {
+            // Arrange
+            var request = new AuthRequestDto
+            {
+                Provider = "google",
+                Token = "mock:test123"
+            };
+
+            // Act
+            var response = await _client.PostAsJsonAsync("/api/auth/exchange-token", request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

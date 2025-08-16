@@ -7,6 +7,7 @@ using UrbanAI.Infrastructure.Data;
 using UrbanAI.Domain.Entities;
 using UrbanAI.Application.DTOs;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace UrbanAI.API.Tests.Controllers
 {
@@ -34,229 +35,6 @@ namespace UrbanAI.API.Tests.Controllers
             _mockConfiguration.Setup(c => c["Jwt:Audience"]).Returns("TestAudience");
 
             _controller = new AuthController(_mockHttpClientFactory.Object, _mockConfiguration.Object, _context);
-        }
-
-        [Fact]
-        public async Task Register_ShouldReturnOk_WhenUserRegistersSuccessfully()
-        {
-            // Arrange
-            var request = new AuthRequestDto
-            {
-                Username = "testuser",
-                Password = "TestPassword123!"
-            };
-
-            // Act
-            var result = await _controller.Register(request);
-
-            // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var response = Assert.IsType<AuthResponseDto>(okResult.Value);
-            Assert.NotNull(response.Token);
-
-            // Verify user was created in database
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
-            Assert.NotNull(user);
-            Assert.True(BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash));
-        }
-
-        [Fact]
-        public async Task Register_ShouldReturnBadRequest_WhenUsernameIsEmpty()
-        {
-            // Arrange
-            var request = new AuthRequestDto
-            {
-                Username = "",
-                Password = "TestPassword123!"
-            };
-
-            // Act
-            var result = await _controller.Register(request);
-
-            // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Username and Password are required.", badRequestResult.Value);
-        }
-
-        [Fact]
-        public async Task Register_ShouldReturnBadRequest_WhenPasswordIsTooShort()
-        {
-            // Arrange
-            var request = new AuthRequestDto
-            {
-                Username = "testuser",
-                Password = "123"
-            };
-
-            // Act
-            var result = await _controller.Register(request);
-
-            // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Password must be at least 8 characters long.", badRequestResult.Value);
-        }
-
-        [Fact]
-        public async Task Register_ShouldReturnConflict_WhenUsernameAlreadyExists()
-        {
-            // Arrange
-            var existingUser = new User
-            {
-                Id = Guid.NewGuid(),
-                Username = "existinguser",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("password"),
-                Role = "User",
-                CreatedAt = DateTime.UtcNow
-            };
-            _context.Users.Add(existingUser);
-            await _context.SaveChangesAsync();
-
-            var request = new AuthRequestDto
-            {
-                Username = "existinguser",
-                Password = "NewPassword123!"
-            };
-
-            // Act
-            var result = await _controller.Register(request);
-
-            // Assert
-            var conflictResult = Assert.IsType<ConflictObjectResult>(result);
-            Assert.Equal("Username already exists.", conflictResult.Value);
-        }
-
-        [Fact]
-        public async Task Login_ShouldReturnOk_WhenCredentialsAreValid()
-        {
-            // Arrange
-            var user = new User
-            {
-                Id = Guid.NewGuid(),
-                Username = "testuser",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("TestPassword123!"),
-                Role = "User",
-                CreatedAt = DateTime.UtcNow
-            };
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            var request = new AuthRequestDto
-            {
-                Username = "testuser",
-                Password = "TestPassword123!"
-            };
-
-            // Act
-            var result = await _controller.Login(request);
-
-            // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var response = Assert.IsType<AuthResponseDto>(okResult.Value);
-            Assert.NotNull(response.Token);
-        }
-
-        [Fact]
-        public async Task Login_ShouldReturnBadRequest_WhenUsernameIsEmpty()
-        {
-            // Arrange
-            var request = new AuthRequestDto
-            {
-                Username = "",
-                Password = "TestPassword123!"
-            };
-
-            // Act
-            var result = await _controller.Login(request);
-
-            // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Username and Password are required.", badRequestResult.Value);
-        }
-
-        [Fact]
-        public async Task Login_ShouldReturnUnauthorized_WhenUserDoesNotExist()
-        {
-            // Arrange
-            var request = new AuthRequestDto
-            {
-                Username = "nonexistentuser",
-                Password = "TestPassword123!"
-            };
-
-            // Act
-            var result = await _controller.Login(request);
-
-            // Assert
-            var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
-            Assert.Equal("Invalid credentials.", unauthorizedResult.Value);
-        }
-
-        [Fact]
-        public async Task Login_ShouldReturnUnauthorized_WhenPasswordIsIncorrect()
-        {
-            // Arrange
-            var user = new User
-            {
-                Id = Guid.NewGuid(),
-                Username = "testuser",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("CorrectPassword123!"),
-                Role = "User",
-                CreatedAt = DateTime.UtcNow
-            };
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            var request = new AuthRequestDto
-            {
-                Username = "testuser",
-                Password = "WrongPassword123!"
-            };
-
-            // Act
-            var result = await _controller.Login(request);
-
-            // Assert
-            var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
-            Assert.Equal("Invalid credentials.", unauthorizedResult.Value);
-        }
-
-        [Fact]
-        public async Task Register_ShouldHashPassword_WhenUserIsCreated()
-        {
-            // Arrange
-            var request = new AuthRequestDto
-            {
-                Username = "testuser",
-                Password = "TestPassword123!"
-            };
-
-            // Act
-            await _controller.Register(request);
-
-            // Assert
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
-            Assert.NotNull(user);
-            Assert.NotEqual(request.Password, user.PasswordHash);
-            Assert.True(BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash));
-        }
-
-        [Fact]
-        public async Task Register_ShouldSetDefaultRole_WhenUserIsCreated()
-        {
-            // Arrange
-            var request = new AuthRequestDto
-            {
-                Username = "testuser",
-                Password = "TestPassword123!"
-            };
-
-            // Act
-            await _controller.Register(request);
-
-            // Assert
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
-            Assert.NotNull(user);
-            Assert.Equal("User", user.Role);
         }
 
         [Fact]
@@ -293,6 +71,157 @@ namespace UrbanAI.API.Tests.Controllers
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal("Unsupported provider.", badRequestResult.Value);
+        }
+
+        [Fact]
+        public async Task RegisterExternal_ShouldReturnBadRequest_WhenProviderIsEmpty()
+        {
+            // Arrange
+            var dto = new AuthController.ExternalRegisterDto
+            {
+                Provider = "",
+                ExternalId = "external123"
+            };
+
+            // Act
+            var result = await _controller.RegisterExternal(dto);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Provider and ExternalId are required.", badRequestResult.Value);
+        }
+
+        [Fact]
+        public async Task RegisterExternal_ShouldCreateUser_WhenValidDataProvided()
+        {
+            // Arrange
+            var dto = new AuthController.ExternalRegisterDto
+            {
+                Provider = "google",
+                ExternalId = "google123"
+            };
+
+            // Act
+            var result = await _controller.RegisterExternal(dto);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<AuthResponseDto>(okResult.Value);
+            Assert.NotNull(response.Token);
+
+            // Verify user was created in database
+            var user = await _context.Users
+                .Include(u => u.ExternalLogins)
+                .FirstOrDefaultAsync(u => u.ExternalLogins.Any(l => l.Provider == "google" && l.ExternalId == "google123"));
+            Assert.NotNull(user);
+            Assert.Equal("google_google123", user.Username);
+        }
+
+        [Fact]
+        public async Task RegisterExternal_ShouldReturnExistingToken_WhenUserAlreadyExists()
+        {
+            // Arrange
+            var existingUser = new User
+            {
+                Id = Guid.NewGuid(),
+                Username = "google_google123",
+                Role = "User",
+                ExternalLogins = new List<ExternalLogin>
+                {
+                    new ExternalLogin
+                    {
+                        Id = Guid.NewGuid(),
+                        Provider = "google",
+                        ExternalId = "google123",
+                        UserId = Guid.NewGuid(),
+                        CreatedAt = DateTime.UtcNow
+                    }
+                },
+                CreatedAt = DateTime.UtcNow
+            };
+            _context.Users.Add(existingUser);
+            await _context.SaveChangesAsync();
+
+            var dto = new AuthController.ExternalRegisterDto
+            {
+                Provider = "google",
+                ExternalId = "google123"
+            };
+
+            // Act
+            var result = await _controller.RegisterExternal(dto);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<AuthResponseDto>(okResult.Value);
+            Assert.NotNull(response.Token);
+        }
+
+        [Fact]
+        public async Task ExchangeToken_WithMockToken_ShouldReturnNotFound_WhenUserDoesNotExist()
+        {
+            // Arrange
+            var request = new AuthRequestDto
+            {
+                Provider = "google",
+                Token = "mock:google123"
+            };
+
+            // Act
+            var result = await _controller.ExchangeToken(request);
+
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            var response = notFoundResult.Value;
+            Assert.NotNull(response);
+            
+            // Convert to dictionary for easier access
+            var responseDict = response.GetType().GetProperties()
+                .ToDictionary(p => p.Name, p => p.GetValue(response));
+                
+            Assert.True((bool)responseDict["requiresRegistration"]);
+            Assert.Equal("google", responseDict["provider"]);
+            Assert.Equal("google123", responseDict["externalId"]);
+        }
+
+        [Fact]
+        public async Task ExchangeToken_WithMockToken_ShouldReturnToken_WhenUserExists()
+        {
+            // Arrange
+            var existingUser = new User
+            {
+                Id = Guid.NewGuid(),
+                Username = "google_google123",
+                Role = "User",
+                ExternalLogins = new List<ExternalLogin>
+                {
+                    new ExternalLogin
+                    {
+                        Id = Guid.NewGuid(),
+                        Provider = "google",
+                        ExternalId = "google123",
+                        UserId = Guid.NewGuid(),
+                        CreatedAt = DateTime.UtcNow
+                    }
+                },
+                CreatedAt = DateTime.UtcNow
+            };
+            _context.Users.Add(existingUser);
+            await _context.SaveChangesAsync();
+
+            var request = new AuthRequestDto
+            {
+                Provider = "google",
+                Token = "mock:google123"
+            };
+
+            // Act
+            var result = await _controller.ExchangeToken(request);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<AuthResponseDto>(okResult.Value);
+            Assert.NotNull(response.Token);
         }
 
         public void Dispose()
