@@ -354,6 +354,29 @@ resource sqlFirewallRuleAll 'Microsoft.Sql/servers/firewallRules@2021-11-01' = i
   }
 }
 
+// Frontend Storage Account
+resource frontendStorage 'Microsoft.Storage/storageAccounts@2023-01-01' = {
+  name: 'urbanaiweb${resourceToken}'
+  location: location
+  sku: {
+    name: 'Standard_LRS'
+  }
+  kind: 'StorageV2'
+  properties: {
+    accessTier: 'Hot'
+    supportsHttpsTrafficOnly: true
+  }
+}
+
+resource staticWebsite 'Microsoft.Storage/storageAccounts/staticWebsites@2023-01-01' = {
+  parent: frontendStorage
+  name: 'default'
+  properties: {
+    indexDocument: 'index.html'
+    errorDocument404Path: 'index.html'
+  }
+}
+
 // User-assigned managed identity for App Services
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: 'urbanai-identity-${resourceToken}'
@@ -362,6 +385,9 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-
 }
 
 // Outputs for use in application configuration
+@description('Frontend storage endpoint')
+output frontendEndpoint string = staticWebsite.properties.primaryEndpoint
+
 @description('The fully qualified domain name of the SQL Server')
 output sqlServerFqdn string = sqlServer.properties.fullyQualifiedDomainName
 
