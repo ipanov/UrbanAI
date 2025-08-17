@@ -15,7 +15,6 @@ venv/
 __pycache__/
 
 # Logs / temp
-*.log
 *.tmp
 
 # Large media (keep needed docs images explicitly)
