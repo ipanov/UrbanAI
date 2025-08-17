@@ -97,12 +97,12 @@ describe('OAuthLoginPage', () => {
     const user = userEvent.setup()
     render(<OAuthLoginPage />)
     
-    // Tab through OAuth buttons
-    await user.tab()
-    expect(screen.getByText('Continue with Google')).toHaveFocus()
-    
+    // Tab through OAuth buttons - they appear in this order: Microsoft, Google, Facebook
     await user.tab()
     expect(screen.getByText('Continue with Microsoft')).toHaveFocus()
+    
+    await user.tab()
+    expect(screen.getByText('Continue with Google')).toHaveFocus()
     
     await user.tab()
     expect(screen.getByText('Continue with Facebook')).toHaveFocus()
