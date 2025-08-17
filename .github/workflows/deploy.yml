@@ -30,15 +30,34 @@ jobs:
       
     - name: Find coverage file
       run: |
-        # Find the coverage file in the test results
-        $coverageFile = Get-ChildItem -Path "TestResults" -Filter "*.xml" -Recurse | Select-Object -First 1
+        # Debug: List all XML files in the repository
+        Write-Host "Searching for all XML files..."
+        Get-ChildItem -Path "." -Filter "*.xml" -Recurse | ForEach-Object { Write-Host "Found: $($_.FullName)" }
+        
+        # Find the coverage file in common locations
+        Write-Host "Searching for coverage files..."
+        $coverageFile = $null
+        
+        # Try different search patterns
+        $coverageFile = Get-ChildItem -Path "." -Filter "*coverage*.xml" -Recurse | Select-Object -First 1
+        if (-not $coverageFile) {
+            $coverageFile = Get-ChildItem -Path "." -Filter "*.xml" -Recurse | Where-Object { $_.Name -like "*coverage*" } | Select-Object -First 1
+        }
+        if (-not $coverageFile) {
+            $coverageFile = Get-ChildItem -Path "TestResults" -Filter "*.xml" -Recurse | Select-Object -First 1
+        }
+        if (-not $coverageFile) {
+            $coverageFile = Get-ChildItem -Path "tests" -Filter "*.xml" -Recurse | Select-Object -First 1
+        }
+        
         if ($coverageFile) {
             Write-Host "Found coverage file: $($coverageFile.FullName)"
             # Copy it to the expected location
             Copy-Item -Path $coverageFile.FullName -Destination "coverage.cobertura.xml"
             Write-Host "Copied coverage file to coverage.cobertura.xml"
         } else {
-            Write-Error "No coverage file found in TestResults directory"
+            Write-Error "No coverage file found in any location"
+            Write-Host "Please ensure tests are run with coverage collection"
             exit 1
         }
       
