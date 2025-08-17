@@ -226,11 +226,143 @@ def save_payload(payload: dict, path: str) -> str:
     return path
 
 
+import subprocess
+import time
+import datetime
+
+def _list_latest_run_for_branch(owner: str, repo: str, branch: str, token: Optional[str]):
+    # list workflow runs for branch and return most recent run object or None
+    if not owner or not repo or not branch:
+        return None
+    url = f"{GITHUB_API}/repos/{owner}/{repo}/actions/runs?branch={branch}&event=push&per_page=1"
+    try:
+        data = github_get(url, token)
+        runs = data.get("workflow_runs", [])
+        if runs:
+            return runs[0]
+    except Exception:
+        return None
+    return None
+
+def _wait_for_run_completion(owner: str, repo: str, run_id: str, token: Optional[str], poll_interval: int = 30, timeout: int = 3600):
+    """
+    Poll a specific workflow run until it reaches a completed state or timeout.
+    Returns the final run JSON object (may be None on error or timeout).
+    """
+    start = time.time()
+    if not run_id:
+        return None
+    while True:
+        try:
+            run = fetch_run_metadata(owner, repo, run_id, token)
+        except Exception:
+            run = None
+
+        if run:
+            status = run.get("status")
+            conclusion = run.get("conclusion")
+            if status == "completed":
+                return run
+            # some runs may report 'cancelled' etc via conclusion while status completed
+            if conclusion and status == "completed":
+                return run
+
+        if time.time() - start > timeout:
+            return run
+        time.sleep(poll_interval)
+
+def _wait_for_latest_branch_run_completion(owner: str, repo: str, branch: str, token: Optional[str], poll_interval: int = 30, timeout: int = 3600):
+    """
+    Find the latest run for the branch and wait for its completion. When a new run appears
+    (e.g., after a push), this will pick up the latest run and wait on it.
+    """
+    start = time.time()
+    last_seen_id = None
+    while True:
+        latest = _list_latest_run_for_branch(owner, repo, branch, token)
+        run = None
+        if latest:
+            run_id = str(latest.get("id"))
+            if run_id != last_seen_id:
+                last_seen_id = run_id
+            run = _wait_for_run_completion(owner, repo, run_id, token, poll_interval=poll_interval, timeout=min(timeout, 1800))
+            return run
+        if time.time() - start > timeout:
+            return None
+        time.sleep(poll_interval)
+
+def _run_command(cmd, cwd=None, check=False, capture_output=True):
+    """
+    Helper to run shell commands. Returns CompletedProcess.
+    """
+    try:
+        result = subprocess.run(cmd, cwd=cwd, check=check, capture_output=capture_output, text=True, shell=False)
+        return result
+    except Exception as e:
+        class E:
+            returncode = 1
+            stdout = ""
+            stderr = str(e)
+        return E()
+
+def _attempt_local_reconciliation():
+    """
+    Attempt safe, local remediation steps that may fix common CI failures:
+     - dotnet restore / build
+     - frontend npm ci / build
+    If the build commands change files (e.g. lockfiles), those changes will be committed and returned as True.
+    """
+    changed = False
+
+    # Dotnet build attempt
+    if os.path.isdir("src"):
+        # run restore & build
+        r1 = _run_command(["dotnet", "restore"], cwd=".", capture_output=True)
+        r2 = _run_command(["dotnet", "build", "-c", "Release"], cwd=".", capture_output=True)
+        if r1.returncode == 0 and r2.returncode == 0:
+            # no-op: successful build locally, but there may be generated artifacts to commit
+            pass
+
+    # Frontend attempt
+    frontend_dir = os.path.join("src", "UrbanAI.Frontend")
+    if os.path.isdir(frontend_dir):
+        r3 = _run_command(["npm", "ci"], cwd=frontend_dir, capture_output=True)
+        r4 = _run_command(["npm", "run", "build"], cwd=frontend_dir, capture_output=True)
+        # If build succeeded, there still might be changes (lockfile, package-lock). We'll check git status below.
+
+    # Check for git changes
+    status = _run_command(["git", "status", "--porcelain"], capture_output=True)
+    if getattr(status, "stdout", ""):
+        # Stage and commit changes
+        _run_command(["git", "add", "-A"], capture_output=True)
+        commit_msg = f"chore(ci-autoreconcile): automatic remediation attempt at {datetime.datetime.utcnow().isoformat()}Z"
+        commit = _run_command(["git", "commit", "-m", commit_msg], capture_output=True)
+        if getattr(commit, "returncode", 0) == 0:
+            changed = True
+    return changed
+
+def _git_checkout_and_pull(branch: str = "develop"):
+    """
+    Ensure we are on the target branch and up-to-date before committing.
+    """
+    _run_command(["git", "fetch", "origin"], capture_output=True)
+    _run_command(["git", "checkout", branch], capture_output=True)
+    _run_command(["git", "pull", "origin", branch], capture_output=True)
+
+def _git_push(branch: str = "develop"):
+    _run_command(["git", "push", "origin", branch], capture_output=True)
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--owner", required=False, help="Repo owner (used to fetch run metadata)", default=None)
     parser.add_argument("--repo", required=False, help="Repo name", default=None)
     parser.add_argument("--token", required=False, help="GitHub token (optional)", default=os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN"))
+    parser.add_argument("--wait", action="store_true", help="Wait for CI workflow completion for the run referenced in activeContext.md or latest on branch")
+    parser.add_argument("--auto-reconcile", action="store_true", help="When workflow fails, attempt local reconciliation and push changes to develop automatically")
+    parser.add_argument("--branch", required=False, help="Branch to monitor (default: develop)", default="develop")
+    parser.add_argument("--max-retries", type=int, default=5, help="Maximum auto-reconcile push attempts")
+    parser.add_argument("--poll-interval", type=int, default=30, help="Polling interval in seconds")
+    parser.add_argument("--timeout", type=int, default=3600, help="Timeout (seconds) to wait for a workflow run to complete")
     args = parser.parse_args()
 
     try:
@@ -248,10 +380,63 @@ def main():
 
     run_meta = None
     artifacts = []
-    if args.token and extracted.get("owner") and extracted.get("repo") and extracted.get("run_id"):
-        run_meta = fetch_run_metadata(extracted["owner"], extracted["repo"], extracted["run_id"], args.token)
-        artifacts = list_artifacts_for_run(extracted["owner"], extracted["repo"], extracted["run_id"], args.token)
+    token = args.token
 
+    # If wait flag set: wait for referenced run completion OR the latest run on branch
+    if args.wait and token and extracted.get("owner") and extracted.get("repo"):
+        owner = extracted.get("owner")
+        repo = extracted.get("repo")
+        run = None
+        if extracted.get("run_id"):
+            run = _wait_for_run_completion(owner, repo, str(extracted.get("run_id")), token, poll_interval=args.poll_interval, timeout=args.timeout)
+        else:
+            run = _wait_for_latest_branch_run_completion(owner, repo, args.branch, token, poll_interval=args.poll_interval, timeout=args.timeout)
+
+        if run:
+            run_meta = run
+            artifacts = list_artifacts_for_run(owner, repo, str(run.get("id")), token)
+            conclusion = run.get("conclusion")
+            print(json.dumps({"run_id": run.get("id"), "conclusion": conclusion, "html_url": run.get("html_url")}, indent=2))
+            # If auto_reconcile and the conclusion is failure, run reconciliation loop
+            if args.auto_reconcile and conclusion != "success":
+                attempts = 0
+                while attempts < args.max_retries:
+                    attempts += 1
+                    print(f"Auto-reconcile attempt {attempts}/{args.max_retries} — trying local remediation")
+                    # Ensure develop branch up-to-date before attempt
+                    _git_checkout_and_pull(branch=args.branch)
+                    changed = _attempt_local_reconciliation()
+                    if changed:
+                        # push changes
+                        _git_push(branch=args.branch)
+                        # after push, wait for the new workflow to start and complete
+                        print("Pushed remediation changes, waiting for new workflow run to complete...")
+                        time.sleep(5)
+                        new_run = _wait_for_latest_branch_run_completion(owner, repo, args.branch, token, poll_interval=args.poll_interval, timeout=args.timeout)
+                        if new_run:
+                            run_meta = new_run
+                            conclusion = new_run.get("conclusion")
+                            print(json.dumps({"new_run_id": new_run.get("id"), "conclusion": conclusion, "html_url": new_run.get("html_url")}, indent=2))
+                            if conclusion == "success":
+                                print("Auto-reconcile succeeded: workflow green.")
+                                break
+                            else:
+                                print("Auto-reconcile attempt did not result in success, continuing.")
+                                continue
+                        else:
+                            print("Timed out waiting for the new run after push.")
+                    else:
+                        # Nothing changed locally or commit failed — fall back to raising an issue/report and stop or continue attempts
+                        print("No local changes to commit from remediation attempt.")
+                        # As a fallback, generate the remediation payload and stop attempting further automated commits
+                        break
+                else:
+                    # exhausted attempts
+                    print(json.dumps({"auto_reconcile": "failed_to_resolve", "attempts": attempts}, indent=2))
+        else:
+            print(json.dumps({"error": "no workflow run found for branch or run_id within timeout"}, indent=2))
+
+    # Build the remediation payload regardless for record keeping
     payload = build_task_payload(active_ctx, extracted, run_meta, artifacts)
     saved = save_payload(payload, OUTPUT_PATH)
 
@@ -262,7 +447,8 @@ def main():
         "run_id": payload.get("run_id"),
         "owner": payload.get("owner"),
         "repo": payload.get("repo"),
-        "artifacts_found": len(artifacts)
+        "artifacts_found": len(artifacts),
+        "auto_reconcile_enabled": args.auto_reconcile
     }, indent=2))
     return 0
 

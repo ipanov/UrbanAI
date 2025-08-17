@@ -284,6 +284,22 @@ These rules extend Cline's mandatory behavior specifically for CI/CD to ensure a
    - For destructive remediation changes, seek human approval (explicit confirmation) before applying.
    - Respect `.clineignore` and never attach/distribute binary artifacts excluded by policy.
 
+## Task Completion & Build Monitoring: MANDATORY
+- For any task that introduces code changes, Cline MUST commit and push the changes to the appropriate branch (typically `develop`) and monitor the resulting CI workflow run until it completes successfully before marking the task as completed.
+- The assistant MUST NOT report a task as complete while the CI workflow for that change is still failing or pending.
+- Monitoring requirements:
+  - Use the GitHub Actions API (via MCP or appropriate authenticated requests) to poll workflow run status until `conclusion == "success"` or until configured retry/timeout limits are exhausted.
+  - If the workflow succeeds, document the successful run id, artifacts, and coverage delta in memory-bank/progress.md and finalize the task.
+  - If the workflow fails, Cline MUST continue the Failure Handling & Self-Healing Loop (attempt fixes, push again, and re-monitor) automatically up to configured limits.
+- Failure after retries:
+  - If max retries or timeout are exhausted without a green build, Cline MUST:
+    - Mark the task state as "awaiting human intervention"
+    - Create or update the CI failure issue with logs, artifacts, attempted fixes, and next suggested actions
+    - DO NOT mark the task as completed
+- Commit & push conventions:
+  - All automated remediation commits must use the commit message prefix `chore(ci-autoreconcile):`
+  - All pushes by Cline must be recorded in memory-bank/progress.md with run ids and timestamps
+
 At task start:
 1) Read memory-bank core files,
 2) Skim relevant docs/* files for the area of work,
