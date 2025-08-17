@@ -28,12 +28,13 @@ jobs:
     - name: Run tests
       run: dotnet test --configuration Release --settings coverlet.runsettings --collect:"XPlat Code Coverage"
       
-    - name: Install ReportGenerator
+    - name: Install ReportGenerator (repo-local)
       shell: pwsh
       run: |
-        dotnet tool install -g dotnet-reportgenerator-globaltool
-        # add the dotnet tools folder to PATH for the remainder of the job
-        echo "$env:USERPROFILE\.dotnet\tools" >> $env:GITHUB_PATH
+        # Install ReportGenerator to a repo-local tools directory to avoid requiring global tools
+        dotnet tool install --tool-path tools dotnet-reportgenerator-globaltool
+        # add the repo-local tools folder to PATH for the remainder of the job
+        echo "$env:GITHUB_WORKSPACE\tools" >> $env:GITHUB_PATH
 
     - name: Find coverage file
       run: |

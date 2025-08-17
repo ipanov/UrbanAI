@@ -22,7 +22,9 @@ if (-not (Test-Path $coverageFile)) {
 
 # Generate coverage report
 Write-Host "Generating coverage report from: $coverageFile"
-$coverage = reportgenerator -reports:$coverageFile -reporttypes:TextSummary -targetdir:coverage-report
+# Prefer repo-local tools installation; call the local ReportGenerator executable explicitly.
+# Use the call operator (&) to run the executable with arguments.
+$coverage = & .\tools\reportgenerator -reports:$coverageFile -reporttypes:TextSummary -targetdir:coverage-report
 
 # Check if coverage report was generated
 if (-not $coverage) {
