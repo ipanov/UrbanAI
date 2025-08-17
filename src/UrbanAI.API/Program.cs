@@ -6,12 +6,15 @@ using Microsoft.EntityFrameworkCore;
 using UrbanAI.Infrastructure.Data;
 using UrbanAI.Domain.Interfaces;
 using UrbanAI.Infrastructure.Repositories;
+using UrbanAI.Domain.Entities;
+using Npgsql;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Configure database context based on environment
-// - Development: Local SQL Server (localdb) or Docker SQL Server
-// - Staging/Production: Azure SQL Database
+// - Development: Local PostgreSQL (Supabase) or Docker PostgreSQL
+// - Staging/Production: Supabase PostgreSQL Database
 // - Testing: InMemory provider (configured in CustomWebApplicationFactory)
 if (!builder.Environment.IsEnvironment("Testing"))
 {
@@ -22,15 +25,14 @@ if (!builder.Environment.IsEnvironment("Testing"))
     }
 
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(connectionString));
+        options.UseNpgsql(connectionString));
 }
 
-// Configure MongoDB settings
-builder.Services.Configure<MongoDbSettings>(
-    builder.Configuration.GetSection("MongoDbSettings"));
+// Configure PostgreSQL settings
+builder.Services.Configure<SupabaseSettings>(
+    builder.Configuration.GetSection("SupabaseSettings"));
 
-// Register MongoDbContext and repositories
-builder.Services.AddSingleton<MongoDbContext>();
+// Register repositories
 builder.Services.AddScoped<IRegulationRepository, RegulationRepository>();
 
 builder.Services.AddScoped<IIssueRepository, IssueRepository>();
