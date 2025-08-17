@@ -4,29 +4,31 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "lucide-react": "^0.263.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "lucide-react": "^0.263.1"
+    "react-router-dom": "^7.8.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@testing-library/jest-dom": "^6.1.0",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.5.0",
+    "@types/node": "^20.0.0",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
+    "@vitest/ui": "^1.0.0",
+    "concurrently": "^8.2.2",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "jsdom": "^23.0.0",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/jest-dom": "^6.1.0",
-    "@testing-library/user-event": "^14.5.0",
-    "vitest": "^1.0.0",
-    "@vitest/ui": "^1.0.0",
-    "jsdom": "^23.0.0",
-    "@playwright/test": "^1.40.0",
-    "@types/node": "^20.0.0"
+    "vitest": "^1.0.0"
   },
   "scripts": {
     "dev": "vite",
@@ -37,6 +39,21 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:chrome": "playwright test --project=chromium",
+    "test:e2e:firefox": "playwright test --project=firefox",
+    "test:e2e:safari": "playwright test --project=webkit",
+    "test:e2e:mobile": "playwright test --project=\"Mobile Chrome\"",
+    "test:e2e:all": "playwright test --workers=1",
+    "test:ux-flow": "playwright test ux-flow.spec.ts",
+    "test:ux-flow:headed": "playwright test ux-flow.spec.ts --headed",
+    "test:complete": "npm run test && npm run test:coverage && npm run test:e2e:all",
+    "playwright:install": "playwright install",
+    "playwright:install:all": "playwright install --with-deps",
+    "start:server": "cd ../../ && node server.js",
+    "start:all": "concurrently \"npm run start:server\" \"npm run dev\"",
+    "validate:ux": "npm run test:ux-flow:headed && npm run test:e2e:mobile"
   }
 }

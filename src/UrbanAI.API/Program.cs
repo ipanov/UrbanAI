@@ -82,13 +82,6 @@ builder.Services.AddAuthentication(options =>
         throw new InvalidOperationException("Microsoft ClientId is not configured.");
     options.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"] ??
         throw new InvalidOperationException("Microsoft ClientSecret is not configured.");
-})
-.AddFacebook(options =>
-{
-    options.AppId = builder.Configuration["Authentication:Facebook:AppId"] ??
-        throw new InvalidOperationException("Facebook AppId is not configured.");
-    options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"] ??
-        throw new InvalidOperationException("Facebook AppSecret is not configured.");
 });
 
 builder.Services.AddAuthorization();
