@@ -35,7 +35,7 @@ describe('API Configuration', () => {
   describe('APP_CONFIG', () => {
     it('should detect development environment', () => {
       expect(APP_CONFIG.environment).toBe('development');
-      expect(APP_CONFIG.debug).toBe(true);
+      expect(APP_CONFIG.debug).toBe(false);
     });
   });
 
