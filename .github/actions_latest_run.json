@@ -1,0 +1,10 @@
+{
+  "id": 17025084214,
+  "run_number": 3,
+  "status": "completed",
+  "conclusion": "failure",
+  "html_url": "https://github.com/ipanov/UrbanAI/actions/runs/17025084214",
+  "head_branch": "develop",
+  "event": "push",
+  "created_at": "2025-08-17T19:38:51Z"
+}

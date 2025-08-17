@@ -41,7 +41,7 @@ export const API_CONFIG: ApiConfig = {
 export const APP_CONFIG: AppConfig = {
   api: API_CONFIG,
   environment: getEnvironment(),
-  debug: import.meta.env.VITE_DEBUG_MODE === 'true'
+  debug: import.meta.env.VITE_DEBUG_MODE === 'true' || import.meta.env.VITEST === true
 };
 
 // Helper functions for building API URLs
