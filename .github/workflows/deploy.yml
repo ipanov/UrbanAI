@@ -28,6 +28,20 @@ jobs:
     - name: Run tests
       run: dotnet test --configuration Release --settings coverlet.runsettings --collect:"XPlat Code Coverage"
       
+    - name: Find coverage file
+      run: |
+        # Find the coverage file in the test results
+        $coverageFile = Get-ChildItem -Path "TestResults" -Filter "*.xml" -Recurse | Select-Object -First 1
+        if ($coverageFile) {
+            Write-Host "Found coverage file: $($coverageFile.FullName)"
+            # Copy it to the expected location
+            Copy-Item -Path $coverageFile.FullName -Destination "coverage.cobertura.xml"
+            Write-Host "Copied coverage file to coverage.cobertura.xml"
+        } else {
+            Write-Error "No coverage file found in TestResults directory"
+            exit 1
+        }
+      
     - name: Check coverage
       run: |
         # Coverage verification script

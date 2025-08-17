@@ -496,6 +496,5 @@ CoverageReport/
 # Housekeeping
 temp/
 UrbanAI.git/
-scripts/
 dist/
 src/UrbanAI.Frontend/dist/
