@@ -1,0 +1,112 @@
+name: UrbanAI Lightweight CI (develop)
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [develop]
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      backend: ${{ steps.filter.outputs.backend }}
+      infra: ${{ steps.filter.outputs.infra }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect changed areas
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            frontend:
+              - 'src/UrbanAI.Frontend/**'
+              - 'src/UrbanAI.Frontend/*'
+            backend:
+              - 'src/UrbanAI.API/**'
+              - 'src/UrbanAI.Application/**'
+              - 'src/UrbanAI.Infrastructure/**'
+              - 'src/UrbanAI.Domain/**'
+              - 'src/UrbanAI.Functions/**'
+            infra:
+              - 'infra/**'
+              - '.github/workflows/**'
+
+  backend-check:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.backend == 'true'
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore UrbanAI.sln
+
+      - name: Build (fast)
+        run: dotnet build UrbanAI.sln --configuration Release --no-restore
+
+      - name: Run unit tests (fast)
+        run: dotnet test tests/UrbanAI.Application.Tests/ --configuration Release --no-build --no-restore --verbosity minimal
+
+      - name: Upload quick backend test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-results
+          path: tests/**/TestResults || TestResults
+
+  frontend-check:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install frontend deps (ci)
+        working-directory: src/UrbanAI.Frontend
+        run: npm ci
+
+      - name: Run frontend tests (vitest)
+        working-directory: src/UrbanAI.Frontend
+        run: npm test --if-present
+
+      - name: Upload frontend test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-test-results
+          path: src/UrbanAI.Frontend/test-results || src/UrbanAI.Frontend/playwright-report || src/UrbanAI.Frontend/test-results
+
+  infra-check:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.infra == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Lint Bicep / Infra files
+        run: |
+          echo "Infra changed; running lightweight validation"
+          # Placeholder: add infra validations (bicep lint/arm templates) as needed
+
+  no-op:
+    needs: [detect-changes, backend-check, frontend-check, infra-check]
+    runs-on: ubuntu-latest
+    if: needs.detect-changes.outputs.frontend == 'false' && needs.detect-changes.outputs.backend == 'false' && needs.detect-changes.outputs.infra == 'false'
+    steps:
+      - name: Nothing to do
+        run: echo "No relevant changes detected. Skipping CI checks."

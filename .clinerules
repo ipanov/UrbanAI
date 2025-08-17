@@ -249,6 +249,41 @@ This ensures reliable application startup and prevents port conflicts across dev
 - azure-pipelines.yml
 - docs/api/openapi.yaml
 
+## CI/CD Enforcement (UrbanAI additions)
+These rules extend Cline's mandatory behavior specifically for CI/CD to ensure a closed-loop feedback and remediation process.
+
+1. Build Triggering Policy
+   - Full release pipelines (build + tests + coverage + deploy) MUST run only on merges to `main`.
+   - Lightweight or selective CI may run on `develop` (configured in .github/workflows/ci.yml) and PRs, but MUST avoid running expensive full-suite builds on every push to `develop`.
+
+2. Coverage & Reporting
+   - All release runs MUST upload artifacts: test results, coverage reports, and any build logs to the workflow artifacts store.
+   - Coverage threshold enforcement happens in the release pipeline; Cline MUST block task completion if coverage verification fails.
+
+3. Failure Handling & Self-Healing Loop
+   - If a release pipeline run results in FAILURE:
+     - Cline MUST retrieve logs and relevant artifacts via the GitHub MCP server (`get_workflow_run`, `get_job_logs`, `list_workflow_runs`).
+     - Cline MUST create a GitHub Issue titled "[CI FAILURE] <workflow> failed on <branch> — run <id>", include logs/artifact links, label it `ci-failure` and `urgent`, and assign it to the repository owner by default.
+     - Cline MUST open a new task thread (using `new_task`) that contains:
+       - Issue link and number
+       - The failing workflow run id and step logs
+       - Suggested next steps and the minimal reproduction commands
+     - Cline MUST iterate: attempt fixes (or propose fixes), push changes, and monitor the next run via MCP until the workflow completes successfully.
+     - The task is only closed when MCP confirms the workflow run status is `success`.
+
+4. Assignment Logic
+   - Default assignee is the repository owner.
+   - If the failing step clearly maps to a subsystem (frontend vs backend vs infra), Cline SHOULD prefer assigning to the subsystem owner if configured. If no mapping exists, assign to repository owner.
+
+5. Notifications & PR Feedback
+   - On failure, Cline MUST post the summary and artifact links to the related PR and the created issue.
+   - On success, Cline MUST post a final comment indicating pass + coverage delta (if available), and then close the task.
+
+6. Safety and Limits
+   - Do not automatically close issues created for CI failures until the pipeline passes.
+   - For destructive remediation changes, seek human approval (explicit confirmation) before applying.
+   - Respect `.clineignore` and never attach/distribute binary artifacts excluded by policy.
+
 At task start:
 1) Read memory-bank core files,
 2) Skim relevant docs/* files for the area of work,

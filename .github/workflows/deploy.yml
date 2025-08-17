@@ -2,7 +2,7 @@ name: UrbanAI CI/CD
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
 
 env:
   RESOURCE_TOKEN: ${{ secrets.RESOURCE_TOKEN }}
@@ -28,6 +28,13 @@ jobs:
     - name: Run tests
       run: dotnet test --configuration Release --settings coverlet.runsettings --collect:"XPlat Code Coverage"
       
+    - name: Install ReportGenerator
+      shell: pwsh
+      run: |
+        dotnet tool install -g dotnet-reportgenerator-globaltool
+        # add the dotnet tools folder to PATH for the remainder of the job
+        echo "$env:USERPROFILE\.dotnet\tools" >> $env:GITHUB_PATH
+
     - name: Find coverage file
       run: |
         # Debug: List all XML files in the repository
@@ -60,11 +67,24 @@ jobs:
             Write-Host "Please ensure tests are run with coverage collection"
             exit 1
         }
-      
     - name: Check coverage
       run: |
         # Coverage verification script
         ./.github/scripts/check-coverage.ps1
+
+    - name: Upload coverage report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage-report
+
+    - name: Upload TestResults
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: TestResults
 
     # Frontend build
     - name: Setup Node.js
@@ -147,3 +167,40 @@ jobs:
       uses: zaproxy/action-full-scan@v0.6.0
       with:
         target: 'https://staging.urbanai.site'
+
+  report-failure:
+    needs: build-test
+    if: ${{ needs.build-test.result == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create GitHub Issue for CI Failure and dispatch event
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const issueTitle = `[CI FAILURE] Build failed on ${process.env.GITHUB_REF} — run ${process.env.GITHUB_RUN_ID}`;
+          const body = `The build/test job failed.\n\nRun: ${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}\n\nArtifacts (if available): coverage-report, test-results\n\nPlease triage.`;
+          // Create the issue
+          const created = await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: issueTitle,
+            body: body,
+            labels: ['ci-failure','urgent'],
+            assignees: [context.repo.owner]
+          });
+
+          // Dispatch a repository event so the listener workflow can react in real-time
+          await github.rest.repos.createDispatch({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            event_type: 'ci_failure_report',
+            client_payload: {
+              run_id: process.env.GITHUB_RUN_ID,
+              run_url: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,
+              issue_number: created.data.number,
+              issue_url: created.data.html_url,
+              branch: process.env.GITHUB_REF
+            }
+          });
+
+          core.setOutput('issue_number', created.data.number);

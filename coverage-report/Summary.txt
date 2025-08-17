@@ -1,0 +1,65 @@
+Summary
+  Generated on: 17.8.2025 - 20:28:58
+  Coverage date: 17.8.2025 - 20:19:25
+  Parser: Cobertura
+  Assemblies: 4
+  Classes: 37
+  Files: 39
+  Line coverage: 27.1%
+  Covered lines: 474
+  Uncovered lines: 1272
+  Coverable lines: 1746
+  Total lines: 2903
+  Branch coverage: 23.6% (68 of 288)
+  Covered branches: 68
+  Total branches: 288
+  Method coverage: 58.6% (112 of 191)
+  Full method coverage: 49.2% (94 of 191)
+  Covered methods: 112
+  Fully covered methods: 94
+  Total methods: 191
+
+UrbanAI.API                                                             60.2%
+  Program                                                               57.4%
+  UrbanAI.API.Controllers.AuthController                                62.6%
+  UrbanAI.API.Controllers.IssuesController                              77.5%
+  UrbanAI.API.Controllers.OAuthCallbackController                       53.9%
+
+UrbanAI.Application                                                     42.5%
+  UrbanAI.Application.DTOs.AuthRequestDto                                100%
+  UrbanAI.Application.DTOs.AuthResponseDto                               100%
+  UrbanAI.Application.DTOs.CreateIssueRequestDto                         100%
+  UrbanAI.Application.DTOs.CreateIssueResponseDto                        100%
+  UrbanAI.Application.DTOs.IssueDto                                      100%
+  UrbanAI.Application.DTOs.OAuthAuthorizationDto                           0%
+  UrbanAI.Application.DTOs.UpdateIssueRequestDto                         100%
+  UrbanAI.Application.DTOs.UserDto                                         0%
+  UrbanAI.Application.Services.IssueService                               81%
+  UrbanAI.Application.Services.OAuthService                             32.2%
+  UrbanAI.Application.Services.OAuthTokenResponse                          0%
+  UrbanAI.Application.Services.OAuthUserInfo                               0%
+  UrbanAI.Application.Services.RegulationService                           0%
+  UrbanAI.Application.Services.UserService                                 0%
+
+UrbanAI.Domain                                                          89.2%
+  UrbanAI.Domain.Common.BaseEntity                                       100%
+  UrbanAI.Domain.Entities.ExternalLogin                                   50%
+  UrbanAI.Domain.Entities.Issue                                          100%
+  UrbanAI.Domain.Entities.Regulation                                     100%
+  UrbanAI.Domain.Entities.User                                           100%
+
+UrbanAI.Infrastructure                                                   7.7%
+  UrbanAI.Infrastructure.Data.ApplicationDbContext                       100%
+  UrbanAI.Infrastructure.Data.ApplicationDbContextFactory                  0%
+  UrbanAI.Infrastructure.Data.Configurations.IssueConfiguration          100%
+  UrbanAI.Infrastructure.Data.Models.RegulationDocument                    0%
+  UrbanAI.Infrastructure.Data.MongoDbContext                               0%
+  UrbanAI.Infrastructure.Data.MongoDbSettings                              0%
+  UrbanAI.Infrastructure.Migrations.AddIssueAndRegulationEntities          0%
+  UrbanAI.Infrastructure.Migrations.ApplicationDbContextModelSnapshot      0%
+  UrbanAI.Infrastructure.Migrations.InitialCreate                          0%
+  UrbanAI.Infrastructure.Migrations.InitialPostgreSqlMigrationV2           0%
+  UrbanAI.Infrastructure.Migrations.RemovePasswordAndEmailFields           0%
+  UrbanAI.Infrastructure.Repositories.IssueRepository                    100%
+  UrbanAI.Infrastructure.Repositories.RegulationRepository                 0%
+  UrbanAI.Infrastructure.Repositories.UserRepository                       0%

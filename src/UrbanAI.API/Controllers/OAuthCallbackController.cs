@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using UrbanAI.Application.Interfaces;
-using UrbanAI.Application.Services;
-using UrbanAI.Application.DTOs;
-using System.Text.Json;
 
 namespace UrbanAI.API.Controllers
 {
@@ -10,23 +7,19 @@ namespace UrbanAI.API.Controllers
     /// Controller for handling OAuth provider callbacks and authorization URL generation.
     /// Implements PKCE security for all OAuth flows with state validation for CSRF protection.
     /// </summary>
+    /// <param name="oauthService">The OAuth service for handling authentication flows.</param>
+    /// <param name="configuration">The application configuration settings.</param>
+    /// <param name="logger">The logger for this controller.</param>
     [ApiController]
     [Route("api/v1/oauth")]
-    public class OAuthCallbackController : ControllerBase
+    public class OAuthCallbackController(
+        IOAuthService oauthService,
+        IConfiguration configuration,
+        ILogger<OAuthCallbackController> logger) : ControllerBase
     {
-        private readonly IOAuthService _oauthService;
-        private readonly IConfiguration _configuration;
-        private readonly ILogger<OAuthCallbackController> _logger;
-
-        public OAuthCallbackController(
-            IOAuthService oauthService,
-            IConfiguration configuration,
-            ILogger<OAuthCallbackController> logger)
-        {
-            _oauthService = oauthService;
-            _configuration = configuration;
-            _logger = logger;
-        }
+        private readonly IOAuthService _oauthService = oauthService;
+        private readonly IConfiguration _configuration = configuration;
+        private readonly ILogger<OAuthCallbackController> _logger = logger;
 
         /// <summary>
         /// Generate OAuth authorization URL for the specified provider.
@@ -60,10 +53,10 @@ namespace UrbanAI.API.Controllers
 
                 // Build authorization URL
                 var authUrl = _oauthService.BuildAuthorizationUrl(
-                    normalizedProvider, 
-                    clientId, 
-                    redirectUri, 
-                    state, 
+                    normalizedProvider,
+                    clientId,
+                    redirectUri,
+                    state,
                     codeChallenge
                 );
 
@@ -95,15 +88,15 @@ namespace UrbanAI.API.Controllers
             string provider,
             [FromQuery] string code,
             [FromQuery] string state,
-            [FromQuery] string error = null,
-            [FromQuery] string error_description = null)
+            [FromQuery] string? error = null,
+            [FromQuery] string? error_description = null)
         {
             try
             {
                 // Handle OAuth errors
                 if (!string.IsNullOrEmpty(error))
                 {
-                    _logger.LogWarning("OAuth error from {Provider}: {Error} - {Description}", 
+                    _logger.LogWarning("OAuth error from {Provider}: {Error} - {Description}",
                         provider, error, error_description);
                     return BadRequest($"OAuth error: {error} - {error_description}");
                 }
@@ -127,7 +120,7 @@ namespace UrbanAI.API.Controllers
                 // Get OAuth configuration
                 var clientId = GetClientId(normalizedProvider);
                 var clientSecret = GetClientSecret(normalizedProvider);
-                
+
                 if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
                 {
                     return BadRequest($"OAuth not configured for provider: {provider}");
@@ -135,7 +128,7 @@ namespace UrbanAI.API.Controllers
 
                 // TODO: Validate state parameter against stored value
                 // For MVP, we'll skip this validation but it should be implemented for production
-                
+
                 // Get redirect URI
                 var redirectUri = GetRedirectUri(normalizedProvider);
 
@@ -203,10 +196,10 @@ namespace UrbanAI.API.Controllers
         {
             return provider switch
             {
-                "google" => _configuration["Authentication:Google:ClientId"],
-                "microsoft" => _configuration["Authentication:Microsoft:ClientId"],
-                "facebook" => _configuration["Authentication:Facebook:AppId"],
-                _ => null
+                "google" => _configuration["Authentication:Google:ClientId"] ?? string.Empty,
+                "microsoft" => _configuration["Authentication:Microsoft:ClientId"] ?? string.Empty,
+                "facebook" => _configuration["Authentication:Facebook:AppId"] ?? string.Empty,
+                _ => string.Empty
             };
         }
 
@@ -214,10 +207,10 @@ namespace UrbanAI.API.Controllers
         {
             return provider switch
             {
-                "google" => _configuration["Authentication:Google:ClientSecret"],
-                "microsoft" => _configuration["Authentication:Microsoft:ClientSecret"],
-                "facebook" => _configuration["Authentication:Facebook:AppSecret"],
-                _ => null
+                "google" => _configuration["Authentication:Google:ClientSecret"] ?? string.Empty,
+                "microsoft" => _configuration["Authentication:Microsoft:ClientSecret"] ?? string.Empty,
+                "facebook" => _configuration["Authentication:Facebook:AppSecret"] ?? string.Empty,
+                _ => string.Empty
             };
         }
 
@@ -225,20 +218,20 @@ namespace UrbanAI.API.Controllers
         {
             var environment = _configuration["ASPNETCORE_ENVIRONMENT"] ?? "Development";
             var configKey = environment == "Production" ? "Production" : "Development";
-            
+
             return provider switch
             {
-                "google" => _configuration[$"OAuth:RedirectUris:{configKey}:Google"],
-                "microsoft" => _configuration[$"OAuth:RedirectUris:{configKey}:Microsoft"],
-                "facebook" => _configuration[$"OAuth:RedirectUris:{configKey}:Facebook"],
-                _ => null
+                "google" => _configuration[$"OAuth:RedirectUris:{configKey}:Google"] ?? string.Empty,
+                "microsoft" => _configuration[$"OAuth:RedirectUris:{configKey}:Microsoft"] ?? string.Empty,
+                "facebook" => _configuration[$"OAuth:RedirectUris:{configKey}:Facebook"] ?? string.Empty,
+                _ => string.Empty
             };
         }
 
         private string GetFrontendUrl()
         {
             var environment = _configuration["ASPNETCORE_ENVIRONMENT"] ?? "Development";
-            return environment == "Production" 
+            return environment == "Production"
                 ? _configuration["OAuth:RedirectUris:Production:BaseUrl"] ?? "https://urbanai.site"
                 : _configuration["OAuth:RedirectUris:Development:BaseUrl"] ?? "http://localhost:5173";
         }
