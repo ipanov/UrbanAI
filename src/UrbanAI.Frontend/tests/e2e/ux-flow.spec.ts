@@ -91,10 +91,10 @@ test.describe('UrbanAI UX Flow', () => {
       await page.click('.cta-button');
       
       // Wait for redirect to complete
-      await page.waitForURL('**/app');
+      await page.waitForURL('http://localhost:3000/');
       
       // Verify we're on the React app
-      await expect(page).toHaveURL(/\/app(\/|$)/);
+      await expect(page).toHaveURL('http://localhost:3000/');
       
       // Wait for React app to load
       await page.waitForSelector('#root', { state: 'visible' });
@@ -264,8 +264,8 @@ test.describe('UrbanAI UX Flow', () => {
       await page.waitForLoadState('networkidle');
       
       // Check for proper heading hierarchy
-      const headings = await page.$$eval('h1, h2, h3, h4, h5, h6', headings => 
-        headings.map((h: Element) => ({
+      const headings = await page.$$eval('h1, h2, h3, h4, h5, h6', (elements: Element[]) => 
+        elements.map(h => ({
           level: h.tagName,
           text: h.textContent?.trim()
         }))
@@ -276,8 +276,8 @@ test.describe('UrbanAI UX Flow', () => {
       expect(h1Count).toBe(1);
       
       // Verify alt text for images
-      const images = await page.$$eval('img', images => 
-        images.map(img => ({
+      const images = await page.$$eval('img', (elements: HTMLImageElement[]) => 
+        elements.map(img => ({
           hasAlt: img.hasAttribute('alt'),
           altText: img.getAttribute('alt')
         }))
@@ -289,8 +289,8 @@ test.describe('UrbanAI UX Flow', () => {
       });
       
       // Verify buttons have accessible names
-      const buttons = await page.$$eval('button', buttons => 
-        buttons.map(button => ({
+      const buttons = await page.$$eval('button', (elements: HTMLButtonElement[]) => 
+        elements.map(button => ({
           hasText: button.textContent?.trim().length > 0,
           hasAriaLabel: button.hasAttribute('aria-label')
         }))
