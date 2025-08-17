@@ -11,7 +11,7 @@ namespace UrbanAI.API.Controllers
     /// Implements PKCE security for all OAuth flows with state validation for CSRF protection.
     /// </summary>
     [ApiController]
-    [Route("auth")]
+    [Route("api/v1/oauth")]
     public class OAuthCallbackController : ControllerBase
     {
         private readonly IOAuthService _oauthService;
@@ -90,7 +90,7 @@ namespace UrbanAI.API.Controllers
         /// Handle OAuth callback from providers.
         /// Exchanges authorization code for access token and returns user info.
         /// </summary>
-        [HttpGet("{provider}/callback")]
+        [HttpGet("callback/{provider}")]
         public async Task<IActionResult> HandleCallback(
             string provider,
             [FromQuery] string code,
