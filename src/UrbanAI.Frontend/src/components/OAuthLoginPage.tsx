@@ -4,6 +4,7 @@ import { UrbanAILogoPlaceholder } from './UrbanAILogo';
 import CookieConsentBanner from './CookieConsentBanner';
 import LegalAgreementModal from './LegalAgreementModal';
 import { BRAND_COLORS } from '../assets/brand';
+import { buildApiUrl } from '../config/api';
 import './OAuthLoginPage.css';
 
 interface OAuthLoginPageProps {
@@ -59,26 +60,45 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
     }
   ];
 
-  // Generate a short mock external id for dev/testing
-  const makeMockExternalId = (provider: string) =>
-    `${provider}_${Math.random().toString(36).slice(2, 9)}`;
-
-  // Called when user clicks provider button
+  // Called when user clicks provider button - now uses real OAuth
   const handleOAuthClick = async (provider: 'microsoft' | 'google' | 'facebook') => {
-    // For production: start real OAuth redirect here.
-    // For MVP/dev: generate mock external id then show legal modal before registration.
     setError(null);
-    const externalId = makeMockExternalId(provider);
-    setPendingProvider(provider);
-    setPendingExternalId(externalId);
-    setModalOpen(true);
+    setLoading(true);
+    
+    try {
+      // Get OAuth authorization URL from backend
+      const response = await fetch(buildApiUrl(`auth/authorize/${provider}`), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to get authorization URL: ${errorText}`);
+      }
+
+      const data = await response.json();
+      
+      // Store OAuth parameters for callback handling
+      sessionStorage.setItem('oauth_state', data.state);
+      sessionStorage.setItem('oauth_code_verifier', data.codeVerifier);
+      sessionStorage.setItem('oauth_provider', provider);
+      
+      // Redirect to OAuth provider
+      window.location.href = data.authorizationUrl;
+      
+    } catch (err: any) {
+      console.error('OAuth initiation error:', err);
+      setError(err?.message ?? 'Failed to start OAuth login');
+      setLoading(false);
+    }
   };
 
   const registerExternal = async (provider: string, externalId: string) => {
     setLoading(true);
     setError(null);
     try {
-      const resp = await fetch('/api/auth/register-external', {
+      const resp = await fetch(buildApiUrl('api/auth/register-external'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ provider, externalId })

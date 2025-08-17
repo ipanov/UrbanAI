@@ -45,6 +45,22 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddHttpClient();
 
+// Add CORS configuration
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(
+                "http://localhost:3000",      // Development frontend
+                "https://www.urbanai.site",   // Production frontend
+                "http://localhost:5173"       // Vite default dev server
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 // Add Authentication and JWT configuration
 builder.Services.AddAuthentication(options =>
 {
@@ -89,6 +105,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 builder.Services.AddScoped<UrbanAI.Application.Interfaces.IIssueService, UrbanAI.Application.Services.IssueService>();
+builder.Services.AddScoped<UrbanAI.Application.Interfaces.IOAuthService, UrbanAI.Application.Services.OAuthService>();
 
 var app = builder.Build();
 
@@ -103,6 +120,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting(); // Add routing middleware
+app.UseCors("AllowFrontend"); // Enable CORS
 app.UseAuthentication(); // Add authentication middleware
 app.UseAuthorization(); // Add authorization middleware
 

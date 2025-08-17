@@ -193,6 +193,41 @@ After completing any feature implementation:
 
 This ensures code quality, prevents regressions, and maintains system reliability across all UrbanAI development.
 
+## Process Management: MANDATORY PROTOCOL
+
+**CRITICAL REQUIREMENT**: ALWAYS kill existing processes before starting HTTP applications to ensure consistent port usage.
+
+### Process Cleanup Workflow
+Before starting ANY HTTP server (API, React, etc.):
+
+1. **IDENTIFY** target ports (API: 5001, React: 3000, etc.)
+2. **KILL** existing processes on those ports
+3. **VERIFY** ports are free before starting new processes
+4. **START** applications with consistent port assignments
+
+### Standard Port Assignments
+- **API**: http://localhost:5001 (ASP.NET Core)
+- **React Frontend**: http://localhost:3000 (Vite dev server)
+- **Test Services**: http://localhost:8080+ (avoid conflicts)
+
+### Process Kill Commands (Windows)
+```cmd
+# Kill processes on specific ports
+netstat -ano | findstr :5001 | for /f "tokens=5" %a in ('more') do taskkill /f /pid %a
+netstat -ano | findstr :3000 | for /f "tokens=5" %a in ('more') do taskkill /f /pid %a
+
+# Alternative: Kill all Node.js processes
+taskkill /f /im node.exe
+```
+
+### Non-Negotiable Rules
+- **NO STARTING** applications without killing existing processes
+- **ALWAYS** use consistent port assignments across sessions
+- **VERIFY** port availability before application startup
+- **DOCUMENT** any port conflicts or issues encountered
+
+This ensures reliable application startup and prevents port conflicts across development sessions.
+
 ## Tooling & Safety
 
 - Shell: Windows (cmd.exe). Prefer project-root commands.
