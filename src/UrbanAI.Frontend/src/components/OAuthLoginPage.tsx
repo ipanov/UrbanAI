@@ -83,7 +83,8 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
       // Get OAuth authorization URL from backend
       const response = await fetch(buildApiUrl(`auth/authorize/${provider}`), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
       });
 
       if (!response.ok) {
@@ -112,7 +113,7 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
     setLoading(true);
     setError(null);
     try {
-      const resp = await fetch(buildApiUrl('api/auth/register-external'), {
+      const resp = await fetch(buildApiUrl('auth/register-external'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ provider, externalId })
