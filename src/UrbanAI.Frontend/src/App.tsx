@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import OAuthLoginPage from './components/OAuthLoginPage';
 import Dashboard from './components/Dashboard';
+import Issues from './components/Issues';
+import OAuthCallback from './components/OAuthCallback';
 import './App.css';
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
             />
           } />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/issues" element={<Issues />} />
+          <Route path="/auth/callback" element={<OAuthCallback />} />
         </Routes>
       </div>
     </Router>
