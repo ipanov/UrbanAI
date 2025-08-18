@@ -8,6 +8,7 @@ using UrbanAI.Domain.Entities;
 using UrbanAI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using UrbanAI.Application.Interfaces;
 
 namespace UrbanAI.API.Controllers
 {
@@ -32,16 +33,170 @@ namespace UrbanAI.API.Controllers
         public AuthController(
             IHttpClientFactory httpClientFactory,
             IConfiguration configuration,
-            ApplicationDbContext dbContext)
+            ApplicationDbContext dbContext,
+            IOAuthService oauthService)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
             _dbContext = dbContext;
+            _oauthService = oauthService;
             _jwtSecret = configuration["Jwt:Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");
             _jwtIssuer = configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("JWT Issuer not configured");
             _jwtAudience = configuration["Jwt:Audience"] ?? throw new InvalidOperationException("JWT Audience not configured");
         }
 
+        private readonly IOAuthService _oauthService;
+
+
+        // -------------------------
+        // OAuth authorization endpoint
+        // -------------------------
+        /// <summary>
+        /// Generates OAuth authorization URL with PKCE for the specified provider
+        /// </summary>
+        [HttpPost("authorize/{provider}")]
+        public async Task<IActionResult> GetAuthorizationUrl([FromRoute] string provider)
+        {
+            var normalizedProvider = provider.ToLowerInvariant();
+            
+            // Validate provider
+            if (normalizedProvider != "google" && normalizedProvider != "microsoft" && normalizedProvider != "facebook")
+            {
+                return BadRequest(new { error = "Unsupported provider. Supported providers: google, microsoft, facebook" });
+            }
+
+            var clientId = _configuration[$"Authentication:{char.ToUpper(normalizedProvider[0]) + normalizedProvider[1..]}:ClientId"];
+            var clientSecret = _configuration[$"Authentication:{char.ToUpper(normalizedProvider[0]) + normalizedProvider[1..]}:ClientSecret"];
+            
+            if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
+            {
+                return BadRequest(new { error = $"OAuth credentials not configured for {normalizedProvider}" });
+            }
+
+            // Get redirect URI from configuration
+            var capitalizedProvider = char.ToUpper(normalizedProvider[0]) + normalizedProvider[1..];
+            var redirectUri = _configuration[$"OAuth:RedirectUris:Development:{capitalizedProvider}"] ?? 
+                            _configuration["OAuth:RedirectUris:Development:BaseUrl"] + "/auth/callback";
+
+            // Generate PKCE values
+            var codeVerifier = _oauthService.GenerateCodeVerifier();
+            var codeChallenge = _oauthService.GenerateCodeChallenge(codeVerifier);
+            var state = _oauthService.GenerateState();
+
+            // Build authorization URL
+            var authorizationUrl = _oauthService.BuildAuthorizationUrl(
+                normalizedProvider, 
+                clientId, 
+                redirectUri, 
+                state, 
+                codeChallenge
+            );
+
+            // Store PKCE values in session for later use
+            // In a real app, you'd use distributed session storage
+            HttpContext.Session.SetString("oauth_code_verifier", codeVerifier);
+            HttpContext.Session.SetString("oauth_state", state);
+            HttpContext.Session.SetString("oauth_provider", normalizedProvider);
+
+            return Ok(new 
+            { 
+                authorizationUrl,
+                state,
+                codeChallenge,
+                codeVerifier // Return for testing/debugging
+            });
+        }
+
+        // -------------------------
+        // OAuth callback endpoint
+        // -------------------------
+        /// <summary>
+        /// Handles OAuth callback after user authentication with provider
+        /// </summary>
+        [HttpGet("callback")]
+        public async Task<IActionResult> OAuthCallback([FromQuery] string code, [FromQuery] string state, [FromQuery] string error = null)
+        {
+            if (!string.IsNullOrEmpty(error))
+            {
+                return BadRequest(new { error = $"OAuth error: {error}" });
+            }
+
+            if (string.IsNullOrEmpty(code) || string.IsNullOrEmpty(state))
+            {
+                return BadRequest(new { error = "Authorization code and state are required" });
+            }
+
+            // Retrieve stored values from session
+            var storedState = HttpContext.Session.GetString("oauth_state");
+            var storedProvider = HttpContext.Session.GetString("oauth_provider");
+            var codeVerifier = HttpContext.Session.GetString("oauth_code_verifier");
+
+            if (string.IsNullOrEmpty(storedState) || storedState != state)
+            {
+                return BadRequest(new { error = "Invalid or missing state parameter" });
+            }
+
+            if (string.IsNullOrEmpty(storedProvider) || string.IsNullOrEmpty(codeVerifier))
+            {
+                return BadRequest(new { error = "OAuth session data missing" });
+            }
+
+            var capitalizedProvider = char.ToUpper(storedProvider[0]) + storedProvider[1..];
+            var clientId = _configuration[$"Authentication:{capitalizedProvider}:ClientId"];
+            var clientSecret = _configuration[$"Authentication:{capitalizedProvider}:ClientSecret"];
+            
+            if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
+            {
+                return BadRequest(new { error = $"OAuth credentials not configured for {storedProvider}" });
+            }
+
+            // Get redirect URI from configuration
+            var redirectUri = _configuration[$"OAuth:RedirectUris:Development:{capitalizedProvider}"] ?? 
+                            _configuration["OAuth:RedirectUris:Development:BaseUrl"] + "/auth/callback";
+
+            try
+            {
+                // Exchange authorization code for access token
+                var tokenResponse = await _oauthService.ExchangeCodeForTokenAsync(
+                    storedProvider, 
+                    code, 
+                    codeVerifier, 
+                    clientId, 
+                    clientSecret, 
+                    redirectUri
+                );
+
+                // Get user info from provider
+                var userInfo = await _oauthService.GetUserInfoAsync(storedProvider, tokenResponse.AccessToken);
+
+                // Check if user exists in our system
+                var existingUser = await _dbContext.Users
+                    .Include(u => u.ExternalLogins)
+                    .SingleOrDefaultAsync(u => 
+                        u.ExternalLogins.Any(l => l.Provider == storedProvider && l.ExternalId == userInfo.Id));
+
+                if (existingUser != null)
+                {
+                    // User exists, generate JWT
+                    var jwtToken = GenerateJwtToken(existingUser);
+                    return Ok(new { token = jwtToken, user = new { userInfo.Id, userInfo.Name, userInfo.Email } });
+                }
+                else
+                {
+                    // User doesn't exist, return registration required
+                    return Ok(new { 
+                        requiresRegistration = true, 
+                        provider = storedProvider, 
+                        externalId = userInfo.Id,
+                        userInfo = new { userInfo.Id, userInfo.Name, userInfo.Email }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = $"OAuth callback failed: {ex.Message}" });
+            }
+        }
 
         // -------------------------
         // External provider exchange

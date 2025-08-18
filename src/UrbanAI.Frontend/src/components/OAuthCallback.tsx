@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { buildApiUrl } from '../config/api';
 
@@ -15,8 +15,14 @@ const OAuthCallback: React.FC<OAuthCallbackProps> = ({ onSuccess, onError }) => 
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const hasProcessed = useRef(false);
 
   useEffect(() => {
+    // Prevent double execution in React StrictMode
+    if (hasProcessed.current) {
+      return;
+    }
+    hasProcessed.current = true;
     const handleOAuthCallback = async () => {
       try {
         // Get OAuth parameters from URL
@@ -66,13 +72,14 @@ const OAuthCallback: React.FC<OAuthCallbackProps> = ({ onSuccess, onError }) => 
         }
 
         // Handle the OAuth callback through our backend
-        const callbackUrl = `${buildApiUrl(`auth/${provider}/callback`)}?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}&code_verifier=${encodeURIComponent(codeVerifier)}`;
+        const callbackUrl = `${buildApiUrl('auth/callback')}?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`;
         
         const response = await fetch(callbackUrl, {
           method: 'GET',
           headers: {
             'Accept': 'application/json'
-          }
+          },
+          credentials: 'include'
         });
 
         if (!response.ok) {
@@ -104,7 +111,7 @@ const OAuthCallback: React.FC<OAuthCallbackProps> = ({ onSuccess, onError }) => 
 
   const registerUser = async (provider: string, externalId: string, name: string, email: string) => {
     try {
-      const response = await fetch(buildApiUrl('api/auth/register-external'), {
+      const response = await fetch(buildApiUrl('auth/register-external'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ provider, externalId })

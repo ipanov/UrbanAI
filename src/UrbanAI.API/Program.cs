@@ -18,14 +18,24 @@ var builder = WebApplication.CreateBuilder(args);
 // - Testing: InMemory provider (configured in CustomWebApplicationFactory)
 if (!builder.Environment.IsEnvironment("Testing"))
 {
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    if (string.IsNullOrEmpty(connectionString))
+    // Temporarily use InMemory database for development testing
+    // TODO: Switch back to PostgreSQL once it's installed and configured
+    if (builder.Environment.IsDevelopment())
     {
-        throw new InvalidOperationException("DefaultConnection connection string is not configured.");
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseInMemoryDatabase("UrbanAITestDb"));
     }
+    else
+    {
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidOperationException("DefaultConnection connection string is not configured.");
+        }
 
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(connectionString));
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseNpgsql(connectionString));
+    }
 }
 
 // Configure PostgreSQL settings
@@ -61,6 +71,15 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowCredentials();
     });
+});
+
+// Add session middleware for OAuth flow
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
 // Add Authentication and JWT configuration
@@ -123,6 +142,7 @@ app.UseHttpsRedirection();
 
 app.UseRouting(); // Add routing middleware
 app.UseCors("AllowFrontend"); // Enable CORS
+app.UseSession(); // Add session middleware
 app.UseAuthentication(); // Add authentication middleware
 app.UseAuthorization(); // Add authorization middleware
 

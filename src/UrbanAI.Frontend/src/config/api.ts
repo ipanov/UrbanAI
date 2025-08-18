@@ -48,7 +48,7 @@ export const APP_CONFIG: AppConfig = {
 export const buildApiUrl = (endpoint: string): string => {
   // Remove leading slash if present to avoid double slashes
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
-  return `${API_CONFIG.baseUrl}/${cleanEndpoint}`;
+  return `${API_CONFIG.baseUrl}/api/${cleanEndpoint}`;
 };
 
 export const buildOAuthUrl = (endpoint: string): string => {
