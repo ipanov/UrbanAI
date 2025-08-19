@@ -100,3 +100,14 @@ OAuth2 flow implemented with:
 - **Tokens**: JWT tokens for API authentication
 - **Session**: ASP.NET Core sessions for OAuth state management
 - **Frontend**: React components handle OAuth redirects and token management
+
+## Mobile App Development Guidelines
+
+When creating mobile applications:
+- Follow existing project structure: create mobile app as `src/UrbanAI.Mobile/`
+- Reuse existing API types, constants, and configuration from `src/UrbanAI.Frontend/`
+- Share common components, utilities, and styles between web and mobile
+- Use React Native with TypeScript following same patterns as web app
+- Maintain consistency with existing OAuth, API endpoints, and backend integration
+- Never start new projects outside the existing solution structure
+- Always check existing shared code before creating new implementations
