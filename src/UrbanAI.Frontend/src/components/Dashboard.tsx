@@ -3,6 +3,7 @@ import { Home, FileText, Settings, LogOut, MapPin, Clock, CheckCircle, AlertTria
 import { buildApiUrl } from '../config/api';
 import WelcomeTutorial from './WelcomeTutorial';
 import Layout from './Layout';
+import { useUser } from '../contexts/UserContext';
 
 interface Issue {
   id: string;
@@ -23,6 +24,7 @@ interface DashboardStats {
 }
 
 const Dashboard: React.FC = () => {
+  const { userProfile } = useUser();
   const [stats, setStats] = useState<DashboardStats>({
     totalReports: 0,
     inProgress: 0,
@@ -179,8 +181,18 @@ const Dashboard: React.FC = () => {
       <div className="dashboard">
         <main className="dashboard-content">
         <div className="welcome-section">
-          <h2>Welcome to UrbanAI</h2>
-          <p>Report municipal issues and track their resolution with AI-powered analysis.</p>
+          <h2>
+            {userProfile ? 
+              `Welcome back, ${userProfile.displayName.split(' ')[0]}! 👋` : 
+              'Welcome to UrbanAI'
+            }
+          </h2>
+          <p>
+            {userProfile ? 
+              `Ready to report municipal issues? Let's make your community better together.` :
+              'Report municipal issues and track their resolution with AI-powered analysis.'
+            }
+          </p>
           
           <div className="quick-actions">
             <button className="action-btn primary" data-testid="get-started-btn">

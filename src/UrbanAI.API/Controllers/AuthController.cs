@@ -179,7 +179,7 @@ namespace UrbanAI.API.Controllers
                 {
                     // User exists, generate JWT
                     var jwtToken = GenerateJwtToken(existingUser);
-                    return Ok(new { token = jwtToken, user = new { userInfo.Id, userInfo.Name, userInfo.Email } });
+                    return Ok(new { token = jwtToken, userInfo = new { userInfo.Id, userInfo.Name, userInfo.FirstName, userInfo.LastName, userInfo.Email } });
                 }
                 else
                 {
@@ -188,7 +188,7 @@ namespace UrbanAI.API.Controllers
                         requiresRegistration = true, 
                         provider = storedProvider, 
                         externalId = userInfo.Id,
-                        userInfo = new { userInfo.Id, userInfo.Name, userInfo.Email }
+                        userInfo = new { userInfo.Id, userInfo.Name, userInfo.FirstName, userInfo.LastName, userInfo.Email }
                     });
                 }
             }

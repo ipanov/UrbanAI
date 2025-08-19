@@ -1,13 +1,29 @@
 /* Basic App styles */
 .App {
   min-height: 100vh;
-  background-color: #f8fafc;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.App::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 /* Dashboard Styles */
 .dashboard {
   min-height: 100vh;
-  background-color: #f8fafc;
+  position: relative;
 }
 
 .dashboard-header {
@@ -15,9 +31,10 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 2rem;
-  background: white;
-  border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .header-content h1 {
@@ -31,6 +48,54 @@
   margin: 0.25rem 0 0 0;
   color: #6b7280;
   font-size: 0.875rem;
+}
+
+.header-user-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: rgba(248, 250, 252, 0.8);
+  backdrop-filter: blur(5px);
+  border-radius: 8px;
+  border: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #2563EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.user-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1E293B;
+}
+
+.user-provider {
+  font-size: 0.75rem;
+  color: #64748B;
+  text-transform: capitalize;
 }
 
 .logout-btn {
@@ -56,8 +121,9 @@
   display: flex;
   gap: 0.5rem;
   padding: 1rem 2rem;
-  background: white;
-  border-bottom: 1px solid #e5e7eb;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
 }
 
 .nav-item {
@@ -73,13 +139,14 @@
 }
 
 .nav-item:hover {
-  background: #f3f4f6;
+  background: rgba(248, 250, 252, 0.8);
   color: #374151;
 }
 
 .nav-item.active {
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: rgba(235, 245, 255, 0.9);
+  color: #2563EB;
+  font-weight: 600;
 }
 
 .dashboard-content {
@@ -89,11 +156,13 @@
 }
 
 .welcome-section {
-  background: white;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.5);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
+  margin-bottom: 32px;
 }
 
 .welcome-section h2 {
@@ -156,14 +225,12 @@
 }
 
 .stat-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.5);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .stat-card:hover {
@@ -191,10 +258,13 @@
 }
 
 .recent-issues-section {
-  background: white;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.5);
+  border-radius: 12px;
   overflow: hidden;
+  margin-bottom: 32px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .recent-issues-section h3 {
@@ -568,11 +638,7 @@
 /* Layout Styles */
 .layout {
   min-height: 100vh;
-  background-color: #f8fafc;
-}
-
-.page-content {
-  flex: 1;
+  position: relative;
 }
 
 /* Issues Page Styles */

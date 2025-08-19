@@ -3,6 +3,7 @@ import OAuthLoginPage from './components/OAuthLoginPage';
 import Dashboard from './components/Dashboard';
 import Issues from './components/Issues';
 import OAuthCallback from './components/OAuthCallback';
+import { UserProvider } from './contexts/UserContext';
 import './App.css';
 
 function App() {
@@ -17,27 +18,29 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={
-            <OAuthLoginPage
-              onOAuthLogin={handleOAuthLogin}
-              onGuestAccess={handleGuestAccess}
-            />
-          } />
-          <Route path="/login" element={
-            <OAuthLoginPage
-              onOAuthLogin={handleOAuthLogin}
-              onGuestAccess={handleGuestAccess}
-            />
-          } />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/issues" element={<Issues />} />
-          <Route path="/auth/callback" element={<OAuthCallback />} />
-        </Routes>
-      </div>
-    </Router>
+    <UserProvider>
+      <Router>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={
+              <OAuthLoginPage
+                onOAuthLogin={handleOAuthLogin}
+                onGuestAccess={handleGuestAccess}
+              />
+            } />
+            <Route path="/login" element={
+              <OAuthLoginPage
+                onOAuthLogin={handleOAuthLogin}
+                onGuestAccess={handleGuestAccess}
+              />
+            } />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/issues" element={<Issues />} />
+            <Route path="/auth/callback" element={<OAuthCallback />} />
+          </Routes>
+        </div>
+      </Router>
+    </UserProvider>
   );
 }
 

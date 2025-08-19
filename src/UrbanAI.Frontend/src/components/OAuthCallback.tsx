@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { buildApiUrl } from '../config/api';
+import { useUser, extractUserInfoFromProvider } from '../contexts/UserContext';
 
 interface OAuthCallbackProps {
   onSuccess?: (token: string) => void;
@@ -12,6 +13,7 @@ interface OAuthCallbackProps {
  * Handles the return from OAuth providers and completes the authentication flow
  */
 const OAuthCallback: React.FC<OAuthCallbackProps> = ({ onSuccess, onError }) => {
+  const { setUserProfile } = useUser();
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -88,9 +90,47 @@ const OAuthCallback: React.FC<OAuthCallbackProps> = ({ onSuccess, onError }) => 
         }
 
         const data = await response.json();
+        console.log('[OAuth] Callback response:', data);
         
-        // Now we have the user info, proceed with registration
-        await registerUser(data.provider, data.externalId, data.name, data.email);
+        // Store user profile locally in browser (never sent to server) 
+        if (data.userInfo) {
+          console.log('[OAuth] Processing userInfo:', data.userInfo);
+          
+          // Extract user info from the backend response
+          const userProfile = {
+            firstName: data.userInfo.FirstName || data.userInfo.firstName || '',
+            lastName: data.userInfo.LastName || data.userInfo.lastName || '',
+            displayName: data.userInfo.Name || data.userInfo.displayName || data.userInfo.name || `${data.userInfo.FirstName || data.userInfo.firstName || ''} ${data.userInfo.LastName || data.userInfo.lastName || ''}`.trim() || 'User',
+            email: data.userInfo.Email || data.userInfo.email || data.userInfo.mail || data.userInfo.userPrincipalName || '',
+            provider: (data.provider || provider) as 'microsoft' | 'google' | 'facebook',
+            initials: ''
+          };
+          
+          // Generate initials
+          if (userProfile.firstName && userProfile.lastName) {
+            userProfile.initials = `${userProfile.firstName.charAt(0)}${userProfile.lastName.charAt(0)}`.toUpperCase();
+          } else if (userProfile.displayName && userProfile.displayName !== 'User') {
+            userProfile.initials = userProfile.displayName.split(' ').map(n => n.charAt(0)).join('').toUpperCase().slice(0, 2);
+          } else {
+            userProfile.initials = 'U';
+          }
+          
+          console.log('[OAuth] Setting user profile:', userProfile);
+          setUserProfile(userProfile);
+        }
+
+        // Check if user already exists and has token, or needs registration
+        if (data.token) {
+          // User already exists, store token and redirect
+          localStorage.setItem('urbanai_token', data.token);
+          onSuccess?.(data.token);
+          window.location.href = '/dashboard';
+        } else if (data.requiresRegistration) {
+          // New user, register with external ID only (no PII sent to server)
+          await registerUser(data.provider, data.externalId);
+        } else {
+          throw new Error('Invalid OAuth callback response - missing token or registration data');
+        }
 
       } catch (err: any) {
         console.error('OAuth callback error:', err);
@@ -109,7 +149,7 @@ const OAuthCallback: React.FC<OAuthCallbackProps> = ({ onSuccess, onError }) => 
     handleOAuthCallback();
   }, [searchParams, onSuccess, onError]);
 
-  const registerUser = async (provider: string, externalId: string, name: string, email: string) => {
+  const registerUser = async (provider: string, externalId: string) => {
     try {
       const response = await fetch(buildApiUrl('auth/register-external'), {
         method: 'POST',
