@@ -1,6 +1,6 @@
-# CLAUDE.md
+# UrbanAI Project Context
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code when working with code in this repository.
 
 ## Core Architecture
 
@@ -72,9 +72,10 @@ npm run start:all
 ```
 
 ### Git Branching
-Follow Azure DevOps Work Item integration:
-- Branch naming: `feature/WI-ID-short-description` (e.g., `feature/37-setup-integration-tests`)
-- PR titles: `[Type]: WI-ID - Short description` (e.g., `feat: 37 - Setup Integration Tests Project`)
+Follow GitHub workflow:
+- Branch naming: `feature/description` (e.g., `feature/oauth-integration`)
+- Commit directly to develop branch for now
+- Use conventional commits: `feat:`, `fix:`, `refactor:`, `chore:`
 
 ## Key Configuration Files
 
@@ -111,3 +112,68 @@ When creating mobile applications:
 - Maintain consistency with existing OAuth, API endpoints, and backend integration
 - Never start new projects outside the existing solution structure
 - Always check existing shared code before creating new implementations
+
+## Mission and Scope
+
+**Mission**: Provide a structured platform for reporting, triaging, and resolving urban issues while linking cases to relevant regulations and supporting operators with an AI assistant.
+
+**Current Scope (v1)**:
+- Backend Clean Architecture (API, Application, Domain, Infrastructure)
+- Issue lifecycle (create/read/update)
+- Basic auth scaffolding with OAuth
+- REST API contracts
+- Frontend scaffold (Vite + React + TS) consuming API
+- CI with tests and coverage
+
+**Non-goals**: Advanced workflow automation, complex AI planning, multi-tenant support
+
+## Stakeholders
+- **Citizens**: submit issues, receive confirmations/status
+- **Municipal operators**: review, update, resolve issues, reference regulations, generate reports
+- **Administrators**: configure integrations, monitor compliance and system health
+
+## Technology Patterns
+
+### Clean Architecture Implementation
+- **API Layer**: Controllers are thin, handle HTTP concerns only
+- **Application Layer**: Business logic, DTOs, service interfaces
+- **Domain Layer**: Entities, value objects, domain interfaces
+- **Infrastructure Layer**: Data access, external services, implements domain interfaces
+
+### Data Access Patterns
+- Entity Framework Core for relational data with migrations
+- Repository pattern for data access abstraction
+- DTOs for API data transfer, mapped in Application services
+
+### Testing Patterns
+- Unit tests for business logic in Application and Domain layers
+- Integration tests for API endpoints and database operations
+- E2E tests for critical user flows
+- Comprehensive test coverage with reporting
+
+### Frontend Patterns
+- Component-based architecture with React
+- TypeScript for type safety
+- Vite for fast development and building
+- API integration through centralized service layer
+
+## Current Development Context
+
+**Recent Changes**: 
+- Migrated from Cline AI assistant to Claude Code
+- Consolidated OAuth functionality to use v1/oauth endpoints
+- Removed Azure DevOps dependencies, using GitHub ecosystem
+- No longer using Figma, using HTML mocks instead
+- Cleaned up codebase, removed duplicate code and unused files
+
+**Active Focus**: Streamlining development tools and maintaining clean architecture while building core urban issue reporting functionality.
+
+## Important Reminders
+
+- Do what has been asked; nothing more, nothing less
+- NEVER create files unless they're absolutely necessary for achieving your goal
+- ALWAYS prefer editing an existing file to creating a new one
+- NEVER proactively create documentation files (*.md) or README files unless explicitly requested
+- Follow existing code conventions and patterns
+- Keep changes incremental and auditable
+- Respect the Clean Architecture boundaries
