@@ -74,7 +74,7 @@ const OAuthCallback: React.FC<OAuthCallbackProps> = ({ onSuccess, onError }) => 
         }
 
         // Handle the OAuth callback through our backend
-        const callbackUrl = `${buildApiUrl('auth/callback')}?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`;
+        const callbackUrl = `${buildApiUrl(`v1/oauth/callback/${provider}`)}?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}&code_verifier=${encodeURIComponent(codeVerifier)}`;
         
         const response = await fetch(callbackUrl, {
           method: 'GET',

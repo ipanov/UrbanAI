@@ -3,16 +3,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using UrbanAI.Application.DTOs;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Mvc.Testing;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Text;
 
 namespace UrbanAI.API.IntegrationTests.Controllers
 {
@@ -41,37 +31,37 @@ namespace UrbanAI.API.IntegrationTests.Controllers
         }
 
         [Fact]
-        public async Task ExchangeToken_ShouldReturnBadRequest_WhenProviderIsInvalid()
+        public async Task RegisterExternal_ShouldReturnBadRequest_WhenProviderIsEmpty()
         {
             // Arrange
-            var request = new AuthRequestDto
+            var request = new
             {
-                Provider = "InvalidProvider",
-                Token = "InvalidToken"
+                Provider = "",
+                ExternalId = "test123"
             };
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/auth/exchange-token", request);
+            var response = await _client.PostAsJsonAsync("/api/auth/register-external", request);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Fact]
-        public async Task ExchangeToken_WithMockToken_ShouldReturnNotFound_WhenUserDoesNotExist()
+        public async Task RegisterExternal_ShouldReturnBadRequest_WhenExternalIdIsEmpty()
         {
             // Arrange
-            var request = new AuthRequestDto
+            var request = new
             {
                 Provider = "google",
-                Token = "mock:test123"
+                ExternalId = ""
             };
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/auth/exchange-token", request);
+            var response = await _client.PostAsJsonAsync("/api/auth/register-external", request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
     }
 }

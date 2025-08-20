@@ -1,5 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using UrbanAI.Application.Interfaces;
+using UrbanAI.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using UrbanAI.Domain.Entities;
 
 namespace UrbanAI.API.Controllers
 {
@@ -15,11 +22,16 @@ namespace UrbanAI.API.Controllers
     public class OAuthCallbackController(
         IOAuthService oauthService,
         IConfiguration configuration,
-        ILogger<OAuthCallbackController> logger) : ControllerBase
+        ILogger<OAuthCallbackController> logger,
+        ApplicationDbContext dbContext) : ControllerBase
     {
         private readonly IOAuthService _oauthService = oauthService;
         private readonly IConfiguration _configuration = configuration;
         private readonly ILogger<OAuthCallbackController> _logger = logger;
+        private readonly ApplicationDbContext _dbContext = dbContext;
+        private readonly string _jwtSecret = configuration["Jwt:Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");
+        private readonly string _jwtIssuer = configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("JWT Issuer not configured");
+        private readonly string _jwtAudience = configuration["Jwt:Audience"] ?? throw new InvalidOperationException("JWT Audience not configured");
 
         /// <summary>
         /// Generate OAuth authorization URL for the specified provider.
@@ -150,35 +162,57 @@ namespace UrbanAI.API.Controllers
                     redirectUri
                 );
 
-                // Get user info
+                // Get user info from provider
                 var userInfo = await _oauthService.GetUserInfoAsync(normalizedProvider, tokenResponse.AccessToken);
 
-                // Return user info for frontend to handle registration
-                var callbackResponse = new
-                {
-                    provider = normalizedProvider,
-                    externalId = userInfo.Id,
-                    name = userInfo.Name,
-                    email = userInfo.Email,
-                    picture = userInfo.Picture
-                };
+                // Check if user exists in our system
+                var existingUser = await _dbContext.Users
+                    .Include(u => u.ExternalLogins)
+                    .SingleOrDefaultAsync(u => 
+                        u.ExternalLogins.Any(l => l.Provider == normalizedProvider && l.ExternalId == userInfo.Id));
 
-                // For development, return JSON response
-                // In production, this should redirect to frontend with parameters
-                if (Request.Headers.Accept.ToString().Contains("application/json"))
+                if (existingUser != null)
                 {
-                    return Ok(callbackResponse);
+                    // User exists, generate JWT
+                    var jwtToken = GenerateJwtToken(existingUser);
+                    var callbackResponse = new { 
+                        token = jwtToken, 
+                        userInfo = new { userInfo.Id, userInfo.Name, userInfo.FirstName, userInfo.LastName, userInfo.Email } 
+                    };
+                    
+                    if (Request.Headers.Accept.ToString().Contains("application/json"))
+                    {
+                        return Ok(callbackResponse);
+                    }
+                    // For redirect, include token in URL (not recommended for production)
+                    var frontendUrl = GetFrontendUrl();
+                    var redirectUrl = $"{frontendUrl}/auth/callback?token={Uri.EscapeDataString(jwtToken)}";
+                    return Redirect(redirectUrl);
                 }
-
-                // Redirect to frontend with OAuth result
-                var frontendUrl = GetFrontendUrl();
-                var redirectUrl = $"{frontendUrl}/auth/callback?" +
-                    $"provider={normalizedProvider}&" +
-                    $"externalId={Uri.EscapeDataString(userInfo.Id)}&" +
-                    $"name={Uri.EscapeDataString(userInfo.Name)}&" +
-                    $"email={Uri.EscapeDataString(userInfo.Email)}";
-
-                return Redirect(redirectUrl);
+                else
+                {
+                    // User doesn't exist, return registration required
+                    var callbackResponse = new { 
+                        requiresRegistration = true, 
+                        provider = normalizedProvider, 
+                        externalId = userInfo.Id,
+                        userInfo = new { userInfo.Id, userInfo.Name, userInfo.FirstName, userInfo.LastName, userInfo.Email }
+                    };
+                    
+                    if (Request.Headers.Accept.ToString().Contains("application/json"))
+                    {
+                        return Ok(callbackResponse);
+                    }
+                    // For redirect, pass registration data
+                    var frontendUrl = GetFrontendUrl();
+                    var redirectUrl = $"{frontendUrl}/auth/callback?" +
+                        $"requiresRegistration=true&" +
+                        $"provider={normalizedProvider}&" +
+                        $"externalId={Uri.EscapeDataString(userInfo.Id)}&" +
+                        $"name={Uri.EscapeDataString(userInfo.Name)}&" +
+                        $"email={Uri.EscapeDataString(userInfo.Email)}";
+                    return Redirect(redirectUrl);
+                }
             }
             catch (Exception ex)
             {
@@ -234,6 +268,31 @@ namespace UrbanAI.API.Controllers
             return environment == "Production"
                 ? _configuration["OAuth:RedirectUris:Production:BaseUrl"] ?? "https://urbanai.site"
                 : _configuration["OAuth:RedirectUris:Development:BaseUrl"] ?? "http://localhost:5173";
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_jwtSecret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, user.Role),
+                    new Claim("auth_time", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
+                    new Claim("iss", _jwtIssuer),
+                    new Claim("aud", _jwtAudience)
+                }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }

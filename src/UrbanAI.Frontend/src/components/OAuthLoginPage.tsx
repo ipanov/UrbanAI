@@ -79,7 +79,7 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
     
     try {
       // Get OAuth authorization URL from backend
-      const response = await fetch(buildApiUrl(`auth/authorize/${provider}`), {
+      const response = await fetch(buildApiUrl(`v1/oauth/authorize/${provider}`), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'

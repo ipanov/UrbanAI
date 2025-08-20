@@ -5,7 +5,9 @@
       "Bash(claude mcp add:*)",
       "Bash(claude mcp:*)",
       "Bash(tasklist:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(rm:*)",
+      "Bash(dotnet build)"
     ],
     "deny": [],
     "ask": []
