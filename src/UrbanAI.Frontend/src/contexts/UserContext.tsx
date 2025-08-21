@@ -11,7 +11,7 @@ interface UserProfile {
 
 interface UserContextType {
   userProfile: UserProfile | null;
-  setUserProfile: (profile: UserProfile | null) => void;
+  setUserProfile: (_profile: UserProfile | null) => void;
   isAuthenticated: boolean;
   logout: () => void;
 }
@@ -96,6 +96,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useUser = (): UserContextType => {
   const context = useContext(UserContext);
   if (context === undefined) {
@@ -105,6 +106,7 @@ export const useUser = (): UserContextType => {
 };
 
 // Helper to extract user info from OAuth provider responses (client-side only)
+// eslint-disable-next-line react-refresh/only-export-components
 export const extractUserInfoFromProvider = (
   provider: 'microsoft' | 'google' | 'facebook',
   providerUserData?: any

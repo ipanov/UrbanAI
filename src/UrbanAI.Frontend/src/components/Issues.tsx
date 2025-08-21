@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FileText, MapPin, Clock, CheckCircle, AlertTriangle, Plus, Filter, Search, Sparkles } from 'lucide-react';
 import { buildApiUrl } from '../config/api';
 import Layout from './Layout';
@@ -22,7 +22,7 @@ const Issues: React.FC = () => {
 
   useEffect(() => {
     fetchIssues();
-  }, []);
+  }, [fetchIssues]);
 
   const createWelcomeIssue = (): Issue => {
     return {
@@ -36,7 +36,7 @@ const Issues: React.FC = () => {
     };
   };
 
-  const fetchIssues = async () => {
+  const fetchIssues = useCallback(async () => {
     try {
       const token = localStorage.getItem('urbanai_token');
       let fetchedIssues: Issue[] = [];
@@ -86,7 +86,7 @@ const Issues: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const isWelcomeIssue = (issueId: string) => {
     return issueId === 'welcome-template-issue';

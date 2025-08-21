@@ -9,7 +9,7 @@ import { buildApiUrl } from '../config/api';
 import './OAuthLoginPage.css';
 
 interface OAuthLoginPageProps {
-  onOAuthLogin?: (provider: 'microsoft' | 'google' | 'facebook') => void;
+  onOAuthLogin?: (_provider: 'microsoft' | 'google' | 'facebook') => void;
   onGuestAccess?: () => void;
 }
 
@@ -65,7 +65,6 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
     setLoading(true);
 
     // For testing environments, use mock behavior
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     if (import.meta.env && import.meta.env.VITEST === 'true') {
       setPendingProvider(provider);

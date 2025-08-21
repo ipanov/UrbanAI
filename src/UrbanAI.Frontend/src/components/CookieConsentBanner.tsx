@@ -12,7 +12,7 @@ interface ConsentPreferences {
 }
 
 interface CookieConsentBannerProps {
-  onConsentChange?: (preferences: ConsentPreferences) => void;
+  onConsentChange?: (_preferences: ConsentPreferences) => void;
 }
 
 const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ onConsentChange }) => {

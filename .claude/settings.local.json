@@ -20,7 +20,9 @@
       "Bash(gh issue list:*)",
       "Bash(npm install)",
       "Bash(gh issue comment:*)",
-      "Bash(npm run type-check:*)"
+      "Bash(npm run type-check:*)",
+      "Bash(npm run lint)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FileText, MapPin, Clock, CheckCircle, AlertTriangle, Plus, TrendingUp, Sparkles } from 'lucide-react';
 import { buildApiUrl } from '../config/api';
 import WelcomeTutorial from './WelcomeTutorial';
@@ -38,7 +38,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     checkIfNewUser();
     fetchDashboardData();
-  }, []);
+  }, [fetchDashboardData]);
 
   const checkIfNewUser = () => {
     const hasSeenTutorial = localStorage.getItem('urbanai_tutorial_completed');
@@ -66,7 +66,7 @@ const Dashboard: React.FC = () => {
     };
   };
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       const token = localStorage.getItem('urbanai_token');
       let issues: Issue[] = [];
@@ -134,7 +134,7 @@ const Dashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const handleTutorialComplete = () => {
     localStorage.setItem('urbanai_tutorial_completed', 'true');

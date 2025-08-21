@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('UrbanAI UX Flow', () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page: _page }) => {
     // Set default timeout
     test.setTimeout(30000);
   });
@@ -329,8 +329,6 @@ test.describe('UrbanAI UX Flow', () => {
         
         // Check if element is focused
         const activeElement = await page.evaluate(() => document.activeElement);
-        const isElementFocused = await page.$eval(selector, (el, active) => 
-          el === active, activeElement);
         
         // At least one of the elements matching the selector should be focused
         const elements = await page.$$(selector);

@@ -9,7 +9,7 @@ export interface ButtonProps {
   loading?: boolean;
   fullWidth?: boolean;
   type?: 'button' | 'submit' | 'reset';
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (_event: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
   'data-testid'?: string;
   'aria-label'?: string;

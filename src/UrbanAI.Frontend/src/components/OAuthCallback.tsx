@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { buildApiUrl } from '../config/api';
 import { useUser } from '../contexts/UserContext';
 
 interface OAuthCallbackProps {
-  onSuccess?: (token: string) => void;
-  onError?: (error: string) => void;
+  onSuccess?: (_token: string) => void;
+  onError?: (_error: string) => void;
 }
 
 /**
@@ -147,9 +147,9 @@ const OAuthCallback: React.FC<OAuthCallbackProps> = ({ onSuccess, onError }) => 
     };
 
     handleOAuthCallback();
-  }, [searchParams, onSuccess, onError]);
+  }, [searchParams, onSuccess, onError, registerUser, setUserProfile]);
 
-  const registerUser = async (provider: string, externalId: string) => {
+  const registerUser = useCallback(async (provider: string, externalId: string) => {
     try {
       const response = await fetch(buildApiUrl('auth/register-external'), {
         method: 'POST',
@@ -182,7 +182,7 @@ const OAuthCallback: React.FC<OAuthCallbackProps> = ({ onSuccess, onError }) => 
       console.error('User registration error:', err);
       throw err;
     }
-  };
+  }, [onSuccess]);
 
   if (loading) {
     return (
