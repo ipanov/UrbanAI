@@ -25,7 +25,9 @@
       "Bash(grep:*)",
       "Bash(gh issue view:*)",
       "Bash(npm run test:coverage:*)",
-      "Bash(npm run test:*)"
+      "Bash(npm run test:*)",
+      "Bash(npm run build:*)",
+      "Bash(chmod:*)"
     ],
     "deny": [],
     "ask": []

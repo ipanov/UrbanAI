@@ -298,20 +298,22 @@ jobs:
               assignees: [context.repo.owner]
             });
 
-            // Trigger the CI failure listener workflow
-            await github.rest.repos.createDispatchEvent({
+            // Add a comment to trigger Claude Code intervention
+            await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              event_type: 'ci_failure_report',
-              client_payload: {
-                run_id: process.env.GITHUB_RUN_ID,
-                run_url: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,
-                issue_number: issue.data.number,
-                issue_url: issue.data.html_url,
-                branch: process.env.GITHUB_REF,
-                failed_jobs: failedJobs,
-                commit_sha: process.env.GITHUB_SHA
-              }
+              issue_number: issue.data.number,
+              body: `## 🚨 CI Failure Detected - Automated Analysis Requested
+            
+            **@claude please analyze and fix the CI failures in this issue.**
+            
+            **Failed Components:** ${failedJobs.join(', ')}  
+            **Run Details:** [View logs and artifacts](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})
+            
+            The Claude CI Fixer workflow will automatically prepare analysis context and guide the fix process.
+            
+            ---
+            *Automated request for Claude Code intervention*`
             });
 
             core.setOutput('issue_number', issue.data.number);
