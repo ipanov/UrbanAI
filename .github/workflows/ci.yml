@@ -253,7 +253,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create GitHub Issue for CI Failure
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const failedJobs = [];
@@ -299,7 +299,7 @@ jobs:
             });
 
             // Trigger the CI failure listener workflow
-            await github.rest.repos.createDispatch({
+            await github.rest.repos.createDispatchEvent({
               owner: context.repo.owner,
               repo: context.repo.repo,
               event_type: 'ci_failure_report',

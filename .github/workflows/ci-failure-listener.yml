@@ -101,13 +101,13 @@ jobs:
             git push --set-upstream origin $BRANCH_NAME
           fi
 
-      - name: Create repository dispatch for Cline (optional notification)
+      - name: Create repository dispatch for Claude Code (optional notification)
         if: always()
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             // Notify repository listeners (optional) that activeContext.md was created/updated
-            await github.rest.repos.createDispatch({
+            await github.rest.repos.createDispatchEvent({
               owner: context.repo.owner,
               repo: context.repo.repo,
               event_type: 'ci_failure_context_ready',

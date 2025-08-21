@@ -1,0 +1,260 @@
+name: Auto-Fix CI Failures
+
+on:
+  repository_dispatch:
+    types: [ci_failure_report]
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  actions: read
+
+jobs:
+  auto-fix:
+    if: |
+      (github.event_name == 'repository_dispatch' && github.event.action == 'ci_failure_report') ||
+      (github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'ci-failure'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Parse CI failure details
+        id: parse
+        run: |
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            # From repository dispatch
+            echo "run_id=${{ github.event.client_payload.run_id }}" >> $GITHUB_OUTPUT
+            echo "issue_number=${{ github.event.client_payload.issue_number }}" >> $GITHUB_OUTPUT
+            echo "branch=${{ github.event.client_payload.branch }}" >> $GITHUB_OUTPUT
+            echo "failed_jobs=${{ join(github.event.client_payload.failed_jobs, ',') }}" >> $GITHUB_OUTPUT
+          else
+            # From issue creation - extract from issue title/body
+            issue_title="${{ github.event.issue.title }}"
+            run_id=$(echo "$issue_title" | grep -o 'Run [0-9]*' | grep -o '[0-9]*' || echo "")
+            echo "run_id=$run_id" >> $GITHUB_OUTPUT
+            echo "issue_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+            echo "branch=develop" >> $GITHUB_OUTPUT
+            # Extract failed jobs from title
+            failed_jobs=$(echo "$issue_title" | sed 's/.*: \(.*\) - Run.*/\1/')
+            echo "failed_jobs=$failed_jobs" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 0
+
+      - name: Download workflow logs
+        if: steps.parse.outputs.run_id != ''
+        run: |
+          # Get the workflow run logs
+          gh run download ${{ steps.parse.outputs.run_id }} --log --dir ./ci-logs || true
+          
+          # Create a summary of failures
+          mkdir -p ./failure-analysis
+          
+          echo "# CI Failure Analysis - Run ${{ steps.parse.outputs.run_id }}" > ./failure-analysis/summary.md
+          echo "" >> ./failure-analysis/summary.md
+          echo "**Failed Components:** ${{ steps.parse.outputs.failed_jobs }}" >> ./failure-analysis/summary.md
+          echo "**Issue:** #${{ steps.parse.outputs.issue_number }}" >> ./failure-analysis/summary.md
+          echo "" >> ./failure-analysis/summary.md
+          
+          # Extract error messages from logs
+          if [ -d "./ci-logs" ]; then
+            echo "## Error Details:" >> ./failure-analysis/summary.md
+            find ./ci-logs -name "*.txt" | while read logfile; do
+              echo "### $(basename "$logfile")" >> ./failure-analysis/summary.md
+              echo '```' >> ./failure-analysis/summary.md
+              # Get last 50 lines of each log file and filter for errors
+              tail -50 "$logfile" | grep -E "(error|Error|ERROR|failed|Failed|FAILED)" | head -20 >> ./failure-analysis/summary.md || echo "No clear error patterns found" >> ./failure-analysis/summary.md
+              echo '```' >> ./failure-analysis/summary.md
+              echo "" >> ./failure-analysis/summary.md
+            done
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create fix branch
+        id: branch
+        run: |
+          branch_name="auto-fix/ci-failure-${{ steps.parse.outputs.run_id }}"
+          echo "branch_name=$branch_name" >> $GITHUB_OUTPUT
+          
+          # Create new branch from develop
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch_name"
+
+      - name: Analyze and fix frontend issues
+        if: contains(steps.parse.outputs.failed_jobs, 'Frontend') || contains(steps.parse.outputs.failed_jobs, 'frontend')
+        run: |
+          echo "🔧 Analyzing frontend failures..."
+          
+          cd src/UrbanAI.Frontend
+          
+          # Install dependencies
+          npm ci
+          
+          # Run type check and capture errors
+          npm run type-check > ../../failure-analysis/frontend-type-errors.log 2>&1 || true
+          
+          # Run lint and capture errors
+          npm run lint > ../../failure-analysis/frontend-lint-errors.log 2>&1 || true
+          
+          # Try to run tests to see specific failures
+          npm run test > ../../failure-analysis/frontend-test-errors.log 2>&1 || true
+          
+          cd ../..
+          
+          # Add error analysis to summary
+          echo "## Frontend Analysis:" >> ./failure-analysis/summary.md
+          
+          if [ -f "./failure-analysis/frontend-type-errors.log" ]; then
+            echo "### TypeScript Errors:" >> ./failure-analysis/summary.md
+            echo '```' >> ./failure-analysis/summary.md
+            cat ./failure-analysis/frontend-type-errors.log >> ./failure-analysis/summary.md
+            echo '```' >> ./failure-analysis/summary.md
+          fi
+          
+          if [ -f "./failure-analysis/frontend-lint-errors.log" ]; then
+            echo "### ESLint Errors:" >> ./failure-analysis/summary.md
+            echo '```' >> ./failure-analysis/summary.md
+            cat ./failure-analysis/frontend-lint-errors.log >> ./failure-analysis/summary.md
+            echo '```' >> ./failure-analysis/summary.md
+          fi
+
+      - name: Analyze and fix mobile issues
+        if: contains(steps.parse.outputs.failed_jobs, 'Mobile') || contains(steps.parse.outputs.failed_jobs, 'mobile')
+        run: |
+          echo "📱 Analyzing mobile failures..."
+          
+          # Check if mobile directory exists
+          if [ ! -d "src/UrbanAI.Mobile" ]; then
+            echo "Mobile directory missing - this might be the issue"
+            echo "### Mobile Analysis:" >> ./failure-analysis/summary.md
+            echo "❌ Mobile directory `src/UrbanAI.Mobile` does not exist" >> ./failure-analysis/summary.md
+            echo "This suggests the mobile project needs to be initialized or restored." >> ./failure-analysis/summary.md
+            echo "" >> ./failure-analysis/summary.md
+          else
+            cd src/UrbanAI.Mobile
+            
+            # Check if package.json exists
+            if [ ! -f "package.json" ]; then
+              echo "Missing package.json in mobile project"
+              echo "❌ Mobile project missing package.json" >> ../../failure-analysis/summary.md
+            else
+              # Try to install and check
+              npm ci > ../../failure-analysis/mobile-install.log 2>&1 || true
+              npm run type-check > ../../failure-analysis/mobile-type-errors.log 2>&1 || true
+            fi
+            
+            cd ../..
+          fi
+
+      - name: Analyze and fix backend issues
+        if: contains(steps.parse.outputs.failed_jobs, 'Backend') || contains(steps.parse.outputs.failed_jobs, 'backend')
+        run: |
+          echo "🏗️ Analyzing backend failures..."
+          
+          # Run dotnet restore and build to see errors
+          dotnet restore UrbanAI.sln > ./failure-analysis/backend-restore.log 2>&1 || true
+          dotnet build UrbanAI.sln --configuration Release > ./failure-analysis/backend-build.log 2>&1 || true
+          
+          # Add backend analysis
+          echo "## Backend Analysis:" >> ./failure-analysis/summary.md
+          
+          if [ -f "./failure-analysis/backend-build.log" ]; then
+            echo "### Build Errors:" >> ./failure-analysis/summary.md
+            echo '```' >> ./failure-analysis/summary.md
+            grep -E "(error|Error|ERROR)" ./failure-analysis/backend-build.log | head -20 >> ./failure-analysis/summary.md || echo "No build errors found" >> ./failure-analysis/summary.md
+            echo '```' >> ./failure-analysis/summary.md
+          fi
+
+      - name: Comment on issue with analysis
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let analysis = "## 🤖 Automated Analysis\n\n";
+            
+            if (fs.existsSync('./failure-analysis/summary.md')) {
+              analysis += fs.readFileSync('./failure-analysis/summary.md', 'utf8');
+            } else {
+              analysis += "Analysis files not found. Manual investigation required.";
+            }
+            
+            analysis += "\n\n---\n";
+            analysis += "**Next Steps:**\n";
+            analysis += "1. Reviewing analysis above\n";
+            analysis += "2. Creating automated fixes based on error patterns\n";
+            analysis += "3. Testing fixes locally\n";
+            analysis += "4. Pushing fix to branch `${{ steps.branch.outputs.branch_name }}`\n";
+            analysis += "5. Creating PR if fixes are successful\n\n";
+            analysis += "*This is an automated analysis. A human developer should review before merging.*";
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ steps.parse.outputs.issue_number }},
+              body: analysis
+            });
+
+      - name: Commit analysis and attempt basic fixes
+        run: |
+          # Add all analysis files
+          git add -A
+          
+          # Create initial commit with analysis
+          git commit -m "feat: automated CI failure analysis for run ${{ steps.parse.outputs.run_id }}
+
+          - Added comprehensive failure analysis
+          - Captured error logs from failed jobs: ${{ steps.parse.outputs.failed_jobs }}
+          - Ready for automated fix implementation
+          
+          Issue: #${{ steps.parse.outputs.issue_number }}
+          Run: ${{ steps.parse.outputs.run_id }}"
+          
+          # Push the analysis branch
+          git push origin "${{ steps.branch.outputs.branch_name }}"
+
+      - name: Trigger Claude Code manual intervention notification
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Create a repository dispatch to notify Claude Code tools
+            await github.rest.repos.createDispatchEvent({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              event_type: 'claude_intervention_needed',
+              client_payload: {
+                issue_number: ${{ steps.parse.outputs.issue_number }},
+                fix_branch: '${{ steps.branch.outputs.branch_name }}',
+                failed_jobs: '${{ steps.parse.outputs.failed_jobs }}',
+                run_id: '${{ steps.parse.outputs.run_id }}',
+                analysis_ready: true
+              }
+            });
+            
+            // Add a comment requesting manual intervention
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ steps.parse.outputs.issue_number }},
+              body: `## 🎯 Ready for Claude Code Intervention
+
+            **Analysis Complete:** Detailed failure analysis has been generated and committed to branch \`${{ steps.branch.outputs.branch_name }}\`
+
+            **Manual Action Required:**
+            1. Run Claude Code with this repository
+            2. Mention this issue: \`@claude please fix the CI failures in issue #${{ steps.parse.outputs.issue_number }}\`
+            3. Claude will analyze the failure logs and implement fixes
+            4. Once fixed, Claude will create a PR to resolve this issue
+
+            **Branch:** \`${{ steps.branch.outputs.branch_name }}\`
+            **Failed Jobs:** ${{ steps.parse.outputs.failed_jobs }}
+
+            @${{ github.repository_owner }} - Claude Code intervention needed for automated CI recovery.`
+            });

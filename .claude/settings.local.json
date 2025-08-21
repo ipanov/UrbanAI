@@ -60,6 +60,16 @@
             "timeout": 2
           }
         ]
+      },
+      {
+        "matcher": "MultiEdit",
+        "hooks": [
+          {
+            "type": "command", 
+            "command": "node .claude/hooks/validate-frontend.js",
+            "timeout": 15
+          }
+        ]
       }
     ]
   }
