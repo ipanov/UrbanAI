@@ -20,10 +20,6 @@ const Issues: React.FC = () => {
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  useEffect(() => {
-    fetchIssues();
-  }, [fetchIssues]);
-
   const createWelcomeIssue = (): Issue => {
     return {
       id: 'welcome-template-issue',
@@ -87,6 +83,10 @@ const Issues: React.FC = () => {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    fetchIssues();
+  }, [fetchIssues]);
 
   const isWelcomeIssue = (issueId: string) => {
     return issueId === 'welcome-template-issue';

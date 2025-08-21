@@ -19,6 +19,44 @@ const OAuthCallback: React.FC<OAuthCallbackProps> = ({ onSuccess, onError }) => 
   const [error, setError] = useState<string | null>(null);
   const hasProcessed = useRef(false);
 
+  const registerUser = useCallback(async (provider: string, externalId: string) => {
+    try {
+      const response = await fetch(buildApiUrl('auth/register-external'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          provider,
+          externalId
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Registration failed (${response.status})`);
+      }
+
+      const json = await response.json();
+      const token = json?.token ?? json?.Token;
+      
+      if (!token) {
+        throw new Error('No authentication token returned from server');
+      }
+
+      // Store token locally (no PII stored)
+      localStorage.setItem('urbanai_token', token);
+      
+      // Notify parent component
+      onSuccess?.(token);
+      
+      // Redirect to dashboard
+      window.location.href = '/dashboard';
+      
+    } catch (err: any) {
+      console.error('User registration error:', err);
+      throw err;
+    }
+  }, [onSuccess]);
+
   useEffect(() => {
     // Prevent double execution in React StrictMode
     if (hasProcessed.current) {
@@ -148,41 +186,6 @@ const OAuthCallback: React.FC<OAuthCallbackProps> = ({ onSuccess, onError }) => 
 
     handleOAuthCallback();
   }, [searchParams, onSuccess, onError, registerUser, setUserProfile]);
-
-  const registerUser = useCallback(async (provider: string, externalId: string) => {
-    try {
-      const response = await fetch(buildApiUrl('auth/register-external'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ provider, externalId })
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || `Registration failed (${response.status})`);
-      }
-
-      const json = await response.json();
-      const token = json?.token ?? json?.Token;
-      
-      if (!token) {
-        throw new Error('No authentication token returned from server');
-      }
-
-      // Store token locally (no PII stored)
-      localStorage.setItem('urbanai_token', token);
-      
-      // Notify parent component
-      onSuccess?.(token);
-      
-      // Redirect to dashboard
-      window.location.href = '/dashboard';
-      
-    } catch (err: any) {
-      console.error('User registration error:', err);
-      throw err;
-    }
-  }, [onSuccess]);
 
   if (loading) {
     return (

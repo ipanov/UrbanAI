@@ -35,37 +35,6 @@ const Dashboard: React.FC = () => {
   const [showTutorial, setShowTutorial] = useState(false);
   const [isNewUser, setIsNewUser] = useState(false);
 
-  useEffect(() => {
-    checkIfNewUser();
-    fetchDashboardData();
-  }, [fetchDashboardData]);
-
-  const checkIfNewUser = () => {
-    const hasSeenTutorial = localStorage.getItem('urbanai_tutorial_completed');
-    const hasSeenWelcomeIssue = localStorage.getItem('urbanai_welcome_issue_seen');
-    
-    if (!hasSeenTutorial) {
-      setIsNewUser(true);
-      setShowTutorial(true);
-    }
-    
-    if (!hasSeenWelcomeIssue) {
-      setIsNewUser(true);
-    }
-  };
-
-  const createWelcomeIssue = (): Issue => {
-    return {
-      id: 'welcome-template-issue',
-      title: 'Welcome to UrbanAI! 🎉 (Template Issue)',
-      description: 'This is a sample issue to help you get familiar with the interface. You can see how issues are displayed, their status, location, and date. Feel free to explore the dashboard and delete this template when you\'re ready to report real municipal issues!',
-      status: 'In Progress',
-      latitude: 40.7589, // NYC coordinates as example
-      longitude: -73.9851,
-      createdAt: new Date().toISOString(),
-    };
-  };
-
   const fetchDashboardData = useCallback(async () => {
     try {
       const token = localStorage.getItem('urbanai_token');
@@ -135,6 +104,37 @@ const Dashboard: React.FC = () => {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    checkIfNewUser();
+    fetchDashboardData();
+  }, [fetchDashboardData]);
+
+  const checkIfNewUser = () => {
+    const hasSeenTutorial = localStorage.getItem('urbanai_tutorial_completed');
+    const hasSeenWelcomeIssue = localStorage.getItem('urbanai_welcome_issue_seen');
+    
+    if (!hasSeenTutorial) {
+      setIsNewUser(true);
+      setShowTutorial(true);
+    }
+    
+    if (!hasSeenWelcomeIssue) {
+      setIsNewUser(true);
+    }
+  };
+
+  const createWelcomeIssue = (): Issue => {
+    return {
+      id: 'welcome-template-issue',
+      title: 'Welcome to UrbanAI! 🎉 (Template Issue)',
+      description: 'This is a sample issue to help you get familiar with the interface. You can see how issues are displayed, their status, location, and date. Feel free to explore the dashboard and delete this template when you\'re ready to report real municipal issues!',
+      status: 'In Progress',
+      latitude: 40.7589, // NYC coordinates as example
+      longitude: -73.9851,
+      createdAt: new Date().toISOString(),
+    };
+  };
 
   const handleTutorialComplete = () => {
     localStorage.setItem('urbanai_tutorial_completed', 'true');
