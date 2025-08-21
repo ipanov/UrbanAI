@@ -33,9 +33,7 @@ Write-Host "`n📋 Checking workflow files..." -ForegroundColor Yellow
 
 $workflows = @(
     ".github/workflows/ci.yml",
-    ".github/workflows/pr-main.yml", 
-    ".github/workflows/ci-failure-listener.yml",
-    ".github/workflows/deploy.yml"
+    ".github/workflows/claude-ci-fixer.yml"
 )
 
 foreach ($workflow in $workflows) {
@@ -177,41 +175,18 @@ if ($TestMode) {
         Write-Host "  ❌ CI status hook failed: $_" -ForegroundColor Red
     }
     
-    # Create mock CI failure context
-    Write-Host "  Creating mock CI failure context..." -ForegroundColor Cyan
-    if (-not (Test-Path "memory-bank")) {
-        New-Item -ItemType Directory -Path "memory-bank" | Out-Null
-    }
-    
-    @"
-# CI Failure Active Context
-
-Generated: $(Get-Date -Format 'yyyy-MM-ddTHH:mm:ssZ')
-
-- Repository: Test/UrbanAI
-- Run ID: 12345
-- Run URL: https://github.com/test/UrbanAI/actions/runs/12345
-- Branch: develop
-
-- Issue: #123 https://github.com/test/UrbanAI/issues/123
-
-Notes:
-- This is a test CI failure context
-"@ | Out-File -FilePath "memory-bank/activeContext.md" -Encoding utf8
-    
-    Write-Host "  ✅ Mock CI failure context created" -ForegroundColor Green
-    
-    # Test hook again with failure context
-    Write-Host "  Testing hook with failure context..." -ForegroundColor Cyan
+    # Test GitHub CLI integration
+    Write-Host "  Testing GitHub CLI integration..." -ForegroundColor Cyan
     try {
-        node ".claude/hooks/check-ci-status.js"
-        Write-Host "  ✅ Hook correctly detected CI failure context" -ForegroundColor Green
+        $issueList = gh issue list --label "ci-failure" --state open --limit 1 --json number,title 2>$null
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "  ✅ GitHub CLI working - can fetch CI failure issues" -ForegroundColor Green
+        } else {
+            Write-Host "  ⚠️  GitHub CLI not authenticated or repo not found" -ForegroundColor Yellow
+        }
     } catch {
-        Write-Host "  ❌ Hook failed with context: $_" -ForegroundColor Red
+        Write-Host "  ❌ GitHub CLI not available: $_" -ForegroundColor Red
     }
-    
-    # Cleanup
-    Remove-Item "memory-bank/activeContext.md" -ErrorAction SilentlyContinue
 }
 
 # Summary
@@ -220,9 +195,9 @@ Write-Host "=====================" -ForegroundColor Cyan
 
 Write-Host "✅ Smart CI/CD Pipeline Features:" -ForegroundColor Green
 Write-Host "   • Intelligent test selection based on file changes" -ForegroundColor DarkGreen
-Write-Host "   • Separate workflows for develop (fast) and main (comprehensive)" -ForegroundColor DarkGreen
 Write-Host "   • Automated GitHub issue creation for CI failures" -ForegroundColor DarkGreen
-Write-Host "   • Claude hooks for real-time monitoring" -ForegroundColor DarkGreen
+Write-Host "   • Automatic issue closure when builds pass" -ForegroundColor DarkGreen
+Write-Host "   • Claude Code hooks for real-time monitoring" -ForegroundColor DarkGreen
 Write-Host "   • Path-based test optimization to save build minutes" -ForegroundColor DarkGreen
 
 Write-Host "`n🚀 Next Steps:" -ForegroundColor Yellow

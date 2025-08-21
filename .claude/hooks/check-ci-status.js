@@ -20,27 +20,25 @@ function checkCIStatus() {
     // Get current branch
     const currentBranch = execSync('git branch --show-current', { encoding: 'utf-8' }).trim();
     
-    // Check for active CI failure context
-    const contextFile = 'memory-bank/activeContext.md';
-    if (fs.existsSync(contextFile)) {
-      const contextContent = fs.readFileSync(contextFile, 'utf-8');
-      
-      // Check if context is recent (within last 2 hours)
-      const contextStat = fs.statSync(contextFile);
-      const twoHoursAgo = Date.now() - (2 * 60 * 60 * 1000);
-      
-      if (contextStat.mtime.getTime() > twoHoursAgo) {
-        console.log('\n⚠️  ACTIVE CI FAILURE DETECTED');
-        console.log('📄 CI failure context available in memory-bank/activeContext.md');
-        
-        // Extract issue link if available
-        const issueMatch = contextContent.match(/- Issue: #(\d+) (https:\/\/[^\s]+)/);
-        if (issueMatch) {
-          console.log(`🔗 GitHub Issue: #${issueMatch[1]} ${issueMatch[2]}`);
+    // Check for active CI failure issues via GitHub CLI
+    try {
+      const openIssues = execSync('gh issue list --label "ci-failure" --state open --limit 5 --json number,title,url', { encoding: 'utf-8' }).trim();
+      if (openIssues && openIssues !== '[]') {
+        const issues = JSON.parse(openIssues);
+        if (issues.length > 0) {
+          console.log('\n⚠️  ACTIVE CI FAILURES DETECTED');
+          console.log(`📄 ${issues.length} open CI failure issue(s):`);
+          
+          issues.forEach(issue => {
+            console.log(`🔗 Issue #${issue.number}: ${issue.title.substring(0, 60)}...`);
+            console.log(`   ${issue.url}`);
+          });
+          
+          console.log('💡 Consider addressing CI failures before continuing development\n');
         }
-        
-        console.log('💡 Consider addressing CI failures before continuing development\n');
       }
+    } catch (error) {
+      // Ignore if gh CLI not available or not authenticated
     }
 
     // Check git status for uncommitted changes

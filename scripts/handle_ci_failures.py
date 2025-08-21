@@ -2,23 +2,21 @@
 """
 scripts/handle_ci_failures.py
 
-Helper script to fetch open GitHub issues labeled `ci-failure` for this repository,
-save a concise report into memory-bank/ci-failures.md and print a short JSON summary.
+Helper script to fetch open GitHub issues labeled `ci-failure` for this repository
+and print a short JSON summary.
 
 Purpose:
-- Make it easy for an operator or Cline (assistant) to locate CI failure issues quickly.
-- Persist a small report into the repository's memory-bank so Cline can read it at task start
-  and use it to create a new task (via the new_task tool) containing the failure context.
+- Make it easy for an operator or Claude Code to locate CI failure issues quickly.
+- Provides command-line interface to check CI failure status.
 
 Usage:
   - Ensure you have GITHUB_TOKEN (with repo scope) in environment.
   - Run: python scripts/handle_ci_failures.py --owner ipanov --repo UrbanAI
-  - Script will populate memory-bank/ci-failures.md and print a short JSON to stdout.
+  - Script will print a JSON summary to stdout.
 
 Notes:
-- This script is a convenience helper. The assistant (Cline) can call GitHub MCP server
-  directly (recommended) to list workflow runs, download logs, and create a new task via the
-  new_task tool. Use this script when you prefer a local helper.
+- This script is a convenience helper. Claude Code can use GitHub CLI or MCP servers
+  directly to list workflow runs and manage issues.
 """
 
 import os
@@ -69,24 +67,17 @@ Body:
 
 """
 
-def ensure_memory_bank():
-    path = "memory-bank"
-    if not os.path.isdir(path):
-        os.makedirs(path, exist_ok=True)
-
 def save_report(owner, repo, issues):
-    ensure_memory_bank()
+    """Save a simple JSON report for CI failures"""
     now = datetime.datetime.utcnow().isoformat() + "Z"
-    md_path = os.path.join("memory-bank", "ci-failures.md")
-    with open(md_path, "w", encoding="utf-8") as f:
-        f.write(f"# CI Failure Issues Report for {owner}/{repo}\n\n")
-        f.write(f"Generated: {now}\n\n")
-        if not issues:
-            f.write("No open issues found with labels `ci-failure` and `urgent`.\n")
-        else:
-            for issue in issues:
-                f.write(format_issue_md(issue))
-    return md_path
+    
+    # Just return summary data, no file writing needed
+    return {
+        "repo": f"{owner}/{repo}",
+        "generated": now,
+        "count": len(issues),
+        "status": "No open CI failures" if not issues else f"{len(issues)} open CI failure(s)"
+    }
 
 def main():
     parser = argparse.ArgumentParser()
@@ -108,14 +99,14 @@ def main():
         print(f"Unexpected error: {e}", file=sys.stderr)
         sys.exit(4)
 
-    md_path = save_report(args.owner, args.repo, issues)
+    report_info = save_report(args.owner, args.repo, issues)
 
     # Print JSON summary for automation
     summary = {
         "repo": f"{args.owner}/{args.repo}",
         "fetched_at": datetime.datetime.utcnow().isoformat() + "Z",
         "open_ci_failure_count": len(issues),
-        "report_path": md_path,
+        "status": report_info["status"],
         "issues": []
     }
     for issue in issues:
