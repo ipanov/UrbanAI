@@ -1,8 +1,7 @@
 import React from 'react';
-import { COLORS, SPACING, BORDERS } from '../../../constants';
 import './Input.css';
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string;
   error?: string;
   variant?: 'default' | 'filled';

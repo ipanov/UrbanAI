@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { buildApiUrl } from '../config/api';
-import { useUser, extractUserInfoFromProvider } from '../contexts/UserContext';
+import { useUser } from '../contexts/UserContext';
 
 interface OAuthCallbackProps {
   onSuccess?: (token: string) => void;
@@ -110,7 +110,7 @@ const OAuthCallback: React.FC<OAuthCallbackProps> = ({ onSuccess, onError }) => 
           if (userProfile.firstName && userProfile.lastName) {
             userProfile.initials = `${userProfile.firstName.charAt(0)}${userProfile.lastName.charAt(0)}`.toUpperCase();
           } else if (userProfile.displayName && userProfile.displayName !== 'User') {
-            userProfile.initials = userProfile.displayName.split(' ').map(n => n.charAt(0)).join('').toUpperCase().slice(0, 2);
+            userProfile.initials = userProfile.displayName.split(' ').map((n: string) => n.charAt(0)).join('').toUpperCase().slice(0, 2);
           } else {
             userProfile.initials = 'U';
           }

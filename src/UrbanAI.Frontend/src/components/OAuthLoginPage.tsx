@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Shield, Lock, Users, Building, TrendingUp } from 'lucide-react';
+import { Shield, Users, Building, TrendingUp } from 'lucide-react';
 import { UrbanAILogoPlaceholder } from './UrbanAILogo';
 import CookieConsentBanner from './CookieConsentBanner';
 import LegalAgreementModal from './LegalAgreementModal';
-import { Button, Card, Typography } from './atoms';
-import { AUTH_PROVIDERS, USER_TYPES, ROUTES } from '../constants';
+import { Card, Typography } from './atoms';
+import { AUTH_PROVIDERS, USER_TYPES } from '../constants';
 import { buildApiUrl } from '../config/api';
-import { useUser, extractUserInfoFromProvider } from '../contexts/UserContext';
 import './OAuthLoginPage.css';
 
 interface OAuthLoginPageProps {
@@ -26,10 +25,9 @@ interface OAuthLoginPageProps {
  */
 
 const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
-  onOAuthLogin,
+  onOAuthLogin: _onOAuthLogin,
   onGuestAccess
 }) => {
-  const { setUserProfile } = useUser();
   const [selectedUserType, setSelectedUserType] = useState<'citizen' | 'investor' | 'authority' | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [pendingProvider, setPendingProvider] = useState<'microsoft' | 'google' | 'facebook' | null>(null);

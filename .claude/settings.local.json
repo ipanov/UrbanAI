@@ -18,7 +18,9 @@
       "Bash(gh run list:*)",
       "Bash(gh run view:*)",
       "Bash(gh issue list:*)",
-      "Bash(npm install)"
+      "Bash(npm install)",
+      "Bash(gh issue comment:*)",
+      "Bash(npm run type-check:*)"
     ],
     "deny": [],
     "ask": []

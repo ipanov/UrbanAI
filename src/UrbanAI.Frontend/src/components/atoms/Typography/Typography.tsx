@@ -9,6 +9,7 @@ export interface TypographyProps {
   weight?: 'light' | 'normal' | 'medium' | 'semibold' | 'bold';
   className?: string;
   as?: React.ElementType;
+  role?: string;
 }
 
 const Typography: React.FC<TypographyProps> = ({
@@ -18,7 +19,8 @@ const Typography: React.FC<TypographyProps> = ({
   align = 'left',
   weight,
   className = '',
-  as
+  as,
+  role
 }) => {
   const getDefaultElement = (variant: string): React.ElementType => {
     const elementMap: Record<string, React.ElementType> = {
@@ -48,7 +50,7 @@ const Typography: React.FC<TypographyProps> = ({
   ].filter(Boolean).join(' ');
 
   return (
-    <Component className={typographyClasses}>
+    <Component className={typographyClasses} role={role}>
       {children}
     </Component>
   );

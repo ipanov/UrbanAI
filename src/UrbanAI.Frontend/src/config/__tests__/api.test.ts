@@ -14,9 +14,6 @@ describe('API Configuration', () => {
     });
 
     it('should use environment variables when available', async () => {
-      // Mock environment variables by setting them before importing
-      const originalEnv = { ...import.meta.env };
-      
       // Create a mock module to test environment variable usage
       vi.stubEnv('VITE_API_BASE_URL', 'https://api.test.com');
       vi.stubEnv('VITE_OAUTH_REDIRECT_URI', 'https://test.com/callback');

@@ -1,5 +1,4 @@
 import React from 'react';
-import { COLORS, SPACING, BORDERS, SHADOWS } from '../../../constants';
 import './Card.css';
 
 export interface CardProps {
