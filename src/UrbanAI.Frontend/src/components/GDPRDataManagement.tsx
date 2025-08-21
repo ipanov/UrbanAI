@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Download, Trash2, AlertTriangle, Shield, Database, FileText, Clock, MapPin, Eye, Mail } from 'lucide-react';
+import { Download, Trash2, Shield, Database, FileText } from 'lucide-react';
 
 interface UserData {
   id: string;

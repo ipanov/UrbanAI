@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, FileText, Settings, LogOut, MapPin, Clock, CheckCircle, AlertTriangle, Plus, TrendingUp, Sparkles } from 'lucide-react';
+import { FileText, MapPin, Clock, CheckCircle, AlertTriangle, Plus, TrendingUp, Sparkles } from 'lucide-react';
 import { buildApiUrl } from '../config/api';
 import WelcomeTutorial from './WelcomeTutorial';
 import Layout from './Layout';
@@ -311,7 +311,7 @@ const Dashboard: React.FC = () => {
         </main>
 
         <WelcomeTutorial 
-          isOpen={showTutorial}
+          isOpen={showTutorial && isNewUser}
           onClose={handleCloseTutorial}
           onComplete={handleTutorialComplete}
         />
