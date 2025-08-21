@@ -3,6 +3,7 @@ import OAuthLoginPage from './components/OAuthLoginPage';
 import Dashboard from './components/Dashboard';
 import Issues from './components/Issues';
 import OAuthCallback from './components/OAuthCallback';
+import GDPRDataManagement from './components/GDPRDataManagement';
 import { UserProvider } from './contexts/UserContext';
 import './App.css';
 
@@ -36,6 +37,7 @@ function App() {
             } />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/issues" element={<Issues />} />
+            <Route path="/gdpr-data-management" element={<GDPRDataManagement />} />
             <Route path="/auth/callback" element={<OAuthCallback />} />
           </Routes>
         </div>

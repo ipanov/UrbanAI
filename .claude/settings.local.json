@@ -9,9 +9,48 @@
       "Bash(rm:*)",
       "Bash(dotnet build)",
       "Bash(git checkout:*)",
-      "WebFetch(domain:docs.anthropic.com)"
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebSearch",
+      "Bash(mkdir:*)",
+      "Bash(powershell:*)"
     ],
     "deny": [],
     "ask": []
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/check-ci-status.js",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/monitor-push.js",
+            "timeout": 3
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/track-changes.js",
+            "timeout": 2
+          }
+        ]
+      }
+    ]
   }
 }

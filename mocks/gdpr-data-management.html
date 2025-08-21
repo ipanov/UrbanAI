@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanAI - My Data & Privacy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #1E293B;
+            background: #F8FAFC;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: #FFFFFF;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 16px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #2563EB;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #2563EB;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: #64748B;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: #64748B;
+            font-size: 16px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #E2E8F0;
+            margin-bottom: 32px;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            color: #64748B;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            color: #2563EB;
+            border-bottom-color: #2563EB;
+        }
+
+        .tab:hover {
+            color: #2563EB;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: #FFFFFF;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 12px;
+        }
+
+        .card-description {
+            color: #64748B;
+            margin-bottom: 16px;
+        }
+
+        /* Data Display */
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .data-item:last-child {
+            border-bottom: none;
+        }
+
+        .data-label {
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .data-value {
+            color: #64748B;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+        }
+
+        /* Issues Table */
+        .issues-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .issues-table th,
+        .issues-table td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .issues-table th {
+            background: #F8FAFC;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .issues-table td {
+            color: #64748B;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-open {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .status-in-progress {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .status-resolved {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .status-municipal {
+            background: #F3E8FF;
+            color: #6B21A8;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 16px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #2563EB;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1D4ED8;
+        }
+
+        .btn-secondary {
+            background: #F1F5F9;
+            color: #475569;
+            border: 1px solid #E2E8F0;
+        }
+
+        .btn-secondary:hover {
+            background: #E2E8F0;
+        }
+
+        .btn-danger {
+            background: #DC2626;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #B91C1C;
+        }
+
+        .btn-warning {
+            background: #D97706;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #B45309;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: #FEF3C7;
+            border: 1px solid #F59E0B;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .warning-title {
+            font-weight: 600;
+            color: #92400E;
+            margin-bottom: 8px;
+        }
+
+        .warning-text {
+            color: #92400E;
+            font-size: 14px;
+        }
+
+        /* Success Box */
+        .success-box {
+            background: #D1FAE5;
+            border: 1px solid #10B981;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .success-title {
+            font-weight: 600;
+            color: #065F46;
+            margin-bottom: 8px;
+        }
+
+        .success-text {
+            color: #065F46;
+            font-size: 14px;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #EFF6FF;
+            border: 1px solid #3B82F6;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .info-title {
+            font-weight: 600;
+            color: #1E40AF;
+            margin-bottom: 8px;
+        }
+
+        .info-text {
+            color: #1E40AF;
+            font-size: 14px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        /* Icons */
+        .icon {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px 16px;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .issues-table {
+                font-size: 12px;
+            }
+
+            .issues-table th,
+            .issues-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <span>🏙️ UrbanAI</span>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">JD</div>
+                <span class="user-name">Anonymous User</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">My Data & Privacy</h1>
+            <p class="page-subtitle">Manage your personal data and privacy settings</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('overview')">Overview</button>
+            <button class="tab" onclick="showTab('my-data')">My Data</button>
+            <button class="tab" onclick="showTab('my-issues')">My Issues</button>
+            <button class="tab" onclick="showTab('export')">Export Data</button>
+            <button class="tab" onclick="showTab('delete')">Delete Account</button>
+        </div>
+
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="card">
+                <h2 class="card-title">Your Privacy Rights</h2>
+                <p class="card-description">Under GDPR, you have comprehensive rights over your personal data. Here's what you can do:</p>
+                
+                <div class="data-item">
+                    <span class="data-label">📋 Access your data</span>
+                    <span class="data-value">View all personal information we store</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">📥 Export your data</span>
+                    <span class="data-value">Download a copy in machine-readable format</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">✏️ Correct your data</span>
+                    <span class="data-value">Update or fix incorrect information</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">🗑️ Delete your data</span>
+                    <span class="data-value">Request removal of your personal information</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">Data Processing Summary</h2>
+                <p class="card-description">UrbanAI follows privacy-by-design principles:</p>
+                
+                <div class="info-box">
+                    <div class="info-title">Zero-PII Architecture</div>
+                    <div class="info-text">We don't store names, emails, or personal identifiers. Your identity remains with your OAuth provider.</div>
+                </div>
+
+                <div class="data-item">
+                    <span class="data-label">Account Created</span>
+                    <span class="data-value">2024-01-15 14:30:22 UTC</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Authentication Provider</span>
+                    <span class="data-value">Google OAuth</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Issues Reported</span>
+                    <span class="data-value">3 issues</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Data Retention</span>
+                    <span class="data-value">Until account deletion requested</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Data Tab -->
+        <div id="my-data" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">Account Information</h2>
+                <p class="card-description">Basic account data stored in our system:</p>
+                
+                <div class="data-item">
+                    <span class="data-label">User ID</span>
+                    <span class="data-value">usr_3a4b5c6d7e8f9g0h</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Username</span>
+                    <span class="data-value">google_108234567890123456789</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Role</span>
+                    <span class="data-value">User</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Created At</span>
+                    <span class="data-value">2024-01-15T14:30:22.123Z</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">OAuth Provider Links</h2>
+                <p class="card-description">External authentication providers linked to your account:</p>
+                
+                <div class="data-item">
+                    <span class="data-label">Provider</span>
+                    <span class="data-value">Google</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">External ID</span>
+                    <span class="data-value">108234567890123456789</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Linked On</span>
+                    <span class="data-value">2024-01-15T14:30:22.123Z</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">Client-Side Data</h2>
+                <p class="card-description">Personal information stored only in your browser:</p>
+                
+                <div class="info-box">
+                    <div class="info-title">Privacy Protection</div>
+                    <div class="info-text">This data is never sent to our servers and remains under your control.</div>
+                </div>
+
+                <div class="data-item">
+                    <span class="data-label">Display Name</span>
+                    <span class="data-value">John Doe (stored locally)</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Email</span>
+                    <span class="data-value">john.doe@gmail.com (stored locally)</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Profile Picture</span>
+                    <span class="data-value">OAuth provider URL (stored locally)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Issues Tab -->
+        <div id="my-issues" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">Issues You've Reported</h2>
+                <p class="card-description">All urban issues you've reported through UrbanAI:</p>
+                
+                <table class="issues-table">
+                    <thead>
+                        <tr>
+                            <th>Issue ID</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Reported</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ISS-2024-001</td>
+                            <td>Pothole on Main Street</td>
+                            <td><span class="status-badge status-municipal">Municipal Review</span></td>
+                            <td>2024-01-20</td>
+                            <td>
+                                <button class="btn btn-secondary" disabled title="Issue in municipal pipeline - cannot edit">
+                                    View Only
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ISS-2024-002</td>
+                            <td>Broken streetlight</td>
+                            <td><span class="status-badge status-in-progress">In Progress</span></td>
+                            <td>2024-01-18</td>
+                            <td>
+                                <button class="btn btn-secondary" onclick="editIssue('ISS-2024-002')">
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ISS-2024-003</td>
+                            <td>Graffiti in park</td>
+                            <td><span class="status-badge status-open">Open</span></td>
+                            <td>2024-01-22</td>
+                            <td>
+                                <button class="btn btn-secondary" onclick="editIssue('ISS-2024-003')">
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <div class="warning-title">Data Deletion Policy</div>
+                    <div class="warning-text">
+                        Issues that have entered the municipal review process cannot be fully deleted due to public interest requirements. 
+                        However, your personal connection to these issues can be anonymized while preserving the municipal data.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Data Tab -->
+        <div id="export" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">Export Your Data</h2>
+                <p class="card-description">Download a complete copy of your personal data in machine-readable format (JSON).</p>
+                
+                <div class="info-box">
+                    <div class="info-title">What's Included</div>
+                    <div class="info-text">
+                        Your export will include: account information, OAuth provider links, all issues you've reported, 
+                        and associated metadata. Client-side data must be exported separately from your browser.
+                    </div>
+                </div>
+
+                <div class="data-item">
+                    <span class="data-label">Export Format</span>
+                    <span class="data-value">JSON (machine-readable)</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Data Scope</span>
+                    <span class="data-value">All personal data we store</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Processing Time</span>
+                    <span class="data-value">Immediate download</span>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="exportData()">
+                        📥 Download My Data
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportClientData()">
+                        📱 Export Client-Side Data
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">Export History</h2>
+                <p class="card-description">Previous data exports for your records:</p>
+                
+                <div class="data-item">
+                    <span class="data-label">Last Export</span>
+                    <span class="data-value">Never exported</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Account Tab -->
+        <div id="delete" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">Delete My Account</h2>
+                <p class="card-description">Permanently remove your account and personal data from UrbanAI.</p>
+                
+                <div class="warning-box">
+                    <div class="warning-title">Important: This Action Cannot Be Undone</div>
+                    <div class="warning-text">
+                        Account deletion will permanently remove your access to UrbanAI and delete your personal data. 
+                        This process typically completes within 30 days.
+                    </div>
+                </div>
+
+                <h3 style="margin: 20px 0 12px 0; font-size: 16px; font-weight: 600;">What happens when you delete your account:</h3>
+                
+                <div class="data-item">
+                    <span class="data-label">✅ Immediately Deleted</span>
+                    <span class="data-value">Account access, OAuth links, personal identifiers</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">🔒 Anonymized (30 days)</span>
+                    <span class="data-value">Issues in municipal pipeline (public interest exception)</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">🗑️ Fully Deleted (30 days)</span>
+                    <span class="data-value">Issues not yet in municipal review</span>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">📱 Your Responsibility</span>
+                    <span class="data-value">Clear browser data and OAuth provider permissions</span>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-title">Legal Exceptions</div>
+                    <div class="info-text">
+                        Some data may be retained longer if required by law or for legitimate public interests (e.g., ongoing municipal processes, legal obligations, or statistical purposes).
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-danger" onclick="showDeleteModal()">
+                        🗑️ Delete My Account
+                    </button>
+                    <button class="btn btn-warning" onclick="showAnonymizeModal()">
+                        🔒 Anonymize My Data Only
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Confirm Account Deletion</h2>
+            <p>Are you absolutely sure you want to delete your UrbanAI account?</p>
+            
+            <div class="warning-box">
+                <div class="warning-title">This action cannot be undone</div>
+                <div class="warning-text">
+                    All your personal data will be permanently deleted. Issues in municipal review will be anonymized to remove your personal connection.
+                </div>
+            </div>
+
+            <p>Type <strong>DELETE</strong> to confirm:</p>
+            <input type="text" id="deleteConfirmation" placeholder="Type DELETE here" style="width: 100%; padding: 8px; margin: 8px 0; border: 1px solid #E2E8F0; border-radius: 4px;">
+
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="hideDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmDelete()" id="confirmDeleteBtn" disabled>Delete Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Anonymize Confirmation Modal -->
+    <div id="anonymizeModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Anonymize My Data</h2>
+            <p>This will remove your personal connection to all issues while keeping the issue data for municipal purposes.</p>
+            
+            <div class="info-box">
+                <div class="info-title">What happens:</div>
+                <div class="info-text">
+                    Your account will be deleted, but issues you reported will remain in the system without any personal identifiers linking them to you.
+                </div>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="hideAnonymizeModal()">Cancel</button>
+                <button class="btn btn-warning" onclick="confirmAnonymize()">Anonymize Data</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Export data
+        function exportData() {
+            // Simulate data export
+            const exportData = {
+                user: {
+                    id: "usr_3a4b5c6d7e8f9g0h",
+                    username: "google_108234567890123456789",
+                    role: "User",
+                    createdAt: "2024-01-15T14:30:22.123Z"
+                },
+                externalLogins: [{
+                    provider: "Google",
+                    externalId: "108234567890123456789",
+                    createdAt: "2024-01-15T14:30:22.123Z"
+                }],
+                issues: [
+                    {
+                        id: "ISS-2024-001",
+                        title: "Pothole on Main Street",
+                        description: "Large pothole causing vehicle damage",
+                        status: "Municipal Review",
+                        createdAt: "2024-01-20T10:15:30.000Z",
+                        location: { lat: 40.7128, lng: -74.0060 }
+                    },
+                    {
+                        id: "ISS-2024-002", 
+                        title: "Broken streetlight",
+                        description: "Streetlight not working for 3 days",
+                        status: "In Progress",
+                        createdAt: "2024-01-18T16:22:45.000Z",
+                        location: { lat: 40.7589, lng: -73.9851 }
+                    },
+                    {
+                        id: "ISS-2024-003",
+                        title: "Graffiti in park", 
+                        description: "Vandalism on park bench",
+                        status: "Open",
+                        createdAt: "2024-01-22T09:33:12.000Z",
+                        location: { lat: 40.7831, lng: -73.9712 }
+                    }
+                ],
+                exportedAt: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `urbanai-data-export-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportClientData() {
+            alert('This would export browser-stored data like display name, email, and profile picture.');
+        }
+
+        // Modal functions
+        function showDeleteModal() {
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function hideDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+            document.getElementById('deleteConfirmation').value = '';
+            document.getElementById('confirmDeleteBtn').disabled = true;
+        }
+
+        function showAnonymizeModal() {
+            document.getElementById('anonymizeModal').classList.add('active');
+        }
+
+        function hideAnonymizeModal() {
+            document.getElementById('anonymizeModal').classList.remove('active');
+        }
+
+        // Delete confirmation
+        document.getElementById('deleteConfirmation').addEventListener('input', function(e) {
+            const btn = document.getElementById('confirmDeleteBtn');
+            btn.disabled = e.target.value !== 'DELETE';
+        });
+
+        function confirmDelete() {
+            alert('Account deletion request submitted. You will receive a confirmation email.');
+            hideDeleteModal();
+        }
+
+        function confirmAnonymize() {
+            alert('Data anonymization request submitted. Your personal connection to issues will be removed.');
+            hideAnonymizeModal();
+        }
+
+        function editIssue(issueId) {
+            alert(`Editing issue ${issueId} - this would open an edit form.`);
+        }
+
+        // Close modals when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
