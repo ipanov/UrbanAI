@@ -317,3 +317,61 @@ jobs:
             });
 
             core.setOutput('issue_number', issue.data.number);
+
+  close-resolved-issues:
+    needs: [detect-changes, backend-check, frontend-check, mobile-check, infra-check]
+    if: always() && (needs.backend-check.result == 'success' || needs.frontend-check.result == 'success' || needs.mobile-check.result == 'success' || needs.infra-check.result == 'success' || needs.detect-changes.outputs.needs_tests == 'false')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close resolved CI failure issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Get all open CI failure issues
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'ci-failure',
+              state: 'open'
+            });
+
+            console.log(`Found ${issues.length} open CI failure issues`);
+
+            for (const issue of issues) {
+              // Check if issue is from develop branch and recent (last 24 hours)
+              const issueAge = Date.now() - new Date(issue.created_at).getTime();
+              const isRecent = issueAge < (24 * 60 * 60 * 1000); // 24 hours
+              
+              if (issue.title.includes('develop') && isRecent) {
+                console.log(`Closing resolved issue: #${issue.number} - ${issue.title}`);
+                
+                // Close the issue
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed'
+                });
+
+                // Add resolution comment
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: `## ✅ CI Issue Resolved
+                  
+                  **Status:** Build now passing ✅
+                  **Resolved by:** Commit ${process.env.GITHUB_SHA.substring(0, 8)}
+                  **Run ID:** ${process.env.GITHUB_RUN_ID}
+                  
+                  🔗 **[View Successful Run](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})**
+                  
+                  The CI pipeline is now passing successfully. This issue has been automatically closed.
+                  
+                  ---
+                  *Auto-resolved by UrbanAI Smart CI*`
+                });
+                
+                console.log(`✅ Closed issue #${issue.number}`);
+              }
+            }
