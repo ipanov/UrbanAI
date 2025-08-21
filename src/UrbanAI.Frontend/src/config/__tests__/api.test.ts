@@ -39,12 +39,12 @@ describe('API Configuration', () => {
   describe('URL Building', () => {
     it('should build API URLs correctly', () => {
       const url = buildApiUrl('auth/login');
-      expect(url).toBe('http://localhost:5001/auth/login');
+      expect(url).toBe('http://localhost:5001/api/auth/login');
     });
 
     it('should handle leading slashes in endpoints', () => {
       const url = buildApiUrl('/auth/login');
-      expect(url).toBe('http://localhost:5001/auth/login');
+      expect(url).toBe('http://localhost:5001/api/auth/login');
     });
 
     it('should build OAuth URLs correctly', () => {
