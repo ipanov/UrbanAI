@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [develop]
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  actions: read
+
 env:
   DOTNET_VERSION: '9.0.x'
   NODE_VERSION: '20'
@@ -178,8 +184,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: src/UrbanAI.Mobile/package-lock.json
 
       - name: Install mobile dependencies
         working-directory: src/UrbanAI.Mobile
@@ -249,7 +253,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create GitHub Issue for CI Failure
-        uses: actions/github-script@v7
+        uses: actions/github-script@v6
         with:
           script: |
             const failedJobs = [];
