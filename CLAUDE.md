@@ -6,16 +6,19 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 UrbanAI is a full-stack application built with:
 - **Backend**: ASP.NET Core Web API (.NET 9) using Clean Architecture (Domain/Application/Infrastructure/API layers)
-- **Frontend**: React TypeScript with Vite, using React Router for navigation
-- **Database**: Supabase PostgreSQL (production) with Entity Framework Core, InMemory provider for development
+- **Alternative Backend**: Azure Functions (.NET 9) for serverless event-driven architecture (future scaling)
+- **Frontend**: React TypeScript with Vite, using React Router for navigation  
+- **Database**: Azure SQL Database (production) + Azure Cosmos DB MongoDB API, InMemory provider for development
 - **Authentication**: OAuth2 integration with Microsoft and Google providers, JWT tokens
+- **Hosting**: Microsoft Azure (cost-optimized at $4.90/month for MVP)
 - **Testing**: xUnit for .NET backend, Vitest for React frontend, Playwright for E2E testing
 
-The solution follows Clean Architecture principles with clear separation of concerns across four main projects in `src/`:
+The solution follows Clean Architecture principles with clear separation of concerns across projects in `src/`:
 - `UrbanAI.Domain`: Core entities and interfaces
 - `UrbanAI.Application`: Business logic and DTOs  
 - `UrbanAI.Infrastructure`: Data access and external services
-- `UrbanAI.API`: Web API controllers and configuration
+- `UrbanAI.API`: Web API controllers and configuration (primary backend)
+- `UrbanAI.Functions`: Azure Functions for serverless/event-driven architecture (alternative backend)
 
 ## Development Commands
 
@@ -24,9 +27,13 @@ The solution follows Clean Architecture principles with clear separation of conc
 # Build entire solution
 dotnet build
 
-# Run API locally
+# Run API locally (primary backend)
 cd src/UrbanAI.API
 dotnet run
+
+# Run Azure Functions locally (alternative backend)
+cd src/UrbanAI.Functions
+func start
 
 # Run all tests with coverage
 dotnet test --collect:"XPlat Code Coverage" --settings coverlet.runsettings
@@ -71,6 +78,19 @@ npm run test:complete
 npm run start:all
 ```
 
+### Azure Deployment
+```bash
+# Deploy infrastructure and application
+azd up -e production
+
+# Deploy Functions only
+cd src/UrbanAI.Functions
+func azure functionapp publish urbanai-func-production-{token}
+
+# Deploy API only  
+az webapp deploy --resource-group urbanai-rg --name urbanai-api-production-{token} --src-path src/UrbanAI.API
+```
+
 ### Git Branching
 Follow GitHub workflow:
 - Branch naming: `feature/description` (e.g., `feature/oauth-integration`)
@@ -80,7 +100,10 @@ Follow GitHub workflow:
 ## Key Configuration Files
 
 - **Backend**: `src/UrbanAI.API/appsettings.json` - API configuration including database connections and OAuth settings
+- **Functions**: `src/UrbanAI.Functions/local.settings.json` - Azure Functions local development settings
 - **Frontend**: `src/UrbanAI.Frontend/src/config/api.ts` - API endpoints and configuration
+- **Infrastructure**: `infra/main.bicep` - Azure infrastructure as code
+- **Deployment**: `azure.yaml` - Azure Developer CLI configuration
 - **Tests**: `coverlet.runsettings` and `integration-coverage.runsettings` for test coverage configuration
 - **E2E**: `src/UrbanAI.Frontend/playwright.config.ts` for Playwright configuration
 
@@ -88,10 +111,24 @@ Follow GitHub workflow:
 
 The application uses different database providers by environment:
 - **Development**: InMemory database (EF Core) for quick setup
-- **Production/Staging**: Supabase PostgreSQL with Entity Framework Core
+- **Production**: Azure SQL Database (relational) + Azure Cosmos DB MongoDB API (documents)
 - **Testing**: InMemory provider configured in test factories
 
 Database context is configured in `src/UrbanAI.Infrastructure/Data/ApplicationDbContext.cs`.
+
+## Azure Architecture & Cost
+
+**MVP Phase (Cost: $4.90/month)**:
+- Azure SQL Database Basic ($4.90/month, 2GB, 5 DTUs)
+- Azure Cosmos DB MongoDB API Free Tier (1000 RU/s, 25GB)
+- Azure Functions/App Service F1 Free Tier
+- Azure Storage Account (minimal cost for Functions)
+
+**Future Event-Driven Phase (Cost: ~$25-50/month)**:
+- Azure Service Bus for message queuing
+- Azure SignalR for real-time LLM chat
+- Azure OpenAI for AI agents
+- Container Apps for microservices scaling
 
 ## Authentication Architecture
 

@@ -28,17 +28,17 @@ param sqlAdminPassword string
 @description('The Cosmos DB database name')
 param cosmosDatabaseName string
 
-@description('The staging Cosmos DB account name')
-param stagingCosmosAccountName string
-
-@description('The production Cosmos DB account name')
-param productionCosmosAccountName string
+@description('The Cosmos DB account name')
+param cosmosAccountName string
 
 @description('The managed identity ID')
 param managedIdentityId string
 
 @description('The managed identity principal ID')
 param managedIdentityPrincipalId string
+
+@description('The App Service Plan ID')
+param appServicePlanId string
 
 // Common tags for all resources
 var tags = {
@@ -48,17 +48,15 @@ var tags = {
   ManagedBy: 'Bicep'
 }
 
-// Resource names using the resource token for uniqueness
-var stagingFunctionAppName = 'urbanai-func-staging-${resourceToken}'
-var productionFunctionAppName = 'urbanai-func-production-${resourceToken}'
-var stagingStorageAccountName = 'urbanstaging${resourceToken}'
-var productionStorageAccountName = 'urbanprod${resourceToken}'
+// Resource names using the resource token for uniqueness (single environment)
+var functionAppName = 'urbanai-func-${resourceToken}'
+var storageAccountName = 'urban${resourceToken}'
 
-// Storage Account for Functions - Staging
-resource stagingStorageAccount 'Microsoft.Storage/storageAccounts@2024-01-01' = {
-  name: stagingStorageAccountName
+// Storage Account for Functions
+resource storageAccount 'Microsoft.Storage/storageAccounts@2024-01-01' = {
+  name: storageAccountName
   location: location
-  tags: union(tags, { Environment: 'staging' })
+  tags: tags
   sku: {
     name: 'Standard_LRS'
   }
@@ -69,27 +67,12 @@ resource stagingStorageAccount 'Microsoft.Storage/storageAccounts@2024-01-01' = 
   }
 }
 
-// Storage Account for Functions - Production
-resource productionStorageAccount 'Microsoft.Storage/storageAccounts@2024-01-01' = {
-  name: productionStorageAccountName
-  location: location
-  tags: union(tags, { Environment: 'production' })
-  sku: {
-    name: 'Standard_LRS'
-  }
-  kind: 'StorageV2'
-  properties: {
-    supportsHttpsTrafficOnly: true
-    minimumTlsVersion: 'TLS1_2'
-  }
-}
-
-// Function App (Functions App) - Staging
-resource stagingFunctionApp 'Microsoft.Web/sites@2024-04-01' = {
-  name: stagingFunctionAppName
+// Function App (Functions App) - Single Environment
+resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
+  name: functionAppName
   location: location
   kind: 'functionapp'
-  tags: union(tags, { Environment: 'staging', 'azd-service-name': 'functions' })
+  tags: union(tags, { 'azd-service-name': 'functions' })
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
@@ -97,13 +80,13 @@ resource stagingFunctionApp 'Microsoft.Web/sites@2024-04-01' = {
     }
   }
   properties: {
-    serverFarmId: resourceId('Microsoft.Web/serverfarms', 'urbanai-plan-staging-${resourceToken}')
+    serverFarmId: appServicePlanId
     httpsOnly: true
     siteConfig: {
       appSettings: [
         {
           name: 'AzureWebJobsStorage'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${stagingStorageAccount.name};AccountKey=${listKeys(stagingStorageAccount.id, '2024-01-01').keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, '2024-01-01').keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
@@ -115,7 +98,7 @@ resource stagingFunctionApp 'Microsoft.Web/sites@2024-04-01' = {
         }
         {
           name: 'ASPNETCORE_ENVIRONMENT'
-          value: 'Staging'
+          value: environmentName
         }
         {
           name: 'ConnectionStrings__DefaultConnection'
@@ -123,69 +106,7 @@ resource stagingFunctionApp 'Microsoft.Web/sites@2024-04-01' = {
         }
         {
           name: 'MongoDbSettings__ConnectionString'
-          value: 'mongodb://${stagingCosmosAccountName}.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@${stagingCosmosAccountName}@'
-        }
-        {
-          name: 'MongoDbSettings__DatabaseName'
-          value: cosmosDatabaseName
-        }
-        {
-          name: 'WEBSITE_RUN_FROM_PACKAGE'
-          value: '1'
-        }
-      ]
-      alwaysOn: false // F1 tier doesn't support Always On
-      ftpsState: 'Disabled'
-      minTlsVersion: '1.2'
-      use32BitWorkerProcess: true // F1 tier limitation
-      cors: {
-        allowedOrigins: ['*']
-        supportCredentials: false
-      }
-    }
-  }
-}
-
-// Function App (Functions App) - Production
-resource productionFunctionApp 'Microsoft.Web/sites@2024-04-01' = {
-  name: productionFunctionAppName
-  location: location
-  kind: 'functionapp'
-  tags: union(tags, { Environment: 'production', 'azd-service-name': 'functions' })
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${managedIdentityId}': {}
-    }
-  }
-  properties: {
-    serverFarmId: resourceId('Microsoft.Web/serverfarms', 'urbanai-plan-production-${resourceToken}')
-    httpsOnly: true
-    siteConfig: {
-      appSettings: [
-        {
-          name: 'AzureWebJobsStorage'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${productionStorageAccount.name};AccountKey=${listKeys(productionStorageAccount.id, '2024-01-01').keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
-        }
-        {
-          name: 'FUNCTIONS_EXTENSION_VERSION'
-          value: '~4'
-        }
-        {
-          name: 'FUNCTIONS_WORKER_RUNTIME'
-          value: 'dotnet-isolated'
-        }
-        {
-          name: 'ASPNETCORE_ENVIRONMENT'
-          value: 'Production'
-        }
-        {
-          name: 'ConnectionStrings__DefaultConnection'
-          value: 'Server=${sqlServerName}.database.windows.net;Database=${sqlDatabaseName};User Id=${sqlAdminLogin};Password=${sqlAdminPassword};Encrypt=True;TrustServerCertificate=False;'
-        }
-        {
-          name: 'MongoDbSettings__ConnectionString'
-          value: 'mongodb://${productionCosmosAccountName}.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@${productionCosmosAccountName}@'
+          value: 'mongodb://${cosmosAccountName}.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@${cosmosAccountName}@'
         }
         {
           name: 'MongoDbSettings__DatabaseName'
@@ -209,14 +130,11 @@ resource productionFunctionApp 'Microsoft.Web/sites@2024-04-01' = {
 }
 
 // Outputs for use in application configuration
-@description('The staging Function App URL')
-output stagingFunctionAppUrl string = 'https://${stagingFunctionApp.properties.defaultHostName}'
+@description('The Function App URL')
+output functionAppUrl string = 'https://${functionApp.properties.defaultHostName}'
 
-@description('The production Function App URL')
-output productionFunctionAppUrl string = 'https://${productionFunctionApp.properties.defaultHostName}'
+@description('The Function App name')
+output functionAppName string = functionApp.name
 
-@description('The staging Function App name')
-output stagingFunctionAppName string = stagingFunctionApp.name
-
-@description('The production Function App name')
-output productionFunctionAppName string = productionFunctionApp.name
+@description('The Function App resource for domain binding')
+output functionApp resource = functionApp

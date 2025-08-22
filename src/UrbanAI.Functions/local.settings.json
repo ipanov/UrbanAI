@@ -3,17 +3,17 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "Jwt:Secret": "your-jwt-secret-key-here",
-    "Jwt:Issuer": "UrbanAI",
-    "Jwt:Audience": "UrbanAIUsers",
-    "ConnectionStrings:DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=UrbanAI;Trusted_Connection=true;MultipleActiveResultSets=true",
-    "MongoDbSettings:ConnectionString": "mongodb://localhost:27017",
-    "MongoDbSettings:DatabaseName": "UrbanAI",
-    "Authentication:Google:ClientId": "your-google-client-id",
-    "Authentication:Google:ClientSecret": "your-google-client-secret",
-    "Authentication:Microsoft:ClientId": "your-microsoft-client-id",
-    "Authentication:Microsoft:ClientSecret": "your-microsoft-client-secret",
-    "Authentication:Facebook:AppId": "your-facebook-app-id",
-    "Authentication:Facebook:AppSecret": "your-facebook-app-secret"
+    "ASPNETCORE_ENVIRONMENT": "Development",
+    "ConnectionStrings__DefaultConnection": "Server=localhost;Database=UrbanAIDb;Trusted_Connection=true;",
+    "SupabaseSettings__ProjectUrl": "https://your-project-ref.supabase.co",
+    "SupabaseSettings__AnonKey": "your-anon-key",
+    "SupabaseSettings__ServiceRoleKey": "your-service-role-key",
+    "Jwt__Secret": "your-256-bit-secret-replace-this-in-production-env",
+    "Jwt__Issuer": "urbanai-api",
+    "Jwt__Audience": "urbanai-client",
+    "Authentication__Google__ClientId": "your-google-client-id",
+    "Authentication__Google__ClientSecret": "your-google-client-secret",
+    "Authentication__Microsoft__ClientId": "62a3b9fb-2a17-4c82-b300-cdd8af057409",
+    "Authentication__Microsoft__ClientSecret": "nE48Q~EfLHtXyr5TDsZWAXlsoZRPDl4uSZjLfceB"
   }
 }

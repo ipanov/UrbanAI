@@ -37,20 +37,12 @@ var tags = {
   ManagedBy: 'Bicep'
 }
 
-// Resource names using the resource token for uniqueness
+// Resource names using the resource token for uniqueness (single environment)
 var sqlServerName = 'urbanai-sql-${resourceToken}'
 var sqlDatabaseName = 'UrbanAIDb'
 var cosmosDatabaseName = 'UrbanAI'
-
-// Staging environment resources
-var stagingCosmosAccountName = 'urbanai-cosmos-staging-${resourceToken}'
-var stagingAppServicePlanName = 'urbanai-plan-staging-${resourceToken}'
-var stagingAppServiceName = 'urbanai-api-staging-${resourceToken}'
-
-// Production environment resources
-var productionCosmosAccountName = 'urbanai-cosmos-production-${resourceToken}'
-var productionAppServicePlanName = 'urbanai-plan-production-${resourceToken}'
-var productionAppServiceName = 'urbanai-api-production-${resourceToken}'
+var cosmosAccountName = 'urbanai-cosmos-${resourceToken}'
+var appServicePlanName = 'urbanai-plan-${resourceToken}'
 
 // SQL Server
 resource sqlServer 'Microsoft.Sql/servers@2021-11-01' = {
@@ -85,22 +77,19 @@ resource sqlDatabase 'Microsoft.Sql/servers/databases@2021-11-01' = {
   }
 }
 
-// Azure Cosmos DB Account for MongoDB API - Staging
-resource stagingCosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2024-11-15' = {
-  name: stagingCosmosAccountName
+// Azure Cosmos DB Account for MongoDB API (single environment with free tier)
+resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2024-11-15' = {
+  name: cosmosAccountName
   location: location
   kind: 'MongoDB'
-  tags: union(tags, { Environment: 'staging' })
+  tags: tags
   properties: {
     databaseAccountOfferType: 'Standard'
     enableAutomaticFailover: false
     enableMultipleWriteLocations: false
-    enableFreeTier: true
+    enableFreeTier: true // Free tier (1000 RU/s, 25GB)
     capabilities: [
       {
-        name: 'EnableServerless'
-      }
-      {
         name: 'EnableMongo'
       }
     ]
@@ -123,169 +112,18 @@ resource stagingCosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2024-11-15'
   }
 }
 
-// Azure Cosmos DB Account for MongoDB API - Production
-resource productionCosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2024-11-15' = {
-  name: productionCosmosAccountName
-  location: location
-  kind: 'MongoDB'
-  tags: union(tags, { Environment: 'production' })
-  properties: {
-    databaseAccountOfferType: 'Standard'
-    enableAutomaticFailover: false
-    enableMultipleWriteLocations: false
-    enableFreeTier: false // Only one account can use free tier
-    capabilities: enableCosmosServerless ? [
-      {
-        name: 'EnableServerless'
-      }
-      {
-        name: 'EnableMongo'
-      }
-    ] : [
-      {
-        name: 'EnableMongo'
-      }
-    ]
-    consistencyPolicy: {
-      defaultConsistencyLevel: 'Session'
-    }
-    locations: [
-      {
-        locationName: location
-        failoverPriority: 0
-        isZoneRedundant: false
-      }
-    ]
-    apiProperties: {
-      serverVersion: '5.0'
-    }
-    minimalTlsVersion: 'Tls12'
-    publicNetworkAccess: 'Enabled'
-    networkAclBypass: 'AzureServices'
-  }
-}
-
-// App Service Plan (F1 Free tier) - Staging
-resource stagingAppServicePlan 'Microsoft.Web/serverfarms@2024-04-01' = {
-  name: stagingAppServicePlanName
+// App Service Plan (F1 Free tier) - Single Environment
+resource appServicePlan 'Microsoft.Web/serverfarms@2024-04-01' = {
+  name: appServicePlanName
   location: location
   kind: 'app'
-  tags: union(tags, { Environment: 'staging' })
+  tags: tags
   sku: {
     name: 'F1'
     tier: 'Free'
   }
   properties: {
     reserved: false
-  }
-}
-
-// App Service Plan (F1 Free tier) - Production
-resource productionAppServicePlan 'Microsoft.Web/serverfarms@2024-04-01' = {
-  name: productionAppServicePlanName
-  location: location
-  kind: 'app'
-  tags: union(tags, { Environment: 'production' })
-  sku: {
-    name: 'F1'
-    tier: 'Free'
-  }
-  properties: {
-    reserved: false
-  }
-}
-
-// App Service (Web App for API) - Staging
-resource stagingAppService 'Microsoft.Web/sites@2024-04-01' = {
-  name: stagingAppServiceName
-  location: location
-  kind: 'app'
-  tags: union(tags, { Environment: 'staging', 'azd-service-name': 'api' })
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${managedIdentity.id}': {}
-    }
-  }
-  properties: {
-    serverFarmId: stagingAppServicePlan.id
-    httpsOnly: true
-    siteConfig: {
-      alwaysOn: false // F1 tier doesn't support Always On
-      ftpsState: 'Disabled'
-      minTlsVersion: '1.2'
-      netFrameworkVersion: 'v8.0'
-      use32BitWorkerProcess: true // F1 tier limitation
-      cors: {
-        allowedOrigins: ['*']
-        supportCredentials: false
-      }
-      appSettings: [
-        {
-          name: 'ASPNETCORE_ENVIRONMENT'
-          value: 'Staging'
-        }
-        {
-          name: 'ConnectionStrings__DefaultConnection'
-          value: 'Server=${sqlServer.properties.fullyQualifiedDomainName};Database=${sqlDatabaseName};User Id=${sqlAdminLogin};Password=${sqlAdminPassword};Encrypt=True;TrustServerCertificate=False;'
-        }
-        {
-          name: 'MongoDbSettings__ConnectionString'
-          value: stagingCosmosAccount.listConnectionStrings().connectionStrings[0].connectionString
-        }
-        {
-          name: 'MongoDbSettings__DatabaseName'
-          value: cosmosDatabaseName
-        }
-      ]
-    }
-  }
-}
-
-// App Service (Web App for API) - Production
-resource productionAppService 'Microsoft.Web/sites@2024-04-01' = {
-  name: productionAppServiceName
-  location: location
-  kind: 'app'
-  tags: union(tags, { Environment: 'production', 'azd-service-name': 'api' })
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${managedIdentity.id}': {}
-    }
-  }
-  properties: {
-    serverFarmId: productionAppServicePlan.id
-    httpsOnly: true
-    siteConfig: {
-      alwaysOn: false // F1 tier doesn't support Always On
-      ftpsState: 'Disabled'
-      minTlsVersion: '1.2'
-      netFrameworkVersion: 'v8.0'
-      use32BitWorkerProcess: true // F1 tier limitation
-      cors: {
-        allowedOrigins: ['*']
-        supportCredentials: false
-      }
-      appSettings: [
-        {
-          name: 'ASPNETCORE_ENVIRONMENT'
-          value: 'Production'
-        }
-        {
-          name: 'ConnectionStrings__DefaultConnection'
-          value: 'Server=${sqlServer.properties.fullyQualifiedDomainName};Database=${sqlDatabaseName};User Id=${sqlAdminLogin};Password=${sqlAdminPassword};Encrypt=True;TrustServerCertificate=False;'
-        }
-        {
-          name: 'MongoDbSettings__ConnectionString'
-          value: productionCosmosAccount.listConnectionStrings().connectionStrings[0].connectionString
-        }
-        {
-          name: 'MongoDbSettings__DatabaseName'
-          value: cosmosDatabaseName
-        }
-      ]
-    }
   }
 }
 
@@ -301,32 +139,19 @@ module functions './functions.bicep' = {
     sqlAdminLogin: sqlAdminLogin
     sqlAdminPassword: sqlAdminPassword
     cosmosDatabaseName: cosmosDatabaseName
-    stagingCosmosAccountName: stagingCosmosAccountName
-    productionCosmosAccountName: productionCosmosAccountName
+    cosmosAccountName: cosmosAccountName
     managedIdentityId: managedIdentity.id
     managedIdentityPrincipalId: managedIdentity.properties.principalId
+    appServicePlanId: appServicePlan.id
   }
 }
 
-// Custom domain binding for production App Service (root domain)
-resource productionCustomDomainBinding 'Microsoft.Web/sites/hostNameBindings@2024-04-01' = if (enableProductionCustomDomain && productionCustomDomain != '') {
-  parent: productionAppService
+// Custom domain binding for Function App (if enabled)
+resource customDomainBinding 'Microsoft.Web/sites/hostNameBindings@2024-04-01' = if (enableProductionCustomDomain && productionCustomDomain != '') {
+  parent: functions.outputs.functionApp
   name: productionCustomDomain
   properties: {
-    azureResourceName: productionAppService.name
-    azureResourceType: 'Website'
-    customHostNameDnsRecordType: 'CName'
-    hostNameType: 'Verified'
-    sslState: 'SniEnabled'
-  }
-}
-
-// Custom domain binding for API subdomain (api.urbanai.site) - ONLY for production
-resource productionApiCustomDomainBinding 'Microsoft.Web/sites/hostNameBindings@2024-04-01' = if (enableProductionCustomDomain && productionCustomDomain != '') {
-  parent: productionAppService
-  name: 'api.${productionCustomDomain}'
-  properties: {
-    azureResourceName: productionAppService.name
+    azureResourceName: functions.outputs.functionAppName
     azureResourceType: 'Website'
     customHostNameDnsRecordType: 'CName'
     hostNameType: 'Verified'
@@ -354,30 +179,7 @@ resource sqlFirewallRuleAll 'Microsoft.Sql/servers/firewallRules@2021-11-01' = i
   }
 }
 
-// Frontend Storage Account
-resource frontendStorage 'Microsoft.Storage/storageAccounts@2023-01-01' = {
-  name: 'urbanaiweb${resourceToken}'
-  location: location
-  sku: {
-    name: 'Standard_LRS'
-  }
-  kind: 'StorageV2'
-  properties: {
-    accessTier: 'Hot'
-    supportsHttpsTrafficOnly: true
-  }
-}
-
-resource staticWebsite 'Microsoft.Storage/storageAccounts/staticWebsites@2023-01-01' = {
-  parent: frontendStorage
-  name: 'default'
-  properties: {
-    indexDocument: 'index.html'
-    errorDocument404Path: 'index.html'
-  }
-}
-
-// User-assigned managed identity for App Services
+// User-assigned managed identity for Function Apps
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: 'urbanai-identity-${resourceToken}'
   location: location
@@ -385,9 +187,6 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-
 }
 
 // Outputs for use in application configuration
-@description('Frontend storage endpoint')
-output frontendEndpoint string = staticWebsite.properties.primaryEndpoint
-
 @description('The fully qualified domain name of the SQL Server')
 output sqlServerFqdn string = sqlServer.properties.fullyQualifiedDomainName
 
@@ -400,38 +199,17 @@ output sqlServerName string = sqlServer.name
 @description('The resource token used for naming')
 output resourceToken string = resourceToken
 
-@description('The name of the staging Cosmos DB account')
-output stagingCosmosAccountName string = stagingCosmosAccount.name
-
-@description('The name of the production Cosmos DB account')
-output productionCosmosAccountName string = productionCosmosAccount.name
+@description('The name of the Cosmos DB account')
+output cosmosAccountName string = cosmosAccount.name
 
 @description('The Cosmos DB database name')
 output cosmosDatabaseName string = cosmosDatabaseName
 
-@description('The staging App Service URL')
-output stagingAppServiceUrl string = 'https://${stagingAppService.properties.defaultHostName}'
+@description('The Function App URL')
+output functionAppUrl string = functions.outputs.functionAppUrl
 
-@description('The production App Service URL')
-output productionAppServiceUrl string = 'https://${productionAppService.properties.defaultHostName}'
-
-@description('The staging App Service name')
-output stagingAppServiceName string = stagingAppService.name
-
-@description('The production App Service name')
-output productionAppServiceName string = productionAppService.name
-
-@description('The staging Function App URL')
-output stagingFunctionAppUrl string = functions.outputs.stagingFunctionAppUrl
-
-@description('The production Function App URL')
-output productionFunctionAppUrl string = functions.outputs.productionFunctionAppUrl
-
-@description('The staging Function App name')
-output stagingFunctionAppName string = functions.outputs.stagingFunctionAppName
-
-@description('The production Function App name')
-output productionFunctionAppName string = functions.outputs.productionFunctionAppName
+@description('The Function App name')
+output functionAppName string = functions.outputs.functionAppName
 
 @description('Resource group ID')
 output RESOURCE_GROUP_ID string = resourceGroup().id
@@ -442,8 +220,8 @@ output managedIdentityId string = managedIdentity.id
 @description('The managed identity principal ID')  
 output managedIdentityPrincipalId string = managedIdentity.properties.principalId
 
-@description('Production custom domain URL (if enabled)')
-output productionCustomDomainUrl string = enableProductionCustomDomain && productionCustomDomain != '' ? 'https://${productionCustomDomain}' : ''
+@description('Custom domain URL (if enabled)')
+output customDomainUrl string = enableProductionCustomDomain && productionCustomDomain != '' ? 'https://${productionCustomDomain}' : ''
 
-@description('Production API custom domain URL (if enabled)')
-output productionApiCustomDomainUrl string = enableProductionCustomDomain && productionCustomDomain != '' ? 'https://api.${productionCustomDomain}' : ''
+@description('API custom domain URL (if enabled)')
+output apiCustomDomainUrl string = enableProductionCustomDomain && productionCustomDomain != '' ? 'https://api.${productionCustomDomain}' : ''

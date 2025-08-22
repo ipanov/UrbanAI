@@ -3,76 +3,142 @@ name: UrbanAI CI/CD
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 env:
-  RESOURCE_TOKEN: ${{ secrets.RESOURCE_TOKEN }}
-  SUBSCRIPTION_ID: "184eb9b3-615b-424a-9270-8703af01c717"
-  PRODUCTION_DOMAIN: "urbanai.site"
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/UrbanAI.Functions'
+  DOTNET_VERSION: '9.0.x'
+  NODE_VERSION: '20'
 
 jobs:
-  build-test:
-    runs-on: windows-latest
+  comprehensive-tests:
+    name: Comprehensive Test Suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    services:
+      # PostgreSQL service for integration tests
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: urbanai_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # Backend build
+    # Backend setup and tests
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Restore .NET dependencies
+      run: dotnet restore UrbanAI.sln
     
     - name: Build solution
-      run: dotnet build UrbanAI.sln --configuration Release
-      
-    - name: Run tests
-      run: dotnet test --configuration Release --settings coverlet.runsettings --collect:"XPlat Code Coverage"
-      
-    - name: Install ReportGenerator (repo-local)
-      shell: pwsh
-      run: |
-        # Install ReportGenerator to a repo-local tools directory to avoid requiring global tools
-        dotnet tool install --tool-path tools dotnet-reportgenerator-globaltool
-        # add the repo-local tools folder to PATH for the remainder of the job
-        echo "$env:GITHUB_WORKSPACE\tools" >> $env:GITHUB_PATH
+      run: dotnet build UrbanAI.sln --configuration Release --no-restore
+    
+    - name: Run Domain Unit Tests
+      run: dotnet test tests/UrbanAI.Domain.Tests/ --configuration Release --no-build --collect:"XPlat Code Coverage" --settings coverlet.runsettings --logger trx --results-directory TestResults/Domain
+    
+    - name: Run Application Unit Tests
+      run: dotnet test tests/UrbanAI.Application.Tests/ --configuration Release --no-build --collect:"XPlat Code Coverage" --settings coverlet.runsettings --logger trx --results-directory TestResults/Application
+    
+    - name: Run Infrastructure Unit Tests
+      run: dotnet test tests/UrbanAI.Infrastructure.Tests/ --configuration Release --no-build --collect:"XPlat Code Coverage" --settings coverlet.runsettings --logger trx --results-directory TestResults/Infrastructure
+    
+    - name: Run API Unit Tests
+      run: dotnet test tests/UrbanAI.API.Tests/ --configuration Release --no-build --collect:"XPlat Code Coverage" --settings coverlet.runsettings --logger trx --results-directory TestResults/API
+    
+    - name: Run API Integration Tests
+      env:
+        ASPNETCORE_ENVIRONMENT: Testing
+        ConnectionStrings__DefaultConnection: Host=localhost;Port=5432;Database=urbanai_test;Username=postgres;Password=postgres
+      run: dotnet test tests/UrbanAI.API.IntegrationTests/ --configuration Release --no-build --collect:"XPlat Code Coverage" --settings integration-coverage.runsettings --logger trx --results-directory TestResults/Integration
 
-    - name: Find coverage file
+    # Frontend setup and tests
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: src/UrbanAI.Frontend/package-lock.json
+    
+    - name: Install frontend dependencies
+      working-directory: src/UrbanAI.Frontend
+      run: npm ci
+    
+    - name: TypeScript compilation check
+      working-directory: src/UrbanAI.Frontend
+      run: npm run type-check
+    
+    - name: ESLint code quality check
+      working-directory: src/UrbanAI.Frontend
+      run: npm run lint
+    
+    - name: Run frontend unit tests
+      working-directory: src/UrbanAI.Frontend
+      run: npm run test:coverage
+    
+    # Check if frontend files have changed (for E2E tests)
+    - name: Check for frontend changes
+      id: frontend-changes
+      uses: dorny/paths-filter@v2
+      with:
+        filters: |
+          frontend:
+            - 'src/UrbanAI.Frontend/**'
+            - '!src/UrbanAI.Frontend/tests/e2e/**'
+            - '!**/*.md'
+    
+    # E2E tests only run when frontend changes are detected OR it's a PR to main
+    - name: Install Playwright
+      if: steps.frontend-changes.outputs.frontend == 'true' || github.event_name == 'pull_request'
+      working-directory: src/UrbanAI.Frontend
+      run: npx playwright install --with-deps
+    
+    - name: Run E2E tests
+      if: steps.frontend-changes.outputs.frontend == 'true' || github.event_name == 'pull_request'
+      working-directory: src/UrbanAI.Frontend
+      run: npm run test:e2e:ci
+      env:
+        CI: true
+    
+    - name: Upload E2E test results
+      if: (steps.frontend-changes.outputs.frontend == 'true' || github.event_name == 'pull_request') && always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report
+        path: src/UrbanAI.Frontend/playwright-report/
+        retention-days: 30
+    
+    # Build frontend for deployment
+    - name: Build frontend
+      working-directory: src/UrbanAI.Frontend
+      run: npm run build
+    
+    # Coverage reporting
+    - name: Install ReportGenerator
+      run: dotnet tool install --global dotnet-reportgenerator-globaltool
+    
+    - name: Generate coverage report
       run: |
-        # Debug: List all XML files in the repository
-        Write-Host "Searching for all XML files..."
-        Get-ChildItem -Path "." -Filter "*.xml" -Recurse | ForEach-Object { Write-Host "Found: $($_.FullName)" }
-        
-        # Find the coverage file in common locations
-        Write-Host "Searching for coverage files..."
-        $coverageFile = $null
-        
-        # Try different search patterns
-        $coverageFile = Get-ChildItem -Path "." -Filter "*coverage*.xml" -Recurse | Select-Object -First 1
-        if (-not $coverageFile) {
-            $coverageFile = Get-ChildItem -Path "." -Filter "*.xml" -Recurse | Where-Object { $_.Name -like "*coverage*" } | Select-Object -First 1
-        }
-        if (-not $coverageFile) {
-            $coverageFile = Get-ChildItem -Path "TestResults" -Filter "*.xml" -Recurse | Select-Object -First 1
-        }
-        if (-not $coverageFile) {
-            $coverageFile = Get-ChildItem -Path "tests" -Filter "*.xml" -Recurse | Select-Object -First 1
-        }
-        
-        if ($coverageFile) {
-            Write-Host "Found coverage file: $($coverageFile.FullName)"
-            # Copy it to the expected location
-            Copy-Item -Path $coverageFile.FullName -Destination "coverage.cobertura.xml"
-            Write-Host "Copied coverage file to coverage.cobertura.xml"
-        } else {
-            Write-Error "No coverage file found in any location"
-            Write-Host "Please ensure tests are run with coverage collection"
-            exit 1
-        }
-    - name: Check coverage
-      run: |
-        # Coverage verification script
-        ./.github/scripts/check-coverage.ps1
-
+        reportgenerator \
+          -reports:"TestResults/**/coverage.cobertura.xml" \
+          -targetdir:"coverage-report" \
+          -reporttypes:"Html;Cobertura;TextSummary" \
+          -verbosity:"Info"
+    
     - name: Upload coverage report
       if: always()
       uses: actions/upload-artifact@v4
@@ -80,88 +146,68 @@ jobs:
         name: coverage-report
         path: coverage-report
 
-    - name: Upload TestResults
+    - name: Upload test results
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: test-results
         path: TestResults
 
-    # Frontend build
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
-        
-    - name: Install frontend dependencies
-      working-directory: src/UrbanAI.Frontend
-      run: npm install
-      
-    - name: Build frontend
-      working-directory: src/UrbanAI.Frontend
-      run: npm run build
-
-  deploy-staging:
-    needs: build-test
-    if: github.ref == 'refs/heads/develop'
-    runs-on: ubuntu-latest
-    steps:
-    - name: Azure Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-        subscription-id: ${{ env.SUBSCRIPTION_ID }}
-
-    - name: Deploy infrastructure
-      run: azd up -e staging --no-prompt
-
-    - name: Deploy API
-      uses: Azure/functions-action@v1
-      with:
-        app-name: urbanai-api-staging-${{ env.RESOURCE_TOKEN }}
-        package: src/UrbanAI.API
-
-    - name: Deploy Frontend
-      run: |
-        az storage blob upload-batch \
-          --account-name urbanaiweb${{ env.RESOURCE_TOKEN }} \
-          -s src/UrbanAI.Frontend/dist \
-          -d '$web' \
-          --overwrite
-
   deploy-production:
-    needs: build-test
-    if: github.ref == 'refs/heads/main'
+    needs: comprehensive-tests
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
     - name: Azure Login
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-        subscription-id: ${{ env.SUBSCRIPTION_ID }}
 
     - name: Deploy infrastructure
       run: azd up -e production --no-prompt
 
-    - name: Deploy API
+    - name: Build and deploy Functions
+      run: |
+        cd ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        dotnet build --configuration Release
+        dotnet publish --configuration Release --output ./output
+        
+    - name: Deploy to Azure Functions
       uses: Azure/functions-action@v1
       with:
-        app-name: urbanai-api-production-${{ env.RESOURCE_TOKEN }}
-        package: src/UrbanAI.API
+        app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
+        package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
 
-    - name: Deploy Frontend
+    - name: Build and deploy Frontend
+      working-directory: src/UrbanAI.Frontend
       run: |
-        az storage blob upload-batch \
-          --account-name urbanaiweb${{ env.RESOURCE_TOKEN }} \
-          -s src/UrbanAI.Frontend/dist \
-          -d '$web' \
-          --overwrite
-        az storage account update \
-          --name urbanaiweb${{ env.RESOURCE_TOKEN }} \
-          --custom-domain ${{ env.PRODUCTION_DOMAIN }}
+        npm ci
+        npm run build
+        
+    - name: Deploy Frontend to Static Web App
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        action: "upload"
+        app_location: "src/UrbanAI.Frontend/dist"
+        skip_api_build: true
 
   security-scan:
-    needs: build-test
+    needs: comprehensive-tests
     runs-on: ubuntu-latest
     steps:
     - name: OWASP ZAP Scan
@@ -170,8 +216,8 @@ jobs:
         target: 'https://staging.urbanai.site'
 
   report-failure:
-    needs: build-test
-    if: ${{ needs.build-test.result == 'failure' }}
+    needs: comprehensive-tests
+    if: ${{ needs.comprehensive-tests.result == 'failure' }}
     runs-on: ubuntu-latest
     steps:
     - name: Create GitHub Issue for CI Failure and dispatch event

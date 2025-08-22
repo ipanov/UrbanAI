@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\UrbanAI.API\UrbanAI.API.csproj" />
+    <ProjectReference Include="..\UrbanAI.API.Tests\UrbanAI.API.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>

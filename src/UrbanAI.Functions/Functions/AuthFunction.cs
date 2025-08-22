@@ -1,291 +1,154 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
-using UrbanAI.Application.DTOs;
-using UrbanAI.Application.Interfaces;
-using UrbanAI.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Text.Json;
+using UrbanAI.Application.DTOs;
+using UrbanAI.Application.Interfaces;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using UrbanAI.Domain.Entities;
+using UrbanAI.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace UrbanAI.Functions.Functions
 {
-    /// <summary>
-    /// Azure Function for OAuth-only authentication and user management.
-    /// Migrated from AuthController to provide the same functionality as HTTP triggers.
-    /// Implements: external token exchange (Google/Microsoft/Facebook) and a registration 
-    /// endpoint for external providers that requires explicit legal acceptance on the frontend 
-    /// before creating an anonymous, PII-free user record.
-    /// </summary>
     public class AuthFunction
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILogger _logger;
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _dbContext;
-        private readonly IUserService _userService;
-        private readonly ILogger<AuthFunction> _logger;
+        private readonly string _jwtSecret;
+        private readonly string _jwtIssuer;
+        private readonly string _jwtAudience;
 
         public AuthFunction(
-            IHttpClientFactory httpClientFactory,
+            ILoggerFactory loggerFactory,
             IConfiguration configuration,
-            ApplicationDbContext dbContext,
-            IUserService userService,
-            ILogger<AuthFunction> logger)
+            ApplicationDbContext dbContext)
         {
-            _httpClientFactory = httpClientFactory;
+            _logger = loggerFactory.CreateLogger<AuthFunction>();
             _configuration = configuration;
             _dbContext = dbContext;
-            _userService = userService;
-            _logger = logger;
+            _jwtSecret = configuration["Jwt:Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");
+            _jwtIssuer = configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("JWT Issuer not configured");
+            _jwtAudience = configuration["Jwt:Audience"] ?? throw new InvalidOperationException("JWT Audience not configured");
         }
 
-        /// <summary>
-        /// Exchange external provider token for internal JWT.
-        /// </summary>
-        [Function("ExchangeToken")]
-        public async Task<HttpResponseData> ExchangeToken(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "auth/exchange-token")] HttpRequestData req)
-        {
-            try
-            {
-                var request = await req.ReadFromJsonAsync<AuthRequestDto>();
-                if (request == null || string.IsNullOrEmpty(request.Provider) || string.IsNullOrEmpty(request.Token))
-                {
-                    var response = req.CreateResponse(HttpStatusCode.BadRequest);
-                    await response.WriteStringAsync("Provider and token are required.");
-                    return response;
-                }
-
-                // Developer convenience: support tokens like "mock:alice123" for local testing
-                if (request.Token.StartsWith("mock:"))
-                {
-                    var externalId = request.Token.Substring("mock:".Length);
-                    return await HandleExternalLogin(req, request.Provider.ToLowerInvariant(), externalId);
-                }
-
-                switch (request.Provider.ToLowerInvariant())
-                {
-                    case "google":
-                        return await HandleGoogleToken(req, request.Token);
-                    case "microsoft":
-                        return await HandleMicrosoftToken(req, request.Token);
-                    case "facebook":
-                        return await HandleFacebookToken(req, request.Token);
-                    default:
-                        var response = req.CreateResponse(HttpStatusCode.BadRequest);
-                        await response.WriteStringAsync("Unsupported provider.");
-                        return response;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error exchanging token");
-                var response = req.CreateResponse(HttpStatusCode.InternalServerError);
-                await response.WriteStringAsync("Internal server error");
-                return response;
-            }
-        }
-
-        private async Task<HttpResponseData> HandleGoogleToken(HttpRequestData req, string token)
-        {
-            var httpClient = _httpClientFactory.CreateClient();
-            var response = await httpClient.GetAsync($"https://www.googleapis.com/oauth2/v3/tokeninfo?id_token={token}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
-                await errorResponse.WriteStringAsync("Invalid Google token.");
-                return errorResponse;
-            }
-
-            var content = await response.Content.ReadAsStringAsync();
-            var payload = JsonSerializer.Deserialize<JsonDocument>(content);
-            var sub = payload?.RootElement.GetProperty("sub").GetString();
-
-            if (string.IsNullOrEmpty(sub))
-            {
-                var errorResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
-                await errorResponse.WriteStringAsync("Invalid token payload.");
-                return errorResponse;
-            }
-
-            return await HandleExternalLogin(req, "google", sub);
-        }
-
-        private async Task<HttpResponseData> HandleMicrosoftToken(HttpRequestData req, string token)
-        {
-            var httpClient = _httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            var response = await httpClient.GetAsync("https://graph.microsoft.com/v1.0/me");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
-                await errorResponse.WriteStringAsync("Invalid Microsoft token.");
-                return errorResponse;
-            }
-
-            var content = await response.Content.ReadAsStringAsync();
-            var payload = JsonSerializer.Deserialize<JsonDocument>(content);
-            var id = payload?.RootElement.GetProperty("id").GetString();
-
-            if (string.IsNullOrEmpty(id))
-            {
-                var errorResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
-                await errorResponse.WriteStringAsync("Invalid token payload.");
-                return errorResponse;
-            }
-
-            return await HandleExternalLogin(req, "microsoft", id);
-        }
-
-        private async Task<HttpResponseData> HandleFacebookToken(HttpRequestData req, string token)
-        {
-            var httpClient = _httpClientFactory.CreateClient();
-            var response = await httpClient.GetAsync($"https://graph.facebook.com/me?access_token={token}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
-                await errorResponse.WriteStringAsync("Invalid Facebook token.");
-                return errorResponse;
-            }
-
-            var content = await response.Content.ReadAsStringAsync();
-            var payload = JsonSerializer.Deserialize<JsonDocument>(content);
-            var id = payload?.RootElement.GetProperty("id").GetString();
-
-            if (string.IsNullOrEmpty(id))
-            {
-                var errorResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
-                await errorResponse.WriteStringAsync("Invalid token payload.");
-                return errorResponse;
-            }
-
-            return await HandleExternalLogin(req, "facebook", id);
-        }
-
-        /// <summary>
-        /// Lookup an existing user by provider+externalId and return our internal JWT.
-        /// If no user exists, return 404 with requiresRegistration = true so the frontend can
-        /// present the legal agreement and then call register-external.
-        /// </summary>
-        private async Task<HttpResponseData> HandleExternalLogin(HttpRequestData req, string provider, string externalId)
-        {
-            var user = await _dbContext.Users
-                .Include(u => u.ExternalLogins)
-                .SingleOrDefaultAsync(u =>
-                    u.ExternalLogins.Any(l => l.Provider == provider && l.ExternalId == externalId));
-
-            if (user == null)
-            {
-                // Inform frontend that registration (with explicit legal acceptance) is required
-                var response = req.CreateResponse(HttpStatusCode.NotFound);
-                var errorResult = new { requiresRegistration = true, provider, externalId };
-                await response.WriteAsJsonAsync(errorResult);
-                return response;
-            }
-
-            var token = await _userService.GenerateJwtTokenAsync(new UserDto
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Role = user.Role
-            });
-
-            var successResponse = req.CreateResponse(HttpStatusCode.OK);
-            await successResponse.WriteAsJsonAsync(new AuthResponseDto { Token = token });
-            return successResponse;
-        }
-
-        /// <summary>
-        /// DTO for register-external
-        /// </summary>
         public class ExternalRegisterDto
         {
             public string? Provider { get; set; }
             public string? ExternalId { get; set; }
         }
 
-        /// <summary>
-        /// Registers an anonymous user linked to an external provider identifier.
-        /// Idempotent: if a user already exists for the provider+externalId returns existing token.
-        /// IMPORTANT: This endpoint MUST only be called after the user has explicitly accepted
-        /// the legal agreement in the frontend.
-        /// </summary>
         [Function("RegisterExternal")]
         public async Task<HttpResponseData> RegisterExternal(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "auth/register-external")] HttpRequestData req)
         {
+            _logger.LogInformation("Processing external user registration");
+
             try
             {
-                var dto = await req.ReadFromJsonAsync<ExternalRegisterDto>();
+                var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                var dto = JsonSerializer.Deserialize<ExternalRegisterDto>(requestBody, new JsonSerializerOptions 
+                { 
+                    PropertyNameCaseInsensitive = true 
+                });
+
                 if (dto == null || string.IsNullOrEmpty(dto.Provider) || string.IsNullOrEmpty(dto.ExternalId))
                 {
-                    var badRequestResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-                    await badRequestResponse.WriteStringAsync("Provider and ExternalId are required.");
-                    return badRequestResponse;
+                    var badRequest = req.CreateResponse(HttpStatusCode.BadRequest);
+                    await badRequest.WriteStringAsync("Provider and ExternalId are required");
+                    return badRequest;
                 }
 
-                var provider = dto.Provider.ToLowerInvariant();
-                var externalId = dto.ExternalId;
+                // Check if user already exists
+                var existingLogin = await _dbContext.ExternalLogins
+                    .Include(el => el.User)
+                    .FirstOrDefaultAsync(el => el.Provider == dto.Provider && el.ProviderKey == dto.ExternalId);
 
-                // Check existing user
-                var existing = await _dbContext.Users
-                    .Include(u => u.ExternalLogins)
-                    .SingleOrDefaultAsync(u => u.ExternalLogins.Any(l => l.Provider == provider && l.ExternalId == externalId));
-
-                if (existing != null)
+                if (existingLogin != null)
                 {
-                    var existingToken = await _userService.GenerateJwtTokenAsync(new UserDto
+                    // User already exists, return existing user token
+                    var existingToken = GenerateJwtToken(existingLogin.User);
+                    var existingResponse = req.CreateResponse(HttpStatusCode.OK);
+                    await existingResponse.WriteStringAsync(JsonSerializer.Serialize(new AuthResponseDto
                     {
-                        Id = existing.Id,
-                        Username = existing.Username,
-                        Role = existing.Role
-                    });
-
-                var existingOkResponse = req.CreateResponse(HttpStatusCode.OK);
-                await existingOkResponse.WriteAsJsonAsync(new AuthResponseDto { Token = existingToken });
-                return existingOkResponse;
+                        Token = existingToken,
+                        Username = existingLogin.User.Username,
+                        UserId = existingLogin.User.Id
+                    }));
+                    return existingResponse;
                 }
 
-                // Create anonymous user linked only to provider+externalId (no PII)
-                var user = new UrbanAI.Domain.Entities.User
+                // Create new anonymous user
+                var user = new User
                 {
-                    Username = $"{provider}_{externalId}",
-                    Role = "User",
-                    ExternalLogins = new List<UrbanAI.Domain.Entities.ExternalLogin>
-                    {
-                        new UrbanAI.Domain.Entities.ExternalLogin
-                        {
-                            Provider = provider,
-                            ExternalId = externalId
-                        }
-                    }
+                    Username = $"user_{Guid.NewGuid():N}",
+                    IsAnonymous = true,
+                    CreatedAt = DateTime.UtcNow
                 };
 
                 _dbContext.Users.Add(user);
                 await _dbContext.SaveChangesAsync();
 
-                var token = await _userService.GenerateJwtTokenAsync(new UserDto
+                // Create external login record
+                var externalLogin = new ExternalLogin
                 {
-                    Id = user.Id,
-                    Username = user.Username,
-                    Role = user.Role
-                });
+                    UserId = user.Id,
+                    Provider = dto.Provider,
+                    ProviderKey = dto.ExternalId
+                };
 
-                var okResponse = req.CreateResponse(HttpStatusCode.OK);
-                await okResponse.WriteAsJsonAsync(new AuthResponseDto { Token = token });
-                return okResponse;
+                _dbContext.ExternalLogins.Add(externalLogin);
+                await _dbContext.SaveChangesAsync();
+
+                // Generate JWT token
+                var token = GenerateJwtToken(user);
+
+                var response = req.CreateResponse(HttpStatusCode.Created);
+                await response.WriteStringAsync(JsonSerializer.Serialize(new AuthResponseDto
+                {
+                    Token = token,
+                    Username = user.Username,
+                    UserId = user.Id
+                }));
+
+                return response;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error registering external user");
-                var response = req.CreateResponse(HttpStatusCode.InternalServerError);
-                await response.WriteStringAsync("Internal server error");
-                return response;
+                _logger.LogError(ex, "Error during external user registration");
+                var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
+                await errorResponse.WriteStringAsync("Internal server error");
+                return errorResponse;
             }
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_jwtSecret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim("userId", user.Id.ToString()),
+                    new Claim("username", user.Username),
+                    new Claim("isAnonymous", user.IsAnonymous.ToString().ToLower())
+                }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                Issuer = _jwtIssuer,
+                Audience = _jwtAudience,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }

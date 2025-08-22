@@ -27,7 +27,19 @@
       "Bash(npm run test:coverage:*)",
       "Bash(npm run test:*)",
       "Bash(npm run build:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:learn.microsoft.com)",
+      "Bash(npx:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(az account:*)",
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(npm install:*)",
+      "Bash(where.exe tsx)",
+      "Bash(dir:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(dotnet add package:*)",
+      "Bash(dotnet build:*)"
     ],
     "deny": [],
     "ask": []

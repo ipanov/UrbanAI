@@ -6,10 +6,10 @@ metadata:
 
 # Services to be deployed
 services:
-  api:
-    project: src/UrbanAI.API
+  functions:
+    project: src/UrbanAI.Functions
     language: dotnet
-    host: appservice
+    host: function
     
 # Infrastructure configuration
 infra:

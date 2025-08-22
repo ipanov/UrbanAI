@@ -1,246 +1,160 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using System.Net;
+using System.Text.Json;
 using UrbanAI.Application.Interfaces;
 using UrbanAI.Application.DTOs;
-using UrbanAI.Domain.Entities;
-using System.Net;
+using System.Security.Claims;
 
 namespace UrbanAI.Functions.Functions
 {
-    /// <summary>
-    /// Azure Function for managing issues.
-    /// Migrated from IssuesController to provide the same functionality as HTTP triggers.
-    /// </summary>
     public class IssuesFunction
     {
+        private readonly ILogger _logger;
         private readonly IIssueService _issueService;
-        private readonly ILogger<IssuesFunction> _logger;
 
-        public IssuesFunction(IIssueService issueService, ILogger<IssuesFunction> logger)
+        public IssuesFunction(ILoggerFactory loggerFactory, IIssueService issueService)
         {
+            _logger = loggerFactory.CreateLogger<IssuesFunction>();
             _issueService = issueService;
-            _logger = logger;
         }
 
-        /// <summary>
-        /// Gets all issues.
-        /// </summary>
-        [Function("GetAllIssues")]
-        public async Task<HttpResponseData> GetAllIssues(
+        [Function("GetIssues")]
+        public async Task<HttpResponseData> GetIssues(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "issues")] HttpRequestData req)
         {
+            _logger.LogInformation("Getting all issues");
+
             try
             {
-                _logger.LogInformation("Getting all issues");
                 var issues = await _issueService.GetAllIssuesAsync();
+                
                 var response = req.CreateResponse(HttpStatusCode.OK);
-                await response.WriteAsJsonAsync(issues);
+                await response.WriteStringAsync(JsonSerializer.Serialize(issues));
                 return response;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting all issues");
-                var response = req.CreateResponse(HttpStatusCode.InternalServerError);
-                await response.WriteStringAsync("Internal server error");
-                return response;
+                _logger.LogError(ex, "Error getting issues");
+                var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
+                await errorResponse.WriteStringAsync("Internal server error");
+                return errorResponse;
             }
         }
 
-        /// <summary>
-        /// Gets an issue by its ID.
-        /// </summary>
-        [Function("GetIssueById")]
-        public async Task<HttpResponseData> GetIssueById(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "issues/{id}")] HttpRequestData req,
-            Guid id)
+        [Function("GetIssue")]
+        public async Task<HttpResponseData> GetIssue(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "issues/{id:int}")] HttpRequestData req,
+            int id)
         {
+            _logger.LogInformation($"Getting issue with ID: {id}");
+
             try
             {
-                _logger.LogInformation("Getting issue by ID: {Id}", id);
                 var issue = await _issueService.GetIssueByIdAsync(id);
+                
                 if (issue == null)
                 {
-                    var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
-                    return notFoundResponse;
+                    var notFound = req.CreateResponse(HttpStatusCode.NotFound);
+                    await notFound.WriteStringAsync($"Issue with ID {id} not found");
+                    return notFound;
                 }
 
-                var okResponse = req.CreateResponse(HttpStatusCode.OK);
-                await okResponse.WriteAsJsonAsync(issue);
-                return okResponse;
+                var response = req.CreateResponse(HttpStatusCode.OK);
+                await response.WriteStringAsync(JsonSerializer.Serialize(issue));
+                return response;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting issue by ID: {Id}", id);
-                var response = req.CreateResponse(HttpStatusCode.InternalServerError);
-                await response.WriteStringAsync("Internal server error");
-                return response;
+                _logger.LogError(ex, $"Error getting issue with ID: {id}");
+                var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
+                await errorResponse.WriteStringAsync("Internal server error");
+                return errorResponse;
             }
         }
 
-        /// <summary>
-        /// Creates a new issue.
-        /// </summary>
         [Function("CreateIssue")]
         public async Task<HttpResponseData> CreateIssue(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "issues")] HttpRequestData req)
         {
+            _logger.LogInformation("Creating new issue");
+
             try
             {
-                _logger.LogInformation("Creating new issue");
-                var request = await req.ReadFromJsonAsync<CreateIssueRequestDto>();
-                if (request == null)
+                var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                var dto = JsonSerializer.Deserialize<CreateIssueRequestDto>(requestBody, new JsonSerializerOptions 
+                { 
+                    PropertyNameCaseInsensitive = true 
+                });
+
+                if (dto == null)
                 {
-                    var response = req.CreateResponse(HttpStatusCode.BadRequest);
-                    await response.WriteStringAsync("Invalid request body");
-                    return response;
+                    var badRequest = req.CreateResponse(HttpStatusCode.BadRequest);
+                    await badRequest.WriteStringAsync("Invalid request body");
+                    return badRequest;
                 }
 
-                if (string.IsNullOrEmpty(request.Title))
-                {
-                    var titleErrorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-                    await titleErrorResponse.WriteStringAsync("Title is required.");
-                    return titleErrorResponse;
-                }
+                // For now, we'll use a default user ID since we don't have authentication middleware in Functions
+                // In a real implementation, you'd extract this from the JWT token in the Authorization header
+                var userId = 1; // This should come from the authenticated user
 
-                var responseDto = await _issueService.CreateIssueAsync(request);
-                
-                var createdResponse = req.CreateResponse(HttpStatusCode.Created);
-                await createdResponse.WriteAsJsonAsync(responseDto);
-                return createdResponse;
+                var result = await _issueService.CreateIssueAsync(dto, userId);
+
+                var response = req.CreateResponse(HttpStatusCode.Created);
+                await response.WriteStringAsync(JsonSerializer.Serialize(result));
+                return response;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating issue");
-                var response = req.CreateResponse(HttpStatusCode.InternalServerError);
-                await response.WriteStringAsync("Internal server error");
-                return response;
+                var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
+                await errorResponse.WriteStringAsync("Internal server error");
+                return errorResponse;
             }
         }
 
-        /// <summary>
-        /// Updates an existing issue.
-        /// </summary>
         [Function("UpdateIssue")]
         public async Task<HttpResponseData> UpdateIssue(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "issues/{id}")] HttpRequestData req,
-            Guid id)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "issues/{id:int}")] HttpRequestData req,
+            int id)
         {
+            _logger.LogInformation($"Updating issue with ID: {id}");
+
             try
             {
-                _logger.LogInformation("Updating issue with ID: {Id}", id);
-                var request = await req.ReadFromJsonAsync<UpdateIssueRequestDto>();
-                if (request == null)
+                var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                var dto = JsonSerializer.Deserialize<UpdateIssueRequestDto>(requestBody, new JsonSerializerOptions 
+                { 
+                    PropertyNameCaseInsensitive = true 
+                });
+
+                if (dto == null)
                 {
-                    var response = req.CreateResponse(HttpStatusCode.BadRequest);
-                    await response.WriteStringAsync("Invalid request body");
-                    return response;
+                    var badRequest = req.CreateResponse(HttpStatusCode.BadRequest);
+                    await badRequest.WriteStringAsync("Invalid request body");
+                    return badRequest;
                 }
 
-                if (string.IsNullOrEmpty(request.Title))
+                var result = await _issueService.UpdateIssueAsync(id, dto);
+
+                if (result == null)
                 {
-                    var titleErrorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-                    await titleErrorResponse.WriteStringAsync("Title is required.");
-                    return titleErrorResponse;
-                }
-                if (string.IsNullOrEmpty(request.Description))
-                {
-                    var descriptionErrorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-                    await descriptionErrorResponse.WriteStringAsync("Description is required.");
-                    return descriptionErrorResponse;
-                }
-                if (string.IsNullOrEmpty(request.PhotoUrl))
-                {
-                    var photoUrlErrorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-                    await photoUrlErrorResponse.WriteStringAsync("PhotoUrl is required.");
-                    return photoUrlErrorResponse;
-                }
-                if (string.IsNullOrEmpty(request.Status))
-                {
-                    var statusErrorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-                    await statusErrorResponse.WriteStringAsync("Status is required.");
-                    return statusErrorResponse;
+                    var notFound = req.CreateResponse(HttpStatusCode.NotFound);
+                    await notFound.WriteStringAsync($"Issue with ID {id} not found");
+                    return notFound;
                 }
 
-                request.Id = id;
-                var updatedIssue = await _issueService.UpdateIssueAsync(request);
-                if (updatedIssue == null)
-                {
-                    var response = req.CreateResponse(HttpStatusCode.NotFound);
-                    return response;
-                }
-
-                var noContentResponse = req.CreateResponse(HttpStatusCode.NoContent);
-                return noContentResponse;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error updating issue with ID: {Id}", id);
-                var response = req.CreateResponse(HttpStatusCode.InternalServerError);
-                await response.WriteStringAsync("Internal server error");
-                return response;
-            }
-        }
-
-        /// <summary>
-        /// Deletes an issue by its ID.
-        /// </summary>
-        [Function("DeleteIssue")]
-        public async Task<HttpResponseData> DeleteIssue(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "issues/{id}")] HttpRequestData req,
-            Guid id)
-        {
-            try
-            {
-                _logger.LogInformation("Deleting issue with ID: {Id}", id);
-                await _issueService.DeleteIssueAsync(id);
-                var noContentResponse = req.CreateResponse(HttpStatusCode.NoContent);
-                return noContentResponse;
-            }
-            catch (InvalidOperationException)
-            {
-                _logger.LogWarning("Issue with ID {Id} not found", id);
-                var response = req.CreateResponse(HttpStatusCode.NotFound);
+                var response = req.CreateResponse(HttpStatusCode.OK);
+                await response.WriteStringAsync(JsonSerializer.Serialize(result));
                 return response;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting issue with ID: {Id}", id);
-                var response = req.CreateResponse(HttpStatusCode.InternalServerError);
-                await response.WriteStringAsync("Internal server error");
-                return response;
-            }
-        }
-
-        /// <summary>
-        /// Gets regulations by location.
-        /// </summary>
-        [Function("GetRegulationsByLocation")]
-        public async Task<HttpResponseData> GetRegulationsByLocation(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "issues/regulations/{location}")] HttpRequestData req,
-            string location)
-        {
-            try
-            {
-                _logger.LogInformation("Getting regulations by location: {Location}", location);
-                var regulations = await _issueService.GetRegulationsByLocationAsync(location);
-                if (regulations == null || !regulations.Any())
-                {
-                    var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
-                    await notFoundResponse.WriteStringAsync($"No regulations found for location: {location}");
-                    return notFoundResponse;
-                }
-
-                var okResponse = req.CreateResponse(HttpStatusCode.OK);
-                await okResponse.WriteAsJsonAsync(regulations);
-                return okResponse;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting regulations by location: {Location}", location);
-                var response = req.CreateResponse(HttpStatusCode.InternalServerError);
-                await response.WriteStringAsync("Internal server error");
-                return response;
+                _logger.LogError(ex, $"Error updating issue with ID: {id}");
+                var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
+                await errorResponse.WriteStringAsync("Internal server error");
+                return errorResponse;
             }
         }
     }
