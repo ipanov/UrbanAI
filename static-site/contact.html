@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - UrbanAI</title>
+    <meta name="description" content="Get in touch with UrbanAI - Contact our support team, report issues, or learn more about our urban issue management platform.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #1E293B;
+            background: #FFFFFF;
+        }
+
+        .header {
+            background: #FFFFFF;
+            border-bottom: 1px solid #E2E8F0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2563EB;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748B;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #2563EB;
+        }
+
+        .cta-button {
+            background: #2563EB;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            background: #1E40AF;
+        }
+
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #64748B;
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .contact-card {
+            background: #F8FAFC;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .contact-icon {
+            width: 64px;
+            height: 64px;
+            background: #2563EB;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .contact-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 8px;
+        }
+
+        .contact-card p {
+            color: #64748B;
+            margin-bottom: 16px;
+        }
+
+        .contact-link {
+            color: #2563EB;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-link:hover {
+            text-decoration: underline;
+        }
+
+        .faq-section {
+            background: #FFFFFF;
+            margin-top: 48px;
+        }
+
+        .faq-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E293B;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .faq-item {
+            background: #F8FAFC;
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .faq-question {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 12px;
+        }
+
+        .faq-answer {
+            color: #64748B;
+            line-height: 1.6;
+        }
+
+        .response-time {
+            background: #EFF6FF;
+            border: 1px solid #DBEAFE;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 24px 0;
+            text-align: center;
+        }
+
+        .response-time strong {
+            color: #1E40AF;
+        }
+
+        .back-link {
+            color: #2563EB;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 24px;
+            display: inline-block;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .contact-grid,
+            .faq-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                height: auto;
+                padding: 16px 20px;
+                gap: 16px;
+            }
+
+            .nav-links {
+                gap: 16px;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <span class="logo-text">UrbanAI</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="/#features">Features</a></li>
+                <li><a href="/privacy.html">Privacy</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+            </ul>
+            
+            <a href="/app" class="cta-button">Get Started</a>
+        </nav>
+    </header>
+
+    <main class="main">
+        <a href="/" class="back-link">← Back to Home</a>
+        
+        <h1 class="page-title">Contact UrbanAI</h1>
+        <p class="page-subtitle">We're here to help you make your city better. Get in touch with any questions, feedback, or support needs.</p>
+
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                </div>
+                <h3>General Support</h3>
+                <p>Questions about using UrbanAI or need technical assistance?</p>
+                <a href="mailto:support@urbanai.site" class="contact-link">support@urbanai.site</a>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <h3>Privacy & Security</h3>
+                <p>Questions about data privacy, GDPR compliance, or security?</p>
+                <a href="mailto:privacy@urbanai.site" class="contact-link">privacy@urbanai.site</a>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M3 21h18"/>
+                        <path d="M5 21V7l8-4v18"/>
+                        <path d="M19 21V11l-6-4"/>
+                    </svg>
+                </div>
+                <h3>Municipal Partnerships</h3>
+                <p>Interested in implementing UrbanAI for your city or municipality?</p>
+                <a href="mailto:partnerships@urbanai.site" class="contact-link">partnerships@urbanai.site</a>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </div>
+                <h3>Feedback & Ideas</h3>
+                <p>Have suggestions for new features or improvements?</p>
+                <a href="mailto:feedback@urbanai.site" class="contact-link">feedback@urbanai.site</a>
+            </div>
+        </div>
+
+        <div class="response-time">
+            <strong>Response Time:</strong> We typically respond to all inquiries within 24 hours during business days.
+        </div>
+
+        <section class="faq-section">
+            <h2 class="faq-title">Frequently Asked Questions</h2>
+            
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3 class="faq-question">How do I report an urban issue?</h3>
+                    <p class="faq-answer">Simply click "Get Started" to access the web app, sign in with your Google or Microsoft account, and follow the guided process to report issues with photos and location data.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Is my personal information stored?</h3>
+                    <p class="faq-answer">No. UrbanAI uses OAuth authentication and stores no personal identifiable information. All reports are completely anonymous.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Which municipalities use UrbanAI?</h3>
+                    <p class="faq-answer">We're currently in the pilot phase with select European municipalities. Contact us at partnerships@urbanai.site to discuss implementation for your city.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Is there a mobile app?</h3>
+                    <p class="faq-answer">We currently offer a responsive web app that works great on mobile devices. Native iOS and Android apps are coming soon.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">How does AI help with issue reporting?</h3>
+                    <p class="faq-answer">Our AI analyzes your reports to categorize issues, suggest relevant regulations, assess priority levels, and route reports to the appropriate municipal departments.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Is UrbanAI GDPR compliant?</h3>
+                    <p class="faq-answer">Yes, UrbanAI is fully GDPR compliant. All data is stored in EU data centers, and we follow strict privacy-first principles with minimal data collection.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">How do I track my reported issues?</h3>
+                    <p class="faq-answer">After reporting an issue, you'll receive a tracking reference. You can check the status anytime through the web app or receive email updates if you choose to provide an email address.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Can I report issues anonymously?</h3>
+                    <p class="faq-answer">Absolutely. All reports are anonymous by design. We don't store or share any personal information with municipal authorities.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

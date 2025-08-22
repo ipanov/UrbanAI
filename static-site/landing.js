@@ -68,17 +68,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Handle Get Started button click
-    const getStartedButton = document.querySelector('.cta-button');
-    if (getStartedButton) {
-        getStartedButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Simple redirect to React app
-            console.log('Redirecting to React app');
-            window.location.href = 'http://localhost:3000';
+    // Handle Get Started button clicks
+    const getStartedButtons = document.querySelectorAll('a[href="/app"], .cta-button');
+    getStartedButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href === '/app') {
+                // Allow natural navigation to /app route
+                console.log('Navigating to web app');
+                return; // Let the browser handle the navigation
+            }
         });
-    }
+    });
 
     // Handle navigation links
     const navLinks = document.querySelectorAll('.nav-links a');
