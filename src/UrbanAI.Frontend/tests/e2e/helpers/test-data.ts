@@ -20,6 +20,7 @@ export interface TestIssue {
 }
 
 export class TestDataHelper {
+  // eslint-disable-next-line no-unused-vars
   constructor(private page: Page) {}
 
   /**

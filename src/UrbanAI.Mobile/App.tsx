@@ -87,7 +87,11 @@ function App(): React.JSX.Element {
 
   if (isAuthenticated === null) {
     // Loading state - you can add a splash screen here
-    return null;
+    return (
+      <SafeAreaProvider>
+        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      </SafeAreaProvider>
+    );
   }
 
   return (

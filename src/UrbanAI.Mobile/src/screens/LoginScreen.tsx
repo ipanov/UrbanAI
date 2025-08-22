@@ -9,7 +9,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { STORAGE_KEYS, AUTH_PROVIDERS } from '../../UrbanAI.Shared/constants';
+import { STORAGE_KEYS, AUTH_PROVIDERS } from '../../../UrbanAI.Shared/constants';
 
 const LoginScreen: React.FC = () => {
   const handleOAuthLogin = async (provider: string) => {

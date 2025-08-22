@@ -40,7 +40,9 @@
       "Bash(npm uninstall:*)",
       "Bash(dotnet add package:*)",
       "Bash(dotnet build:*)",
-      "Bash(gh pr merge:*)"
+      "Bash(gh pr merge:*)",
+      "Bash(npm run:*)",
+      "Bash(dotnet test:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { encode } from 'react-native-base64';
 import {
   View,
   Text,
@@ -89,7 +90,7 @@ const GDPRDataManagementScreen: React.FC = () => {
   const handleExportData = async () => {
     setIsExporting(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise<void>(resolve => setTimeout(() => resolve(), 2000));
       
       const exportData = {
         user: userData,
@@ -103,7 +104,7 @@ const GDPRDataManagementScreen: React.FC = () => {
       await Share.share({
         message: 'UrbanAI Data Export',
         title: 'UrbanAI Data Export',
-        url: `data:application/json;base64,${Buffer.from(dataString).toString('base64')}`,
+        url: `data:application/json;base64,${encode(dataString)}`,
       });
     } catch (error) {
       Alert.alert('Export Error', 'Failed to export data. Please try again.');

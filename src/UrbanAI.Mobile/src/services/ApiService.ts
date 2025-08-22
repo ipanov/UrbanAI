@@ -1,7 +1,7 @@
 // API Service for mobile app - reusing backend endpoints
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_ENDPOINTS, STORAGE_KEYS } from '../../UrbanAI.Shared/constants';
-import { CreateIssueRequest, Issue, UserProfile } from '../../UrbanAI.Shared/types';
+import { API_ENDPOINTS, STORAGE_KEYS } from '../../../UrbanAI.Shared/constants';
+import { CreateIssueRequest, Issue, UserProfile } from '../../../UrbanAI.Shared/types';
 
 const API_BASE_URL = __DEV__ 
   ? 'http://localhost:5001/api'  // Development - connect to local backend

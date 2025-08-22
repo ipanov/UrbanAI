@@ -10,5 +10,6 @@ namespace UrbanAI.Application.DTOs
         public string? PhotoUrl { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+        public Guid UserId { get; set; }
     }
 }

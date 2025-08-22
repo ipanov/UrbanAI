@@ -4,6 +4,7 @@ import { Page, Locator, expect } from '@playwright/test';
  * Base page object with common functionality
  */
 export abstract class BasePage {
+  // eslint-disable-next-line no-unused-vars
   constructor(protected page: Page) {}
 
   async goto(path: string = '') {

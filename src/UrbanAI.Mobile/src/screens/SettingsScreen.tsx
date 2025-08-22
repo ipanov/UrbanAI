@@ -10,7 +10,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { STORAGE_KEYS } from '../../UrbanAI.Shared/constants';
+import { STORAGE_KEYS } from '../../../UrbanAI.Shared/constants';
 import { useNavigation } from '@react-navigation/native';
 
 const SettingsScreen: React.FC = () => {

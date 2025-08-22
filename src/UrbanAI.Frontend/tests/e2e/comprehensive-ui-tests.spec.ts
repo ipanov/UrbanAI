@@ -99,7 +99,7 @@ test.describe('Comprehensive UI Test Suite', () => {
       expect(tutorialCompleted).toBe('true');
     });
 
-    test('should not show tutorial for returning users', async ({ page }) => {
+    test('should not show tutorial for returning users', async ({ page: _page }) => {
       await testDataHelper.setupReturningUser();
       await testDataHelper.mockIssuesAPI([]);
 
@@ -126,7 +126,7 @@ test.describe('Comprehensive UI Test Suite', () => {
   });
 
   test.describe('Dashboard Functionality', () => {
-    test('should display correct stats for user with issues', async ({ page }) => {
+    test('should display correct stats for user with issues', async ({ page: _page }) => {
       const testIssues = [
         TestDataHelper.createTestIssue({ status: 'Open' }),
         TestDataHelper.createTestIssue({ 
@@ -180,7 +180,7 @@ test.describe('Comprehensive UI Test Suite', () => {
   });
 
   test.describe('Issues Management', () => {
-    test('should display user issues correctly', async ({ page }) => {
+    test('should display user issues correctly', async ({ page: _page }) => {
       const testIssues = [
         TestDataHelper.createTestIssue({ 
           title: 'Broken Streetlight on Main St' 
@@ -360,7 +360,7 @@ test.describe('Comprehensive UI Test Suite', () => {
   });
 
   test.describe('Performance', () => {
-    test('should load dashboard within performance budget', async ({ page }) => {
+    test('should load dashboard within performance budget', async ({ page: _page }) => {
       await testDataHelper.setupReturningUser();
       await testDataHelper.mockIssuesAPI([]);
 
@@ -373,7 +373,7 @@ test.describe('Comprehensive UI Test Suite', () => {
       expect(loadTime).toBeLessThan(3000); // Should load within 3 seconds
     });
 
-    test('should handle large number of issues efficiently', async ({ page }) => {
+    test('should handle large number of issues efficiently', async ({ page: _page }) => {
       // Create 100 test issues
       const manyIssues = Array.from({ length: 100 }, (_, i) => 
         TestDataHelper.createTestIssue({

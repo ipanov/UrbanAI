@@ -10,6 +10,7 @@ namespace UrbanAI.Domain.Entities
         public string? Title { get; set; }
         public required string Status { get; set; } // e.g., Open, In Progress, Closed
         public DateTime CreatedAt { get; set; }
+        public Guid UserId { get; set; }
         // TODO: Add other relevant properties like Category, etc.
     }
 }

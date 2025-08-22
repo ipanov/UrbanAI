@@ -17,7 +17,7 @@ import Voice from '@react-native-voice/voice';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { CreateIssueRequest, LocationData } from '../../UrbanAI.Shared/types';
+import { CreateIssueRequest, LocationData } from '../../../UrbanAI.Shared/types';
 import ApiService from '../services/ApiService';
 
 const { width } = Dimensions.get('window');
