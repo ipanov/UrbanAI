@@ -20,6 +20,8 @@ namespace UrbanAI.Application.Services
     {
         public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Picture { get; set; } = string.Empty;
     }
@@ -78,7 +80,7 @@ namespace UrbanAI.Application.Services
             var scope = provider.ToLowerInvariant() switch
             {
                 "google" => "openid profile email",
-                "microsoft" => "openid profile email",
+                "microsoft" => "openid profile email User.Read",
                 "facebook" => "email public_profile",
                 _ => throw new ArgumentException($"Unsupported provider: {provider}")
             };
@@ -154,13 +156,15 @@ namespace UrbanAI.Application.Services
 
         public async Task<OAuthUserInfo> GetUserInfoAsync(string provider, string accessToken)
         {
+            Console.WriteLine($"[OAuth] Getting user info for provider: {provider}");
+            
             var httpClient = _httpClientFactory.CreateClient();
 
             var userInfoUrl = provider.ToLowerInvariant() switch
             {
                 "google" => "https://www.googleapis.com/oauth2/v2/userinfo",
                 "microsoft" => "https://graph.microsoft.com/v1.0/me",
-                "facebook" => "https://graph.facebook.com/v18.0/me?fields=id,name,email,picture",
+                "facebook" => "https://graph.facebook.com/v18.0/me?fields=id,name,first_name,last_name,email,picture",
                 _ => throw new ArgumentException($"Unsupported provider: {provider}")
             };
 
@@ -172,10 +176,12 @@ namespace UrbanAI.Application.Services
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"[OAuth] User info request failed for {provider}: {response.StatusCode} - {errorContent}");
                 throw new InvalidOperationException($"User info request failed: {errorContent}");
             }
 
             var responseContent = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"[OAuth] User info response for {provider}: {responseContent}");
             var userData = JsonSerializer.Deserialize<JsonElement>(responseContent);
 
             return provider.ToLowerInvariant() switch
@@ -184,6 +190,8 @@ namespace UrbanAI.Application.Services
                 {
                     Id = userData.GetProperty("id").GetString() ?? string.Empty,
                     Name = userData.GetProperty("name").GetString() ?? string.Empty,
+                    FirstName = userData.TryGetProperty("given_name", out var googleFirstName) ? googleFirstName.GetString() ?? string.Empty : string.Empty,
+                    LastName = userData.TryGetProperty("family_name", out var googleLastName) ? googleLastName.GetString() ?? string.Empty : string.Empty,
                     Email = userData.GetProperty("email").GetString() ?? string.Empty,
                     Picture = userData.GetProperty("picture").GetString() ?? string.Empty
                 },
@@ -191,6 +199,8 @@ namespace UrbanAI.Application.Services
                 {
                     Id = userData.GetProperty("id").GetString() ?? string.Empty,
                     Name = userData.GetProperty("displayName").GetString() ?? string.Empty,
+                    FirstName = userData.TryGetProperty("givenName", out var msFirstName) ? msFirstName.GetString() ?? string.Empty : string.Empty,
+                    LastName = userData.TryGetProperty("surname", out var msLastName) ? msLastName.GetString() ?? string.Empty : string.Empty,
                     Email = userData.TryGetProperty("mail", out var mail) ? mail.GetString() ?? string.Empty :
                            userData.TryGetProperty("userPrincipalName", out var upn) ? upn.GetString() ?? string.Empty : string.Empty,
                     Picture = string.Empty // Microsoft Graph requires separate call for photo
@@ -199,6 +209,8 @@ namespace UrbanAI.Application.Services
                 {
                     Id = userData.GetProperty("id").GetString() ?? string.Empty,
                     Name = userData.GetProperty("name").GetString() ?? string.Empty,
+                    FirstName = userData.TryGetProperty("first_name", out var fbFirstName) ? fbFirstName.GetString() ?? string.Empty : string.Empty,
+                    LastName = userData.TryGetProperty("last_name", out var fbLastName) ? fbLastName.GetString() ?? string.Empty : string.Empty,
                     Email = userData.TryGetProperty("email", out var email) ? email.GetString() ?? string.Empty : string.Empty,
                     Picture = userData.TryGetProperty("picture", out var picture) && 
                              picture.TryGetProperty("data", out var data) && 

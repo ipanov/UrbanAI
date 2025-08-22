@@ -8,41 +8,56 @@ using UrbanAI.Domain.Interfaces;
 using UrbanAI.Infrastructure.Repositories;
 using UrbanAI.Application.Interfaces;
 using UrbanAI.Application.Services;
-using System.Reflection;
-using Microsoft.Extensions.Http;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
     .ConfigureServices((context, services) =>
     {
-        // Configure database context based on environment
+        services.AddApplicationInsightsTelemetryWorkerService();
+        services.ConfigureFunctionsApplicationInsights();
+
+        // Configure database context
         var connectionString = context.Configuration.GetConnectionString("DefaultConnection");
         if (!string.IsNullOrEmpty(connectionString))
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
         }
+        else
+        {
+            // Use InMemory database for development/testing
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseInMemoryDatabase("UrbanAIDb"));
+        }
 
-        // Configure MongoDB settings
-        services.Configure<MongoDbSettings>(
-            context.Configuration.GetSection("MongoDbSettings"));
+        // Configure Supabase settings for PostgreSQL
+        services.Configure<SupabaseSettings>(
+            context.Configuration.GetSection("SupabaseSettings"));
 
-        // Register MongoDbContext and repositories
-        services.AddSingleton<MongoDbContext>();
+        // Register repositories
         services.AddScoped<IRegulationRepository, RegulationRepository>();
         services.AddScoped<IIssueRepository, IssueRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
-
-        // Register HTTP client factory
-        services.AddHttpClient();
 
         // Register application services
         services.AddScoped<IIssueService, IssueService>();
         services.AddScoped<IOAuthService, OAuthService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IRegulationService, RegulationService>();
 
-        // Register configuration
-        services.AddSingleton<IConfiguration>(context.Configuration);
+        // Register HTTP client
+        services.AddHttpClient();
+
+        // Configure CORS
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            });
+        });
     })
     .Build();
 

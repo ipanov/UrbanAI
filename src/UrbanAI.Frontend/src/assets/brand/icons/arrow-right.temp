@@ -1,6 +1,0 @@
-<!-- temp file to workaround svg write issue; will rename to .svg -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M5 12h12"/>
-  <path d="M13 6l6 6-6 6"/>
-  <title>Arrow Right</title>
-</svg>

@@ -32,27 +32,28 @@ The UrbanAI project follows a simplified GitFlow branching strategy:
 *   **`develop`**: Latest integrated development code. Feature branches merge into `develop` via pull requests.
 
 ### Feature Branch Naming Convention
-Feature branches **must** include the associated Azure DevOps Work Item ID for automatic linking and PR completion.
+Feature branches should use descriptive names that clearly indicate the purpose of the changes.
 
-**Format:** `feature/WI-ID-short-description`
-*   `feature`: (or `bugfix`, `hotfix`, `users/username`)
-*   `WI-ID`: Azure DevOps Work Item ID (e.g., `37`)
+**Format:** `feature/short-description`
+*   `feature`: (or `bugfix`, `hotfix`, `refactor`)
 *   `short-description`: Concise, hyphen-separated description.
 
 **Examples:**
-*   `feature/37-setup-integration-tests`
-*   `bugfix/123-fix-login-issue`
+*   `feature/oauth-integration`
+*   `bugfix/fix-login-validation`
+*   `refactor/cleanup-authentication-flow`
 
-### Pull Request (PR) Titles
-PR titles should reference the Work Item ID and clearly indicate the purpose of changes.
+### Commit Message Conventions
+Follow conventional commit format for clear history and automated changelog generation.
 
-**Format:** `[Type]: WI-ID - Short description of changes`
-*   `[Type]`: Commit type (e.g., `feat`, `fix`, `chore`, `docs`, `refactor`).
-*   `WI-ID`: Azure DevOps Work Item ID.
-*   `Short description of changes`: Brief summary.
+**Format:** `type: description`
+*   `type`: Commit type (`feat`, `fix`, `chore`, `docs`, `refactor`, `test`)
+*   `description`: Brief, clear description of changes
 
-**Example:**
-*   `feat: 37 - Setup Integration Tests Project`
+**Examples:**
+*   `feat: implement OAuth authentication flow`
+*   `fix: resolve JWT token validation issue`
+*   `refactor: consolidate API endpoints`
 
 ## Getting Started
 

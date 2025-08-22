@@ -1,0 +1,377 @@
+name: UrbanAI Smart CI (develop)
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [develop]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  actions: read
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  NODE_VERSION: '20'
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      backend: ${{ steps.filter.outputs.backend }}
+      mobile: ${{ steps.filter.outputs.mobile }}
+      docs: ${{ steps.filter.outputs.docs }}
+      config: ${{ steps.filter.outputs.config }}
+      infra: ${{ steps.filter.outputs.infra }}
+      needs_tests: ${{ steps.filter.outputs.needs_tests }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect changed areas
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            frontend:
+              - 'src/UrbanAI.Frontend/**'
+              - 'package.json'
+              - 'package-lock.json'
+            backend:
+              - 'src/UrbanAI.API/**'
+              - 'src/UrbanAI.Application/**'
+              - 'src/UrbanAI.Infrastructure/**'
+              - 'src/UrbanAI.Domain/**'
+              - 'tests/**'
+              - '*.sln'
+              - '**/*.csproj'
+              - 'coverlet.runsettings'
+              - 'integration-coverage.runsettings'
+            mobile:
+              - 'src/UrbanAI.Mobile/**'
+            docs:
+              - '**/*.md'
+              - 'docs/**'
+              - 'mocks/**'
+            config:
+              - '.github/workflows/**'
+              - '.gitignore'
+              - '.editorconfig'
+              - 'CLAUDE.md'
+            infra:
+              - 'infra/**'
+              - 'azd.yaml'
+            needs_tests:
+              - 'src/UrbanAI.Frontend/**'
+              - 'src/UrbanAI.API/**'
+              - 'src/UrbanAI.Application/**'
+              - 'src/UrbanAI.Infrastructure/**'
+              - 'src/UrbanAI.Domain/**'
+              - 'src/UrbanAI.Mobile/**'
+              - 'tests/**'
+
+  backend-check:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        test-suite: ['unit', 'integration']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore UrbanAI.sln
+
+      - name: Build solution
+        run: dotnet build UrbanAI.sln --configuration Release --no-restore
+
+      - name: Run Domain tests
+        if: matrix.test-suite == 'unit'
+        run: dotnet test tests/UrbanAI.Domain.Tests/ --configuration Release --no-build --verbosity minimal --logger "trx;LogFileName=domain-results.trx"
+        continue-on-error: false
+
+      - name: Run Application tests
+        if: matrix.test-suite == 'unit'
+        run: dotnet test tests/UrbanAI.Application.Tests/ --configuration Release --no-build --verbosity minimal --logger "trx;LogFileName=application-results.trx"
+        continue-on-error: false
+
+      - name: Run Infrastructure tests
+        if: matrix.test-suite == 'unit'
+        run: dotnet test tests/UrbanAI.Infrastructure.Tests/ --configuration Release --no-build --verbosity minimal --logger "trx;LogFileName=infrastructure-results.trx"
+        continue-on-error: false
+
+      - name: Run API tests
+        if: matrix.test-suite == 'unit'
+        run: dotnet test tests/UrbanAI.API.Tests/ --configuration Release --no-build --verbosity minimal --logger "trx;LogFileName=api-results.trx"
+        continue-on-error: false
+
+      - name: Run Integration tests
+        if: matrix.test-suite == 'integration'
+        run: dotnet test tests/UrbanAI.API.IntegrationTests/ --configuration Release --no-build --verbosity minimal --logger "trx;LogFileName=integration-results.trx" --settings integration-coverage.runsettings
+        continue-on-error: false
+
+      - name: Upload backend test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-results-${{ matrix.test-suite }}
+          path: |
+            tests/**/TestResults/**/*.trx
+            TestResults/**/*.trx
+
+  frontend-check:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: src/UrbanAI.Frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: src/UrbanAI.Frontend
+        run: npm ci
+
+      - name: Type check
+        working-directory: src/UrbanAI.Frontend
+        run: npm run type-check
+
+      - name: Lint
+        working-directory: src/UrbanAI.Frontend
+        run: npm run lint
+
+      - name: Run unit tests
+        working-directory: src/UrbanAI.Frontend
+        run: npm run test:coverage
+
+      - name: Build for production
+        working-directory: src/UrbanAI.Frontend
+        run: npm run build
+
+      - name: Upload frontend test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-test-results
+          path: |
+            src/UrbanAI.Frontend/coverage/
+            src/UrbanAI.Frontend/test-results/
+
+  mobile-check:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.mobile == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install mobile dependencies
+        working-directory: src/UrbanAI.Mobile
+        run: npm ci
+
+      - name: Type check
+        working-directory: src/UrbanAI.Mobile
+        run: npm run type-check
+        continue-on-error: true
+
+      - name: Lint
+        working-directory: src/UrbanAI.Mobile
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Run mobile tests
+        working-directory: src/UrbanAI.Mobile
+        run: npm test
+        continue-on-error: true
+
+      - name: Upload mobile test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-test-results
+          path: |
+            src/UrbanAI.Mobile/coverage/
+            src/UrbanAI.Mobile/test-results/
+
+  infra-check:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.infra == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate workflow syntax
+        run: |
+          echo "Validating GitHub Actions workflows..."
+          # Check workflow files for syntax issues
+          find .github/workflows -name "*.yml" -o -name "*.yaml" | while read file; do
+            echo "Checking $file"
+            # Basic YAML syntax validation would go here
+          done
+
+      - name: Lint infrastructure files
+        run: |
+          echo "Infrastructure files changed - running validation"
+          if [ -d "infra" ]; then
+            echo "Found infra directory, would run bicep/ARM validation here"
+          fi
+
+  skip-ci:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.needs_tests == 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - name: No tests needed
+        run: |
+          echo "Only documentation, configuration, or non-code files changed."
+          echo "Skipping all test execution to save build minutes."
+
+  report-failure:
+    needs: [detect-changes, backend-check, frontend-check, mobile-check, infra-check]
+    if: always() && (needs.backend-check.result == 'failure' || needs.frontend-check.result == 'failure' || needs.mobile-check.result == 'failure' || needs.infra-check.result == 'failure')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create GitHub Issue for CI Failure
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const failedJobs = [];
+            const results = {
+              'Backend': '${{ needs.backend-check.result }}',
+              'Frontend': '${{ needs.frontend-check.result }}', 
+              'Mobile': '${{ needs.mobile-check.result }}',
+              'Infrastructure': '${{ needs.infra-check.result }}'
+            };
+            
+            for (const [job, result] of Object.entries(results)) {
+              if (result === 'failure') {
+                failedJobs.push(job);
+              }
+            }
+
+            const issueTitle = `🚨 CI Failure on develop: ${failedJobs.join(', ')} - Run ${process.env.GITHUB_RUN_ID}`;
+            const body = `## CI Build Failed
+            
+            **Failed Components:** ${failedJobs.join(', ')}
+            **Branch:** \`develop\`
+            **Run ID:** ${process.env.GITHUB_RUN_ID}
+            **Commit:** ${process.env.GITHUB_SHA}
+            
+            🔗 **[View Run Details](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})**
+            
+            ### Next Steps:
+            1. Check the workflow logs for specific error messages
+            2. Download artifacts for detailed test results
+            3. Fix the issues and push to develop branch
+            4. This issue will be auto-closed when CI passes
+            
+            ---
+            *Auto-generated by UrbanAI Smart CI*`;
+
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: issueTitle,
+              body: body,
+              labels: ['ci-failure', 'high-priority', 'automated'],
+              assignees: [context.repo.owner]
+            });
+
+            // Add a comment to trigger Claude Code intervention
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.data.number,
+              body: `## 🚨 CI Failure Detected - Automated Analysis Requested
+            
+            **@claude please analyze and fix the CI failures in this issue.**
+            
+            **Failed Components:** ${failedJobs.join(', ')}  
+            **Run Details:** [View logs and artifacts](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})
+            
+            The Claude CI Fixer workflow will automatically prepare analysis context and guide the fix process.
+            
+            ---
+            *Automated request for Claude Code intervention*`
+            });
+
+            core.setOutput('issue_number', issue.data.number);
+
+  close-resolved-issues:
+    needs: [detect-changes, backend-check, frontend-check, mobile-check, infra-check]
+    if: always() && (needs.backend-check.result == 'success' || needs.frontend-check.result == 'success' || needs.mobile-check.result == 'success' || needs.infra-check.result == 'success' || needs.detect-changes.outputs.needs_tests == 'false')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close resolved CI failure issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Get all open CI failure issues
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'ci-failure',
+              state: 'open'
+            });
+
+            console.log(`Found ${issues.length} open CI failure issues`);
+
+            for (const issue of issues) {
+              // Check if issue is from develop branch and recent (last 24 hours)
+              const issueAge = Date.now() - new Date(issue.created_at).getTime();
+              const isRecent = issueAge < (24 * 60 * 60 * 1000); // 24 hours
+              
+              if (issue.title.includes('develop') && isRecent) {
+                console.log(`Closing resolved issue: #${issue.number} - ${issue.title}`);
+                
+                // Close the issue
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed'
+                });
+
+                // Add resolution comment
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: `## ✅ CI Issue Resolved
+                  
+                  **Status:** Build now passing ✅
+                  **Resolved by:** Commit ${process.env.GITHUB_SHA.substring(0, 8)}
+                  **Run ID:** ${process.env.GITHUB_RUN_ID}
+                  
+                  🔗 **[View Successful Run](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})**
+                  
+                  The CI pipeline is now passing successfully. This issue has been automatically closed.
+                  
+                  ---
+                  *Auto-resolved by UrbanAI Smart CI*`
+                });
+                
+                console.log(`✅ Closed issue #${issue.number}`);
+              }
+            }

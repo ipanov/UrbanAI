@@ -2,34 +2,41 @@
 
 .oauth-login-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-.login-container {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  width: 100%;
-  max-width: 480px;
-  padding: 40px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   position: relative;
   overflow: hidden;
 }
 
-/* Brand accent bar */
-.login-container::before {
+.oauth-login-page::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #2563eb 0%, #059669 50%, #ea580c 100%);
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.login-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 480px;
+  padding: 32px;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 1;
 }
 
 /* Header Section */
@@ -39,25 +46,24 @@
 }
 
 .login-logo {
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 
-.header-text h1 {
-  margin: 0 0 8px 0;
+.login-header h1 {
   font-size: 28px;
   font-weight: 700;
-  color: #1f2937;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #1E293B;
+  margin-bottom: 8px;
+}
+
+.brand-highlight {
+  color: #2563EB;
 }
 
 .tagline {
-  margin: 0;
-  color: #6b7280;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
+  color: #64748B;
+  margin-top: 8px;
 }
 
 /* User Type Selection */
@@ -156,16 +162,18 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 14px 20px;
+  width: 100%;
+  height: 56px;
+  border-radius: 8px;
   border: none;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+  padding: 16px 24px;
   position: relative;
   overflow: hidden;
-  color: white;
 }
 
 .oauth-btn::before {
@@ -183,78 +191,79 @@
   left: 100%;
 }
 
+.oauth-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
 .oauth-btn:focus {
-  outline: 2px solid #2563eb;
+  outline: 2px solid #2563EB;
   outline-offset: 2px;
 }
 
 .oauth-btn--microsoft {
-  background: linear-gradient(135deg, #0078d4 0%, #106ebe 100%);
-}
-
-.oauth-btn--microsoft:hover {
-  background: linear-gradient(135deg, #106ebe 0%, #005a9e 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+  background: linear-gradient(135deg, #0078D4 0%, #106ebe 100%);
+  color: #FFFFFF;
 }
 
 .oauth-btn--google {
-  background: linear-gradient(135deg, #4285f4 0%, #3367d6 100%);
-}
-
-.oauth-btn--google:hover {
-  background: linear-gradient(135deg, #3367d6 0%, #2851a3 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+  background: #FFFFFF;
+  color: #1E293B;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .oauth-btn--facebook {
-  background: linear-gradient(135deg, #1877f2 0%, #166fe5 100%);
-}
-
-.oauth-btn--facebook:hover {
-  background: linear-gradient(135deg, #166fe5 0%, #1557b2 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3);
+  background: linear-gradient(135deg, #1877F2 0%, #166fe5 100%);
+  color: #FFFFFF;
 }
 
 .oauth-icon {
-  font-size: 18px;
-  line-height: 1;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
 }
 
 /* Privacy Section */
 .privacy-section {
-  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
-  border: 1px solid #d1fae5;
-  border-radius: 12px;
-  padding: 20px;
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.8) 100%);
+  border-radius: 8px;
+  padding: 32px;
   margin-bottom: 24px;
+  border: 1px solid rgba(226, 232, 240, 0.5);
 }
 
 .privacy-header {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 12px;
   margin-bottom: 12px;
 }
 
 .privacy-icon {
+  width: 20px;
+  height: 20px;
   color: #059669;
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .privacy-header h3 {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #065f46;
+  color: #1E293B;
+  margin-bottom: 4px;
 }
 
 .privacy-description {
   margin: 0 0 12px 0;
   font-size: 14px;
-  color: #047857;
-  line-height: 1.5;
+  line-height: 20px;
+  color: #64748B;
 }
 
 .privacy-benefits {
@@ -300,51 +309,51 @@
 
 /* Footer */
 .login-footer {
-  border-top: 1px solid #e5e7eb;
-  padding-top: 20px;
-  text-align: center;
+  padding-top: 32px;
+}
+
+.login-footer .footer-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #E2E8F0, transparent);
+  margin-bottom: 24px;
 }
 
 .gdpr-links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
+  font-size: 12px;
+  line-height: 18px;
+  color: #64748B;
+  text-align: center;
+  margin-bottom: 16px;
 }
 
 .gdpr-links a {
-  color: #6b7280;
-  font-size: 12px;
-  text-decoration: none;
+  color: #2563EB;
+  text-decoration: underline;
   transition: color 0.2s;
 }
 
 .gdpr-links a:hover {
-  color: #2563eb;
-  text-decoration: underline;
+  color: #1E40AF;
 }
 
-.separator {
-  color: #d1d5db;
-  font-size: 12px;
+.guest-section {
+  text-align: center;
+  margin-top: 16px;
 }
 
-.compliance-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: #f3f4f6;
-  color: #374151;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 11px;
+.guest-link {
+  font-size: 14px;
   font-weight: 500;
+  color: #2563EB;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  transition: all 0.2s;
 }
 
-.badge-icon {
-  color: #059669;
+.guest-link:hover {
+  text-decoration: underline;
+  color: #1E40AF;
 }
 
 /* Mobile Responsiveness */

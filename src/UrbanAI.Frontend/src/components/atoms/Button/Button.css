@@ -1,0 +1,291 @@
+/* Button Base Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  white-space: nowrap;
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.btn:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* Button Sizes */
+.btn--sm {
+  height: 2rem;
+  padding: 0 var(--spacing-md);
+  font-size: var(--font-size-sm);
+}
+
+.btn--md {
+  height: 2.5rem;
+  padding: 0 var(--spacing-lg);
+  font-size: var(--font-size-sm);
+}
+
+.btn--lg {
+  height: 3rem;
+  padding: 0 var(--spacing-2xl);
+  font-size: var(--font-size-base);
+}
+
+/* Button Variants */
+.btn--primary {
+  background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-primary-700) 100%);
+  color: var(--color-white);
+  box-shadow: var(--shadow-md);
+}
+
+.btn--primary:hover:not(.btn--disabled) {
+  background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-800) 100%);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn--primary:active:not(.btn--disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-md);
+}
+
+.btn--secondary {
+  background: var(--color-white);
+  color: var(--color-neutral-700);
+  border-color: var(--color-neutral-300);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--secondary:hover:not(.btn--disabled) {
+  background: var(--color-neutral-50);
+  border-color: var(--color-neutral-400);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn--secondary:active:not(.btn--disabled) {
+  transform: translateY(0);
+  background: var(--color-neutral-100);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--outline {
+  background: transparent;
+  color: var(--color-primary-600);
+  border-color: var(--color-primary-500);
+}
+
+.btn--outline:hover:not(.btn--disabled) {
+  background: var(--color-primary-50);
+  border-color: var(--color-primary-600);
+  color: var(--color-primary-700);
+}
+
+.btn--outline:active:not(.btn--disabled) {
+  background: var(--color-primary-100);
+  border-color: var(--color-primary-700);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-neutral-600);
+  border-color: transparent;
+}
+
+.btn--ghost:hover:not(.btn--disabled) {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-700);
+}
+
+.btn--ghost:active:not(.btn--disabled) {
+  background: var(--color-neutral-200);
+}
+
+.btn--danger {
+  background: linear-gradient(135deg, var(--color-error-500) 0%, var(--color-error-700) 100%);
+  color: var(--color-white);
+  box-shadow: var(--shadow-md);
+}
+
+.btn--danger:hover:not(.btn--disabled) {
+  background: linear-gradient(135deg, var(--color-error-600) 0%, var(--color-error-800) 100%);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn--danger:active:not(.btn--disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-md);
+}
+
+/* Button States */
+.btn--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn--loading {
+  pointer-events: none;
+}
+
+.btn--full-width {
+  width: 100%;
+}
+
+/* Button Content */
+.btn__content {
+  transition: opacity var(--transition-fast);
+}
+
+.btn__content--loading {
+  opacity: 0;
+}
+
+.btn__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn__icon svg {
+  width: 1em;
+  height: 1em;
+}
+
+/* Loading Spinner */
+.btn__loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn__spinner {
+  width: 1rem;
+  height: 1rem;
+  animation: btn-spin 1s linear infinite;
+}
+
+.btn__spinner-circle {
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-dasharray: 62.83;
+  stroke-dashoffset: 62.83;
+  animation: btn-spinner-dash 1.5s ease-in-out infinite;
+}
+
+@keyframes btn-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes btn-spinner-dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+/* Hover Effects */
+.btn--primary::before,
+.btn--danger::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn--primary:hover::before:not(.btn--disabled),
+.btn--danger:hover::before:not(.btn--disabled) {
+  left: 100%;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .btn--sm {
+    height: 2.25rem;
+    padding: 0 var(--spacing-lg);
+  }
+  
+  .btn--md {
+    height: 2.75rem;
+    padding: 0 var(--spacing-xl);
+  }
+  
+  .btn--lg {
+    height: 3.25rem;
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .btn {
+    border-width: var(--border-width-thick);
+  }
+  
+  .btn--primary,
+  .btn--danger {
+    background: var(--color-primary-600);
+  }
+  
+  .btn--secondary {
+    border-color: var(--color-neutral-600);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+  
+  .btn__spinner {
+    animation: none;
+  }
+  
+  .btn__spinner-circle {
+    animation: none;
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  
+  .btn--primary:hover:not(.btn--disabled),
+  .btn--secondary:hover:not(.btn--disabled),
+  .btn--danger:hover:not(.btn--disabled) {
+    transform: none;
+  }
+}

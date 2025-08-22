@@ -1,0 +1,91 @@
+name: Auto-Close Fixed CI Issues
+
+on:
+  workflow_run:
+    workflows: ["UrbanAI Smart CI (develop)"]
+    types: [completed]
+    branches: [develop]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  close-fixed-issues:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find and close related CI failure issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Get the successful workflow run details
+            const runId = context.payload.workflow_run.id;
+            const runUrl = context.payload.workflow_run.html_url;
+            const commitSha = context.payload.workflow_run.head_sha;
+            
+            console.log(`✅ CI Success - Run ${runId}, Commit ${commitSha}`);
+            
+            // Find open CI failure issues
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'ci-failure',
+              sort: 'created',
+              direction: 'desc',
+              per_page: 10
+            });
+            
+            console.log(`Found ${issues.data.length} open CI failure issues`);
+            
+            for (const issue of issues.data) {
+              // Check if this issue is related to recent failures
+              const title = issue.title;
+              const isRecentFailure = title.includes('develop') || title.includes('CI Failure');
+              
+              if (isRecentFailure) {
+                console.log(`Closing issue #${issue.number}: ${title}`);
+                
+                // Close the issue with a success comment
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: `## ✅ CI Build Now Passing!
+            
+            **Status:** All CI checks are now successful
+            **Latest Run:** [${runId}](${runUrl})
+            **Commit:** ${commitSha}
+            
+            This issue has been automatically resolved. The CI/CD pipeline is healthy again.
+            
+            ---
+            *Auto-closed by successful CI run*`
+                });
+                
+                // Close the issue
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed',
+                  labels: [...issue.labels.map(l => l.name).filter(l => l !== 'ci-failure'), 'ci-resolved']
+                });
+                
+                console.log(`✅ Closed issue #${issue.number}`);
+              }
+            }
+            
+            // Also trigger cleanup of any auto-fix branches
+            await github.rest.repos.createDispatchEvent({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              event_type: 'ci_success_cleanup',
+              client_payload: {
+                run_id: runId,
+                commit_sha: commitSha,
+                run_url: runUrl
+              }
+            });

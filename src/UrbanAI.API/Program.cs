@@ -6,31 +6,43 @@ using Microsoft.EntityFrameworkCore;
 using UrbanAI.Infrastructure.Data;
 using UrbanAI.Domain.Interfaces;
 using UrbanAI.Infrastructure.Repositories;
+using UrbanAI.Domain.Entities;
+using Npgsql;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Configure database context based on environment
-// - Development: Local SQL Server (localdb) or Docker SQL Server
-// - Staging/Production: Azure SQL Database
+// - Development: Local PostgreSQL (Supabase) or Docker PostgreSQL
+// - Staging/Production: Supabase PostgreSQL Database
 // - Testing: InMemory provider (configured in CustomWebApplicationFactory)
 if (!builder.Environment.IsEnvironment("Testing"))
 {
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    if (string.IsNullOrEmpty(connectionString))
+    // Temporarily use InMemory database for development testing
+    // TODO: Switch back to PostgreSQL once it's installed and configured
+    if (builder.Environment.IsDevelopment())
     {
-        throw new InvalidOperationException("DefaultConnection connection string is not configured.");
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseInMemoryDatabase("UrbanAITestDb"));
     }
+    else
+    {
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidOperationException("DefaultConnection connection string is not configured.");
+        }
 
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(connectionString));
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseNpgsql(connectionString));
+    }
 }
 
-// Configure MongoDB settings
-builder.Services.Configure<MongoDbSettings>(
-    builder.Configuration.GetSection("MongoDbSettings"));
+// Configure PostgreSQL settings
+builder.Services.Configure<SupabaseSettings>(
+    builder.Configuration.GetSection("SupabaseSettings"));
 
-// Register MongoDbContext and repositories
-builder.Services.AddSingleton<MongoDbContext>();
+// Register repositories
 builder.Services.AddScoped<IRegulationRepository, RegulationRepository>();
 
 builder.Services.AddScoped<IIssueRepository, IssueRepository>();
@@ -44,6 +56,31 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 builder.Services.AddHttpClient();
+
+// Add CORS configuration
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(
+                "http://localhost:3000",      // Development frontend
+                "https://www.urbanai.site",   // Production frontend
+                "http://localhost:5173"       // Vite default dev server
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
+// Add session middleware for OAuth flow
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 // Add Authentication and JWT configuration
 builder.Services.AddAuthentication(options =>
@@ -82,13 +119,6 @@ builder.Services.AddAuthentication(options =>
         throw new InvalidOperationException("Microsoft ClientId is not configured.");
     options.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"] ??
         throw new InvalidOperationException("Microsoft ClientSecret is not configured.");
-})
-.AddFacebook(options =>
-{
-    options.AppId = builder.Configuration["Authentication:Facebook:AppId"] ??
-        throw new InvalidOperationException("Facebook AppId is not configured.");
-    options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"] ??
-        throw new InvalidOperationException("Facebook AppSecret is not configured.");
 });
 
 builder.Services.AddAuthorization();
@@ -96,6 +126,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 builder.Services.AddScoped<UrbanAI.Application.Interfaces.IIssueService, UrbanAI.Application.Services.IssueService>();
+builder.Services.AddScoped<UrbanAI.Application.Interfaces.IOAuthService, UrbanAI.Application.Services.OAuthService>();
 
 var app = builder.Build();
 
@@ -110,6 +141,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting(); // Add routing middleware
+app.UseCors("AllowFrontend"); // Enable CORS
+app.UseSession(); // Add session middleware
 app.UseAuthentication(); // Add authentication middleware
 app.UseAuthorization(); // Add authorization middleware
 

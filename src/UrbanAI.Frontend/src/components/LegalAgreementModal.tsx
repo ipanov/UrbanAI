@@ -1,7 +1,8 @@
 import React from 'react';
 
 interface LegalAgreementModalProps {
-  open: boolean;
+  open?: boolean;
+  isOpen?: boolean;
   provider: 'microsoft' | 'google' | 'facebook' | null;
   displayName?: string | null;
   onAccept: () => void;
@@ -86,9 +87,12 @@ const secondaryButtonStyle: React.CSSProperties = {
 };
 
 export default function LegalAgreementModal(props: LegalAgreementModalProps) {
-  const { open, provider, displayName, onAccept, onDecline } = props;
+  const { open, isOpen, provider, displayName, onAccept, onDecline } = props;
 
-  if (!open) return null;
+  // Accept either prop for compatibility with tests and callers.
+  const visible = typeof open === 'boolean' ? open : !!isOpen;
+
+  if (!visible) return null;
 
   const providerLabel = provider ? provider.charAt(0).toUpperCase() + provider.slice(1) : 'OAuth Provider';
 
@@ -108,9 +112,7 @@ export default function LegalAgreementModal(props: LegalAgreementModalProps) {
         </div>
 
         <div style={bodyStyle}>
-          <p>
-            You are signing in with <strong>{providerLabel}</strong>. If you proceed with registration we will:
-          </p>
+          <p>{`You are signing in with ${providerLabel}. If you proceed with registration we will:`}</p>
           <ul>
             <li>Generate an internal anonymous identifier (GUID) linked only to your <em>provider identifier</em> (no name, email or PII is stored).</li>
             <li>Use that identifier to associate reports created by you with your account so you can manage them.</li>

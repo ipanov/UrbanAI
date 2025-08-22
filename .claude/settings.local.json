@@ -1,0 +1,93 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude mcp)",
+      "Bash(claude mcp add:*)",
+      "Bash(claude mcp:*)",
+      "Bash(tasklist:*)",
+      "Bash(git add:*)",
+      "Bash(rm:*)",
+      "Bash(dotnet build)",
+      "Bash(git checkout:*)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebSearch",
+      "Bash(mkdir:*)",
+      "Bash(powershell:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh issue list:*)",
+      "Bash(npm install)",
+      "Bash(gh issue comment:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm run lint)",
+      "Bash(grep:*)",
+      "Bash(gh issue view:*)",
+      "Bash(npm run test:coverage:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm run build:*)",
+      "Bash(chmod:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:learn.microsoft.com)",
+      "Bash(npx:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(az account:*)",
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(npm install:*)",
+      "Bash(where.exe tsx)",
+      "Bash(dir:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(dotnet add package:*)",
+      "Bash(dotnet build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/check-ci-status.js",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/monitor-push.js",
+            "timeout": 3
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/track-changes.js",
+            "timeout": 2
+          }
+        ]
+      },
+      {
+        "matcher": "MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/validate-frontend.js",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

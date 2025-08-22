@@ -7,7 +7,6 @@ using UrbanAI.Infrastructure.Data;
 using UrbanAI.Domain.Entities;
 using UrbanAI.Application.DTOs;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 
 namespace UrbanAI.API.Tests.Controllers
 {
@@ -15,7 +14,6 @@ namespace UrbanAI.API.Tests.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly Mock<IConfiguration> _mockConfiguration;
-        private readonly Mock<IHttpClientFactory> _mockHttpClientFactory;
         private readonly AuthController _controller;
 
         public AuthControllerTests()
@@ -27,50 +25,13 @@ namespace UrbanAI.API.Tests.Controllers
 
             _context = new ApplicationDbContext(options);
             _mockConfiguration = new Mock<IConfiguration>();
-            _mockHttpClientFactory = new Mock<IHttpClientFactory>();
 
             // Setup JWT configuration
             _mockConfiguration.Setup(c => c["Jwt:Secret"]).Returns("ThisIsATestSecretKeyThatIsAtLeast32CharactersLongForJwtTokenGeneration");
             _mockConfiguration.Setup(c => c["Jwt:Issuer"]).Returns("TestIssuer");
             _mockConfiguration.Setup(c => c["Jwt:Audience"]).Returns("TestAudience");
 
-            _controller = new AuthController(_mockHttpClientFactory.Object, _mockConfiguration.Object, _context);
-        }
-
-        [Fact]
-        public async Task ExchangeToken_ShouldReturnBadRequest_WhenProviderIsEmpty()
-        {
-            // Arrange
-            var request = new AuthRequestDto
-            {
-                Provider = "",
-                Token = "valid-token"
-            };
-
-            // Act
-            var result = await _controller.ExchangeToken(request);
-
-            // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Provider and token are required.", badRequestResult.Value);
-        }
-
-        [Fact]
-        public async Task ExchangeToken_ShouldReturnBadRequest_WhenProviderIsUnsupported()
-        {
-            // Arrange
-            var request = new AuthRequestDto
-            {
-                Provider = "unsupported",
-                Token = "valid-token"
-            };
-
-            // Act
-            var result = await _controller.ExchangeToken(request);
-
-            // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Unsupported provider.", badRequestResult.Value);
+            _controller = new AuthController(_mockConfiguration.Object, _context);
         }
 
         [Fact]
@@ -132,13 +93,11 @@ namespace UrbanAI.API.Tests.Controllers
                     {
                         Id = Guid.NewGuid(),
                         Provider = "google",
-                        ExternalId = "google123",
-                        UserId = Guid.NewGuid(),
-                        CreatedAt = DateTime.UtcNow
+                        ExternalId = "google123"
                     }
-                },
-                CreatedAt = DateTime.UtcNow
+                }
             };
+
             _context.Users.Add(existingUser);
             await _context.SaveChangesAsync();
 
@@ -155,73 +114,28 @@ namespace UrbanAI.API.Tests.Controllers
             var okResult = Assert.IsType<OkObjectResult>(result);
             var response = Assert.IsType<AuthResponseDto>(okResult.Value);
             Assert.NotNull(response.Token);
+
+            // Verify no duplicate user was created
+            var userCount = await _context.Users.CountAsync();
+            Assert.Equal(1, userCount);
         }
 
         [Fact]
-        public async Task ExchangeToken_WithMockToken_ShouldReturnNotFound_WhenUserDoesNotExist()
+        public async Task RegisterExternal_ShouldReturnBadRequest_WhenExternalIdIsEmpty()
         {
             // Arrange
-            var request = new AuthRequestDto
+            var dto = new AuthController.ExternalRegisterDto
             {
                 Provider = "google",
-                Token = "mock:google123"
+                ExternalId = ""
             };
 
             // Act
-            var result = await _controller.ExchangeToken(request);
+            var result = await _controller.RegisterExternal(dto);
 
             // Assert
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            var response = notFoundResult.Value;
-            Assert.NotNull(response);
-            
-            // Convert to dictionary for easier access
-            var responseDict = response.GetType().GetProperties()
-                .ToDictionary(p => p.Name, p => p.GetValue(response));
-                
-            Assert.True((bool)responseDict["requiresRegistration"]);
-            Assert.Equal("google", responseDict["provider"]);
-            Assert.Equal("google123", responseDict["externalId"]);
-        }
-
-        [Fact]
-        public async Task ExchangeToken_WithMockToken_ShouldReturnToken_WhenUserExists()
-        {
-            // Arrange
-            var existingUser = new User
-            {
-                Id = Guid.NewGuid(),
-                Username = "google_google123",
-                Role = "User",
-                ExternalLogins = new List<ExternalLogin>
-                {
-                    new ExternalLogin
-                    {
-                        Id = Guid.NewGuid(),
-                        Provider = "google",
-                        ExternalId = "google123",
-                        UserId = Guid.NewGuid(),
-                        CreatedAt = DateTime.UtcNow
-                    }
-                },
-                CreatedAt = DateTime.UtcNow
-            };
-            _context.Users.Add(existingUser);
-            await _context.SaveChangesAsync();
-
-            var request = new AuthRequestDto
-            {
-                Provider = "google",
-                Token = "mock:google123"
-            };
-
-            // Act
-            var result = await _controller.ExchangeToken(request);
-
-            // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var response = Assert.IsType<AuthResponseDto>(okResult.Value);
-            Assert.NotNull(response.Token);
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Provider and ExternalId are required.", badRequestResult.Value);
         }
 
         public void Dispose()
