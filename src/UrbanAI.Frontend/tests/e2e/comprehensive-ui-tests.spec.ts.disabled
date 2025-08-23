@@ -72,7 +72,7 @@ test.describe('Comprehensive UI Test Suite', () => {
       await dashboardPage.logout();
 
       // Should redirect to home page
-      await expect(page).toHaveURL('http://localhost:3000/');
+      await expect(page).toHaveURL('/');
 
       // Verify token is cleared
       const token = await page.evaluate(() => localStorage.getItem('urbanai_token'));
@@ -321,7 +321,7 @@ test.describe('Comprehensive UI Test Suite', () => {
       await dashboardPage.goto('/dashboard');
 
       // Should redirect to login
-      await expect(page).toHaveURL('http://localhost:3000/');
+      await expect(page).toHaveURL('/');
       
       // Token should be cleared
       const token = await page.evaluate(() => localStorage.getItem('urbanai_token'));

@@ -493,6 +493,17 @@ coverage_reports/
 CoverageReport/
 # Script for running tests and coverage
 /scripts/run-tests.ps1
+# Frontend Testing Artifacts
+# Playwright test reports and results
+**/playwright-report/
+**/test-results/
+**/test-results.xml
+**/.playwright/
+playwright.config.temp.ts
+
+# Vitest coverage and results
+**/coverage/
+
 # Housekeeping
 temp/
 UrbanAI.git/

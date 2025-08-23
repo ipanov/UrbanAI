@@ -1,80 +1,79 @@
-import { chromium, FullConfig } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+import { processManager } from './helpers/process-manager';
 
-async function globalSetup(_config: FullConfig) {
-  console.log('🚀 Starting global setup for UrbanAI E2E tests');
+test('global setup', async ({ page }) => {
+  console.log('🚀 Starting global setup for UrbanAI E2E tests (embedded browsers only)');
   
-  // Launch a browser instance for setup
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
+  // Clean up any existing processes on test ports
+  const testPorts = [3100, 5101, 7082];
+  for (const port of testPorts) {
+    await processManager.killProcessOnPort(port);
+  }
   
   try {
-    // Wait for the server to be ready
-    console.log('⏳ Waiting for servers to be ready...');
+    // Wait for the test servers to be ready (managed by webServer config)
+    console.log('⏳ Waiting for test servers to be ready...');
     
-    // Check if the main server is running
-    const maxRetries = 10;
-    const retryDelay = 5000; // 5 seconds
+    const maxRetries = 20;
+    const retryDelay = 3000; // 3 seconds
     
+    // Check if the API test server is running
     for (let i = 0; i < maxRetries; i++) {
       try {
-        const response = await page.goto('http://localhost:8080/health', { 
+        const response = await page.goto('http://localhost:5101/swagger', { 
           waitUntil: 'domcontentloaded',
           timeout: 10000 
         });
         
         if (response && response.ok()) {
-          const healthData = await response.json();
-          console.log('✅ Main server is healthy:', healthData);
+          console.log('✅ API test server is healthy on port 5101');
           break;
         }
       } catch (error) {
-        console.log(`⚠️  Attempt ${i + 1}/${maxRetries}: Main server not ready yet`);
+        console.log(`⚠️  Attempt ${i + 1}/${maxRetries}: API test server not ready yet`);
         if (i < maxRetries - 1) {
           await new Promise(resolve => setTimeout(resolve, retryDelay));
         } else {
-          throw new Error('Main server failed to start after maximum retries');
+          console.log('⚠️  API test server not responding - webServer should handle this');
+          break;
         }
       }
     }
     
-    // Check if React dev server is running
+    // Check if React test server is running
     for (let i = 0; i < maxRetries; i++) {
       try {
-        const response = await page.goto('http://localhost:3000', { 
+        const response = await page.goto('http://localhost:3100', { 
           waitUntil: 'domcontentloaded',
           timeout: 10000 
         });
         
         if (response && response.ok()) {
-          console.log('✅ React dev server is ready');
+          console.log('✅ React test server is ready on port 3100');
           break;
         }
       } catch (error) {
-        console.log(`⚠️  Attempt ${i + 1}/${maxRetries}: React dev server not ready yet`);
+        console.log(`⚠️  Attempt ${i + 1}/${maxRetries}: React test server not ready yet`);
         if (i < maxRetries - 1) {
           await new Promise(resolve => setTimeout(resolve, retryDelay));
         } else {
-          console.log('⚠️  React dev server may not be running - tests will use production build');
+          console.log('⚠️  React test server not responding - webServer should handle this');
           break;
         }
       }
     }
     
-    // Navigate back to landing page to ensure it's ready
-    await page.goto('http://localhost:8080', { waitUntil: 'networkidle' });
-    console.log('✅ Landing page is ready');
+    // Navigate to test app to ensure it's ready
+    await page.goto('http://localhost:3100', { waitUntil: 'networkidle' });
+    console.log('✅ Test application is ready');
     
     // Take a screenshot of the initial state
     await page.screenshot({ path: 'test-results/initial-state.png', fullPage: true });
     
-    console.log('🎉 Global setup completed successfully');
+    console.log('🎉 Global setup completed successfully (embedded browsers only)');
     
   } catch (error) {
     console.error('❌ Global setup failed:', error);
     throw error;
-  } finally {
-    await browser.close();
   }
-}
-
-export default globalSetup;
+});

@@ -1,0 +1,209 @@
+name: Nightly Cross-Browser Testing
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Run at 2 AM UTC daily
+  workflow_dispatch:      # Allow manual triggering
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  NODE_VERSION: '20'
+
+jobs:
+  comprehensive-e2e-testing:
+    name: Cross-Browser E2E Testing Suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: urbanai_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        test-suite: ['cross-browser', 'mobile', 'production-validation']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET (for backend server)
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: src/UrbanAI.Frontend/package-lock.json
+    
+    - name: Build backend for testing
+      run: |
+        dotnet restore UrbanAI.sln
+        dotnet build src/UrbanAI.API --configuration Release --no-restore
+    
+    - name: Install frontend dependencies
+      working-directory: src/UrbanAI.Frontend
+      run: npm ci
+    
+    - name: Install Playwright browsers with dependencies
+      working-directory: src/UrbanAI.Frontend
+      run: npx playwright install --with-deps
+    
+    - name: Run cross-browser validation tests
+      if: matrix.test-suite == 'cross-browser'
+      working-directory: src/UrbanAI.Frontend
+      run: |
+        echo "🌐 Running cross-browser validation tests..."
+        echo "Testing with Firefox and WebKit for compatibility"
+        npm run test:e2e:cross-browser
+      env:
+        CI: true
+    
+    - name: Run mobile viewport tests
+      if: matrix.test-suite == 'mobile'
+      working-directory: src/UrbanAI.Frontend
+      run: |
+        echo "📱 Running mobile viewport tests..."
+        echo "Testing mobile Chrome and Safari viewports"
+        npm run test:e2e:mobile
+      env:
+        CI: true
+    
+    - name: Run production validation with real browsers
+      if: matrix.test-suite == 'production-validation'
+      working-directory: src/UrbanAI.Frontend
+      run: |
+        echo "🎯 Running production validation with real Chrome..."
+        echo "Final validation using branded browser for production readiness"
+        npm run test:e2e:production
+      env:
+        CI: true
+    
+    - name: Upload comprehensive test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: nightly-test-results-${{ matrix.test-suite }}
+        path: |
+          src/UrbanAI.Frontend/playwright-report/
+          src/UrbanAI.Frontend/test-results/
+        retention-days: 30
+
+  test-performance-metrics:
+    name: E2E Performance Benchmarking
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: src/UrbanAI.Frontend/package-lock.json
+    
+    - name: Install dependencies
+      working-directory: src/UrbanAI.Frontend
+      run: npm ci
+    
+    - name: Install Playwright browsers (minimal)
+      working-directory: src/UrbanAI.Frontend
+      run: npx playwright install chromium
+    
+    - name: Run performance benchmark tests
+      working-directory: src/UrbanAI.Frontend
+      run: |
+        echo "⚡ Running performance benchmark tests..."
+        echo "Measuring embedded browser vs real browser performance"
+        
+        # Time embedded browser tests
+        echo "Testing embedded Chromium performance..."
+        time npm run test:e2e:fast
+        
+        echo "Performance benchmark completed"
+      env:
+        CI: true
+    
+    - name: Upload performance results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: performance-benchmark-results
+        path: src/UrbanAI.Frontend/test-results/
+        retention-days: 7
+
+  notify-results:
+    name: Notify Test Results
+    needs: [comprehensive-e2e-testing, test-performance-metrics]
+    if: always()
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Create summary issue
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const failedJobs = [];
+          const results = {
+            'Cross-browser Testing': '${{ needs.comprehensive-e2e-testing.result }}',
+            'Performance Benchmarking': '${{ needs.test-performance-metrics.result }}'
+          };
+          
+          for (const [job, result] of Object.entries(results)) {
+            if (result === 'failure') {
+              failedJobs.push(job);
+            }
+          }
+
+          if (failedJobs.length > 0) {
+            const issueTitle = `🌙 Nightly Testing Failed: ${failedJobs.join(', ')} - ${new Date().toISOString().split('T')[0]}`;
+            const body = `## Nightly Cross-Browser Testing Results
+            
+            **Failed Components:** ${failedJobs.join(', ')}
+            **Date:** ${new Date().toISOString().split('T')[0]}
+            **Run ID:** ${process.env.GITHUB_RUN_ID}
+            
+            🔗 **[View Run Details](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})**
+            
+            ### Test Coverage
+            - Cross-browser validation (Firefox, WebKit)
+            - Mobile viewport testing (Chrome Mobile, Safari Mobile)
+            - Real browser production validation (Chrome branded)
+            - Performance benchmarking
+            
+            ### Next Steps:
+            1. Review test artifacts and failure logs
+            2. Check for environment-specific issues
+            3. Validate test stability across browsers
+            4. Update tests if browser compatibility changes detected
+            
+            ---
+            *Auto-generated by Nightly Testing Suite*`;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: issueTitle,
+              body: body,
+              labels: ['nightly-tests', 'cross-browser', 'automated'],
+              assignees: [context.repo.owner]
+            });
+          }

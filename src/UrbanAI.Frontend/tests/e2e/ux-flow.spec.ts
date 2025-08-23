@@ -91,10 +91,10 @@ test.describe('UrbanAI UX Flow', () => {
       await page.click('.cta-button');
       
       // Wait for redirect to complete
-      await page.waitForURL('http://localhost:3000/');
+      await page.waitForURL('/');
       
       // Verify we're on the React app
-      await expect(page).toHaveURL('http://localhost:3000/');
+      await expect(page).toHaveURL('/');
       
       // Wait for React app to load
       await page.waitForSelector('#root', { state: 'visible' });

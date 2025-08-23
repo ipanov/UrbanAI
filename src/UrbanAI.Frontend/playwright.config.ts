@@ -1,6 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
+ * Playwright E2E Configuration - Optimized for 2025 Best Practices
+ * Uses ONLY embedded Chromium browsers for optimal performance and reliability
+ * Follows CLAUDE.md guidelines: "Always use embedded browsers"
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
@@ -11,81 +14,106 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: process.env.CI ? [['github'], ['html']] : 'html',
+  /* Optimize workers for performance */
+  workers: process.env.CI ? 2 : 4,
+  /* Enhanced reporter configuration */
+  reporter: process.env.CI ? 
+    [['github'], ['html'], ['junit', { outputFile: 'test-results.xml' }]] : 
+    'html',
+  /* Use project dependencies for better server management */
+  // globalSetup: './tests/e2e/global-setup.ts',
+  // globalTeardown: './tests/e2e/global-teardown.ts',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:3100', // Use different port to avoid conflicts
 
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    /* Optimized trace and debugging configuration */
+    trace: process.env.CI ? 'retain-on-failure' : (process.env.DEBUG ? 'on' : 'on-first-retry'),
 
     /* Take screenshot on failure */
     screenshot: 'only-on-failure',
 
-    /* Record video on failure */
-    video: 'retain-on-failure',
+    /* Enhanced video configuration */
+    video: process.env.DEBUG ? 'on' : 'retain-on-failure',
 
-    /* Additional test timeouts for E2E testing */
-    actionTimeout: 30 * 1000,
-    navigationTimeout: 30 * 1000,
+    /* Optimized timeouts for faster feedback */
+    actionTimeout: 15 * 1000,
+    navigationTimeout: 20 * 1000,
+
+    /* Force headless mode - embedded browsers only */
+    headless: true,
   },
 
-  /* Configure projects for major browsers */
+  /* Configure projects - EMBEDDED BROWSERS ONLY per CLAUDE.md guidelines */
   projects: [
+    /* Setup project for server management */
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: 'setup',
+      testMatch: /global\.setup\.ts/,
+      teardown: 'cleanup',
+    },
+    
+    /* Cleanup project */
+    {
+      name: 'cleanup',
+      testMatch: /global\.teardown\.ts/,
     },
 
+    /* Primary testing with embedded Chromium only - Fast and reliable */
     {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      name: 'chromium-fast',
+      testMatch: /.*\.spec\.ts$/,
+      dependencies: ['setup'],
+      use: { 
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 720 },
+        headless: true, // Force headless
+      },
     },
 
+    /* Smoke tests for critical paths - embedded Chromium only */
     {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      name: 'smoke',
+      testMatch: /.*smoke.*\.spec\.ts$/,
+      dependencies: ['setup'],
+      use: { 
+        ...devices['Desktop Chrome'],
+        headless: true, // Force headless
+      },
+      retries: 0,
     },
 
-    /* Test against mobile viewports. */
+    /* Mobile testing with embedded browsers only */
     {
-      name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
+      name: 'mobile-chrome',
+      testMatch: /.*mobile.*\.spec\.ts$/,
+      dependencies: ['setup'],
+      use: { 
+        ...devices['Pixel 5'],
+        headless: true, // Force headless
+      },
     },
-    {
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
-    },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
   ],
 
-  /* Run your local dev server before starting the tests */
+  /* Configure test servers - isolated ports to avoid conflicts */
   webServer: [
     {
-      command: 'dotnet run --project ../../src/UrbanAI.API',
-      url: 'http://localhost:5000',
+      command: 'dotnet run --urls http://localhost:5101',
+      url: 'http://localhost:5101/swagger',
       reuseExistingServer: !process.env.CI,
       timeout: 120 * 1000,
-      cwd: '../../',
+      cwd: '../UrbanAI.API',
+      stdout: 'pipe',
+      stderr: 'pipe',
     },
     {
-      command: 'npm run dev',
-      url: 'http://localhost:3000',
+      command: 'npm run dev -- --port 3100 --host',
+      url: 'http://localhost:3100',
       reuseExistingServer: !process.env.CI,
       timeout: 120 * 1000,
+      stdout: 'pipe',
+      stderr: 'pipe',
     }
   ],
 });

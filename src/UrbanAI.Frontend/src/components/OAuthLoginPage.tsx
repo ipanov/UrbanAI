@@ -123,7 +123,7 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
   };
 
   return (
-    <div className="oauth-login-page">
+    <div className="oauth-login-page" data-testid="oauth-login-page">
       <div className="login-container">
         {/* Header with Logo */}
         <header className="login-header">
@@ -182,6 +182,7 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
               onClick={() => handleOAuthClick(AUTH_PROVIDERS.MICROSOFT)}
               disabled={loading}
               aria-label="Continue with Microsoft"
+              data-testid="microsoft-oauth-button"
             >
               <div className="oauth-icon">
                 <svg width="21" height="21" viewBox="0 0 21 21" fill="none">
@@ -199,6 +200,7 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
               onClick={() => handleOAuthClick(AUTH_PROVIDERS.GOOGLE)}
               disabled={loading}
               aria-label="Continue with Google"
+              data-testid="google-oauth-button"
             >
               <div className="oauth-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">

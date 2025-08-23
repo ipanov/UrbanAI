@@ -28,11 +28,11 @@ export default defineConfig(({ mode }) => {
       chunkSizeWarningLimit: 1000,
     },
     server: {
-      port: 3000,
+      port: parseInt(env.PORT || '3000'),
       open: '/',
       proxy: {
         '/api': {
-          target: 'http://localhost:5001',
+          target: env.API_URL || 'http://localhost:5001',
           changeOrigin: true,
           secure: false,
           rewrite: (path) => path.replace(/^\/api/, '/api'),

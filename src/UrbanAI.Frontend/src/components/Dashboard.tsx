@@ -178,9 +178,9 @@ const Dashboard: React.FC = () => {
 
   return (
     <Layout>
-      <div className="dashboard">
+      <div className="dashboard" data-testid="dashboard-page">
         <main className="dashboard-content">
-        <div className="welcome-section">
+        <div className="welcome-section" data-testid="welcome-section">
           <h2>
             {userProfile ? 
               `Welcome back, ${userProfile.displayName.split(' ')[0]}! 👋` : 

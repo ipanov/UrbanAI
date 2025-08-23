@@ -1,11 +1,29 @@
-import { FullConfig } from '@playwright/test';
+import { test } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+import { processManager } from './helpers/process-manager';
 
-async function globalTeardown(_config: FullConfig) {
-  console.log('🧹 Starting global teardown for UrbanAI E2E tests');
+test('global teardown', async ({ page }) => {
+  console.log('🧹 Starting global teardown for UrbanAI E2E tests (embedded browsers only)');
   
   try {
+    // Clean up tracked processes and test ports
+    await processManager.cleanupAllProcesses();
+    
+    // Clean up test-specific ports
+    const testPorts = [3100, 5101, 7082];
+    for (const port of testPorts) {
+      await processManager.killProcessOnPort(port);
+    }
+    
+    // Show final process status
+    const remainingProcesses = await processManager.getProcessesOnCommonPorts();
+    if (remainingProcesses.length > 0) {
+      console.log('⚠️  Remaining processes on test ports:', remainingProcesses);
+    } else {
+      console.log('✅ All test ports are clean');
+    }
+    
     // Create test results directory if it doesn't exist
     const testResultsDir = path.join(process.cwd(), 'test-results');
     if (!fs.existsSync(testResultsDir)) {
@@ -74,12 +92,10 @@ async function globalTeardown(_config: FullConfig) {
       }
     });
     
-    console.log('✅ Global teardown completed successfully');
+    console.log('✅ Global teardown completed successfully (embedded browsers only)');
     
   } catch (error) {
     console.error('❌ Global teardown failed:', error);
     throw error;
   }
-}
-
-export default globalTeardown;
+});

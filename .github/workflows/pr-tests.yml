@@ -124,11 +124,12 @@ jobs:
         echo "🎭 Installing Playwright browsers..."
         npx playwright install --with-deps
     
-    - name: Run E2E tests
+    - name: Run E2E tests (optimized strategy)
       if: github.base_ref == 'main' || steps.changes.outputs.frontend == 'true' || steps.changes.outputs.e2e-tests == 'true'
       working-directory: src/UrbanAI.Frontend
       run: |
-        echo "🚀 Running comprehensive E2E test suite..."
+        echo "🚀 Running optimized E2E test suite with embedded browsers..."
+        echo "✅ Fast embedded Chromium tests + smoke tests for PR validation"
         npm run test:e2e:ci
       env:
         CI: true

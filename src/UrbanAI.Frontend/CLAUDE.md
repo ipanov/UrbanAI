@@ -118,12 +118,37 @@ npm run build        # Build for production
 npm run preview      # Preview production build
 ```
 
-### Testing
+### Testing (2025 Optimized Strategy)
 ```bash
-npm run test         # Run unit tests
-npm run test:coverage # Run tests with coverage
-npm run test:e2e     # Run E2E tests
-npm run test:complete # Run all tests
+# Unit Testing
+npm run test           # Run unit tests with Vitest
+npm run test:coverage  # Run tests with coverage reporting
+npm run test:ui        # Interactive test UI
+
+# E2E Testing (Embedded Browser Strategy)
+npm run test:e2e       # Fast embedded Chromium tests (default)
+npm run test:e2e:smoke # Critical path smoke tests
+npm run test:e2e:fast  # Same as test:e2e (embedded Chromium)
+
+# E2E Testing (Cross-Browser Validation)
+npm run test:e2e:firefox      # Firefox validation
+npm run test:e2e:safari       # WebKit/Safari validation  
+npm run test:e2e:cross-browser # Both Firefox and WebKit
+
+# E2E Testing (Specialized)
+npm run test:e2e:mobile      # Mobile Chrome and Safari viewports
+npm run test:e2e:production  # Real Chrome for final validation
+npm run test:e2e:all         # All test projects
+
+# E2E Testing (Development & Debugging)
+npm run test:e2e:headed      # Headed mode for debugging
+npm run test:e2e:debug       # Debug mode with browser DevTools
+npm run test:e2e:ui          # Interactive Playwright UI
+
+# CI/CD Integration
+npm run test:e2e:ci      # Optimized for CI (embedded browsers only)
+npm run test:complete    # Full test suite
+npm run test:ci          # Complete CI validation
 ```
 
 ### Code Quality
@@ -145,11 +170,32 @@ npm run type-check   # TypeScript compilation check
 - Verify API integration with mock responses
 - Test authentication and routing flows
 
-### E2E Testing (Playwright)
-- Test complete user workflows
-- Cross-browser compatibility
-- Real authentication flows
-- Critical path validation
+### E2E Testing (Playwright) - 2025 Optimized Strategy
+
+#### Browser Selection Strategy
+- **Primary Testing**: Embedded Chromium for speed and reliability (40-60% faster)
+- **Cross-Browser**: Firefox and WebKit for compatibility validation
+- **Real Browser**: Only Chrome branded for final production validation
+- **Mobile Testing**: Dedicated mobile viewport testing
+
+#### Test Organization
+- `*.spec.ts` - Standard E2E tests (run with embedded Chromium)
+- `*smoke*.spec.ts` - Critical path smoke tests (fastest execution)
+- `*mobile*.spec.ts` - Mobile-specific responsive tests
+- `*production*.spec.ts` - Real browser validation tests
+
+#### Performance Optimizations
+- 15s action timeouts for faster feedback
+- Parallel execution with 2-4 workers
+- Smart retry strategy (2 retries on CI, 0 locally)
+- Headless by default, headed only for debugging
+
+#### Testing Workflow
+1. **Development**: Use `npm run test:e2e:headed` for debugging
+2. **Pre-commit**: Run `npm run test:e2e:smoke` for quick validation
+3. **CI/PR**: Automated `npm run test:e2e:ci` with embedded browsers
+4. **Nightly**: Cross-browser validation with `test:e2e:cross-browser`
+5. **Pre-release**: Real browser testing with `test:e2e:production`
 
 ## Performance Optimization
 

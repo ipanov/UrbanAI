@@ -126,7 +126,7 @@ export class TestDataHelper {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          authorizationUrl: `http://localhost:3000/auth/callback/${provider}?code=test-auth-code-123&state=test-state`
+          authorizationUrl: `/auth/callback/${provider}?code=test-auth-code-123&state=test-state`
         })
       });
     });

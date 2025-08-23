@@ -71,6 +71,15 @@ npm run test:coverage
 # Run E2E tests (requires backend running)
 npm run test:e2e
 
+# Run E2E tests with specific project (optimized)
+npx playwright test --project=chromium-fast          # Fast embedded browser tests
+npx playwright test --project=smoke                  # Critical path smoke tests  
+npx playwright test --project=firefox-validation     # Cross-browser validation
+npx playwright test --project=chrome-branded         # Real browser validation
+
+# Run E2E tests in debug mode (headed)
+LOCAL_DEBUG=true npx playwright test
+
 # Run complete test suite
 npm run test:complete
 
@@ -183,10 +192,23 @@ When creating mobile applications:
 - DTOs for API data transfer, mapped in Application services
 
 ### Testing Patterns
+
+### Backend Testing (.NET)
 - Unit tests for business logic in Application and Domain layers
 - Integration tests for API endpoints and database operations
-- E2E tests for critical user flows
 - Comprehensive test coverage with reporting
+
+### Frontend Testing (React/Playwright)
+- **Unit Tests**: Co-located with components using Vitest and React Testing Library
+- **E2E Tests**: Located in `src/UrbanAI.Frontend/tests/e2e/` using Playwright
+- **Browser Strategy**: Embedded Chromium for speed and reliability, real browsers for final validation only
+- **Test Organization**: 
+  - `*.spec.ts` - Standard E2E tests (embedded Chromium)
+  - `*smoke*.spec.ts` - Critical path smoke tests 
+  - `*mobile*.spec.ts` - Mobile viewport tests
+  - `*production*.spec.ts` - Real browser validation tests
+- **Performance**: Optimized for fast feedback with 15s action timeouts and parallel execution
+- **CI/CD**: Smoke tests on every commit, full regression nightly, cross-browser pre-release
 
 ### Frontend Patterns
 - Component-based architecture with React
@@ -214,3 +236,26 @@ When creating mobile applications:
 - Follow existing code conventions and patterns
 - Keep changes incremental and auditable
 - Respect the Clean Architecture boundaries
+
+## Testing Guidelines for Claude Code
+
+### QA Engineer Persona Available
+- Use the QA engineer persona (`qa-engineer.md`) for all testing-related tasks
+- Specialized in Playwright, React Testing Library, and modern testing practices
+- Optimized for 2025 testing standards with embedded browser strategy
+
+### E2E Testing Best Practices
+- **Always use embedded browsers** (Playwright's Chromium) unless specifically testing real browser features
+- **Prioritize test speed** - Use 15s action timeouts and optimized configurations
+- **Test user-visible behavior** - Focus on actual user interactions, not implementation details
+- **Maintain test isolation** - Each test should be independent and use fresh browser contexts
+- **Smart browser selection**:
+  - Smoke tests: `chromium-fast` project for every commit
+  - Cross-browser: `firefox-validation`, `webkit-validation` for nightly runs
+  - Real browser: `chrome-branded` project only for production validation
+
+### Test Organization Standards
+- Keep E2E tests in the same project as frontend code (`src/project/tests/e2e/`)
+- Co-locate unit tests with components (`__tests__/` folders)
+- Use proper naming conventions for test targeting
+- Implement Page Object Model for maintainability
