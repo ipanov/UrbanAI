@@ -509,3 +509,21 @@ temp/
 UrbanAI.git/
 dist/
 src/UrbanAI.Frontend/dist/
+
+# Google Cloud SDK and setup files
+GoogleCloudSDKInstaller.exe
+gcloud-installer.exe
+google-cloud-cli.zip
+google-cloud-sdk.zip
+google-cloud-sdk/
+NUL
+OAUTH_SETUP_INSTRUCTIONS.md
+PLAY_STORE_SETUP.md
+SETUP_COMPLETE_SUMMARY.md
+
+# Local environment files
+src/UrbanAI.Frontend/.env.local
+*.json.template
+
+# Disabled test files
+*.spec.ts.disabled
