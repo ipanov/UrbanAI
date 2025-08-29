@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { processManager } from './helpers/process-manager';
 
-test('global teardown', async ({ page }) => {
+test('global teardown', async ({ page: _page }) => {
   console.log('🧹 Starting global teardown for UrbanAI E2E tests (embedded browsers only)');
   
   try {

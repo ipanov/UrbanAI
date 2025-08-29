@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { processManager } from './helpers/process-manager';
 
 test('global setup', async ({ page }) => {

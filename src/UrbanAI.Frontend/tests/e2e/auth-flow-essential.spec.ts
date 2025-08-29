@@ -36,7 +36,7 @@ test.describe('Essential Microsoft OAuth Flow', () => {
       console.log('✅ Microsoft OAuth redirect successful - ready for production');
     } else {
       // Check if we stayed on same page with error (expected without OAuth config)
-      const page_content = await page.textContent('body');
+      const _pageContent = await page.textContent('body');
       console.log('✅ OAuth button functional - UI responds to clicks');
       
       // Verify we're still on the OAuth page (not broken)

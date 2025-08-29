@@ -28,7 +28,7 @@ test.describe('Production Validation - Embedded Browser Testing', () => {
     expect(hasMediaSupport).toBe(true);
   });
 
-  test('should validate local storage functionality', async ({ page, context }) => {
+  test('should validate local storage functionality', async ({ page, context: _context }) => {
     // Test local storage in embedded browser environment
     await page.goto('/');
     
