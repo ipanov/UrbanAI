@@ -143,6 +143,7 @@ module functions './functions.bicep' = {
     managedIdentityId: managedIdentity.id
     managedIdentityPrincipalId: managedIdentity.properties.principalId
     appServicePlanId: appServicePlan.id
+    keyVaultName: keyVault.name
   }
 }
 
@@ -186,6 +187,41 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-
   tags: tags
 }
 
+// Azure Key Vault for secure secret management
+resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
+  name: 'urbanai-kv-${resourceToken}'
+  location: location
+  tags: tags
+  properties: {
+    sku: {
+      family: 'A'
+      name: 'standard'
+    }
+    tenantId: subscription().tenantId
+    enabledForDeployment: true
+    enabledForTemplateDeployment: true
+    enabledForDiskEncryption: false
+    enableRbacAuthorization: true
+    publicNetworkAccess: 'Enabled'
+    networkAcls: {
+      defaultAction: 'Allow'
+      bypass: 'AzureServices'
+    }
+    accessPolicies: []
+  }
+}
+
+// Role assignment: Give the managed identity Key Vault Secrets User role
+resource keyVaultSecretsUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(keyVault.id, managedIdentity.id, 'Key Vault Secrets User')
+  scope: keyVault
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6') // Key Vault Secrets User
+    principalId: managedIdentity.properties.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
 // Outputs for use in application configuration
 @description('The fully qualified domain name of the SQL Server')
 output sqlServerFqdn string = sqlServer.properties.fullyQualifiedDomainName
@@ -225,3 +261,9 @@ output customDomainUrl string = enableProductionCustomDomain && productionCustom
 
 @description('API custom domain URL (if enabled)')
 output apiCustomDomainUrl string = enableProductionCustomDomain && productionCustomDomain != '' ? 'https://api.${productionCustomDomain}' : ''
+
+@description('The Key Vault name')
+output keyVaultName string = keyVault.name
+
+@description('The Key Vault URI')
+output keyVaultUri string = keyVault.properties.vaultUri

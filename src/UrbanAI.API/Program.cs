@@ -7,21 +7,33 @@ using UrbanAI.Infrastructure.Data;
 using UrbanAI.Domain.Interfaces;
 using UrbanAI.Infrastructure.Repositories;
 using UrbanAI.Domain.Entities;
-using Npgsql;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
+using Azure.Identity;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Azure Key Vault for production environments
+if (!builder.Environment.IsDevelopment() && !builder.Environment.IsEnvironment("Testing"))
+{
+    var keyVaultEndpoint = builder.Configuration["AZURE_KEY_VAULT_ENDPOINT"];
+    if (!string.IsNullOrEmpty(keyVaultEndpoint))
+    {
+        builder.Configuration.AddAzureKeyVault(
+            new Uri(keyVaultEndpoint),
+            new DefaultAzureCredential());
+    }
+}
 
 // Add services to the container.
 // Configure database context based on environment
-// - Development: Local PostgreSQL (Supabase) or Docker PostgreSQL
-// - Staging/Production: Supabase PostgreSQL Database
+// - Development: InMemory or SQL Server LocalDB
+// - Staging/Production: Azure SQL Database + Azure Cosmos DB MongoDB API
 // - Testing: InMemory provider (configured in CustomWebApplicationFactory)
 if (!builder.Environment.IsEnvironment("Testing"))
 {
-    // Temporarily use InMemory database for development testing
-    // TODO: Switch back to PostgreSQL once it's installed and configured
     if (builder.Environment.IsDevelopment())
     {
+        // Use InMemory database for development testing
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseInMemoryDatabase("UrbanAITestDb"));
     }
@@ -34,13 +46,9 @@ if (!builder.Environment.IsEnvironment("Testing"))
         }
 
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(connectionString));
+            options.UseSqlServer(connectionString));
     }
 }
-
-// Configure PostgreSQL settings
-builder.Services.Configure<SupabaseSettings>(
-    builder.Configuration.GetSection("SupabaseSettings"));
 
 // Register repositories
 builder.Services.AddScoped<IRegulationRepository, RegulationRepository>();

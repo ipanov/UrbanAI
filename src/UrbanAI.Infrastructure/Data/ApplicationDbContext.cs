@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using UrbanAI.Domain.Entities;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace UrbanAI.Infrastructure.Data
 {
@@ -26,10 +25,10 @@ namespace UrbanAI.Infrastructure.Data
                 entity.Property(e => e.Username).IsRequired();
                 entity.Property(e => e.Role).IsRequired();
 
-                // Configure PostgreSQL-specific types
-                if (Database.IsNpgsql())
+                // Configure SQL Server-specific types
+                if (Database.IsSqlServer())
                 {
-                    entity.Property(e => e.Id).HasColumnType("uuid"); // Explicitly map Guid to uuid for PostgreSQL
+                    entity.Property(e => e.Id).HasColumnType("uniqueidentifier");
                 }
 
                 // Configure the relationship with ExternalLogins
@@ -47,10 +46,10 @@ namespace UrbanAI.Infrastructure.Data
                 entity.Property(e => e.ExternalId).IsRequired();
                 entity.Property(e => e.CreatedAt).IsRequired();
                 
-                // Configure PostgreSQL-specific types
-                if (Database.IsNpgsql())
+                // Configure SQL Server-specific types
+                if (Database.IsSqlServer())
                 {
-                    entity.Property(e => e.Id).HasColumnType("uuid");
+                    entity.Property(e => e.Id).HasColumnType("uniqueidentifier");
                 }
             });
 
@@ -63,10 +62,10 @@ namespace UrbanAI.Infrastructure.Data
                 entity.Property(e => e.SourceUrl).IsRequired();
                 entity.Property(e => e.EffectiveDate).IsRequired();
                 
-                // Configure PostgreSQL-specific types
-                if (Database.IsNpgsql())
+                // Configure SQL Server-specific types
+                if (Database.IsSqlServer())
                 {
-                    entity.Property(e => e.Id).HasColumnType("uuid"); // Explicitly map Guid to uuid for PostgreSQL
+                    entity.Property(e => e.Id).HasColumnType("uniqueidentifier");
                 }
             });
 
@@ -78,16 +77,16 @@ namespace UrbanAI.Infrastructure.Data
                 entity.Property(e => e.Content).IsRequired();
                 entity.Property(e => e.CreatedAt).IsRequired();
                 
-                // PostgreSQL-specific configurations
-                if (Database.IsNpgsql())
+                // Database-specific configurations
+                if (Database.IsSqlServer())
                 {
-                    entity.Property(e => e.Id).HasColumnType("uuid");
-                    entity.Property(e => e.Content).HasColumnType("text");
-                    entity.Property(e => e.Metadata).HasColumnType("jsonb");
-                    entity.Property(e => e.CreatedAt).HasColumnType("timestamp with time zone");
-                    entity.Property(e => e.UpdatedAt).HasColumnType("timestamp with time zone");
-                    entity.Property(e => e.Tags).HasColumnType("text[]");
-                    entity.Property(e => e.Embedding).HasColumnType("vector(1536)"); // For pgvector extension
+                    entity.Property(e => e.Id).HasColumnType("uniqueidentifier");
+                    entity.Property(e => e.Content).HasColumnType("nvarchar(max)");
+                    entity.Property(e => e.Metadata).HasColumnType("nvarchar(max)"); // JSON storage in SQL Server
+                    entity.Property(e => e.CreatedAt).HasColumnType("datetime2");
+                    entity.Property(e => e.UpdatedAt).HasColumnType("datetime2");
+                    entity.Ignore(e => e.Tags); // Array not natively supported in SQL Server
+                    entity.Ignore(e => e.Embedding); // Vector not supported in SQL Server
                 }
                 else
                 {
@@ -100,13 +99,13 @@ namespace UrbanAI.Infrastructure.Data
 
             // Configure the Issue entity using the separate configuration class
             modelBuilder.ApplyConfiguration(new Configurations.IssueConfiguration());
-            // Ensure Issue Id is also mapped to uuid if not already handled in IssueConfiguration
+            // Ensure Issue Id is also mapped to uniqueidentifier if not already handled in IssueConfiguration
             modelBuilder.Entity<Issue>(entity =>
             {
-                // Configure PostgreSQL-specific types
-                if (Database.IsNpgsql())
+                // Configure SQL Server-specific types
+                if (Database.IsSqlServer())
                 {
-                    entity.Property(e => e.Id).HasColumnType("uuid");
+                    entity.Property(e => e.Id).HasColumnType("uniqueidentifier");
                 }
             });
         }

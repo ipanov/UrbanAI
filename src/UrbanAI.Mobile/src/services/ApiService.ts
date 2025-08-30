@@ -5,7 +5,7 @@ import { CreateIssueRequest, Issue, UserProfile } from '../../../UrbanAI.Shared/
 
 const API_BASE_URL = __DEV__ 
   ? 'http://localhost:5001/api'  // Development - connect to local backend
-  : 'https://api.urbanai.site/api'; // Production
+  : 'https://www.urbanai.site/api'; // Production
 
 class ApiService {
   private async getAuthToken(): Promise<string | null> {

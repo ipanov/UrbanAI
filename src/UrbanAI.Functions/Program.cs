@@ -8,9 +8,26 @@ using UrbanAI.Domain.Interfaces;
 using UrbanAI.Infrastructure.Repositories;
 using UrbanAI.Application.Interfaces;
 using UrbanAI.Application.Services;
+using Azure.Identity;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
+    .ConfigureAppConfiguration((context, config) =>
+    {
+        // Configure Azure Key Vault for production environments
+        if (!context.HostingEnvironment.IsDevelopment())
+        {
+            var builtConfig = config.Build();
+            var keyVaultEndpoint = builtConfig["AZURE_KEY_VAULT_ENDPOINT"];
+            if (!string.IsNullOrEmpty(keyVaultEndpoint))
+            {
+                config.AddAzureKeyVault(
+                    new Uri(keyVaultEndpoint),
+                    new DefaultAzureCredential());
+            }
+        }
+    })
     .ConfigureServices((context, services) =>
     {
         services.AddApplicationInsightsTelemetryWorkerService();
@@ -30,9 +47,6 @@ var host = new HostBuilder()
                 options.UseInMemoryDatabase("UrbanAIDb"));
         }
 
-        // Configure Supabase settings for PostgreSQL
-        services.Configure<SupabaseSettings>(
-            context.Configuration.GetSection("SupabaseSettings"));
 
         // Register repositories
         services.AddScoped<IRegulationRepository, RegulationRepository>();

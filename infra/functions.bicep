@@ -40,6 +40,9 @@ param managedIdentityPrincipalId string
 @description('The App Service Plan ID')
 param appServicePlanId string
 
+@description('The Key Vault name for secret management')
+param keyVaultName string
+
 // Common tags for all resources
 var tags = {
   'azd-env-name': environmentName
@@ -115,6 +118,10 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
         {
           name: 'WEBSITE_RUN_FROM_PACKAGE'
           value: '1'
+        }
+        {
+          name: 'AZURE_KEY_VAULT_ENDPOINT'
+          value: 'https://${keyVaultName}.vault.azure.net/'
         }
       ]
       alwaysOn: false // F1 tier doesn't support Always On

@@ -4,16 +4,14 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "ASPNETCORE_ENVIRONMENT": "Development",
-    "ConnectionStrings__DefaultConnection": "Server=localhost;Database=UrbanAIDb;Trusted_Connection=true;",
-    "SupabaseSettings__ProjectUrl": "https://your-project-ref.supabase.co",
-    "SupabaseSettings__AnonKey": "your-anon-key",
-    "SupabaseSettings__ServiceRoleKey": "your-service-role-key",
-    "Jwt__Secret": "your-256-bit-secret-replace-this-in-production-env",
+    "ConnectionStrings__DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=UrbanAIDb;Trusted_Connection=true;MultipleActiveResultSets=true",
+    "ConnectionStrings__MongoConnection": "mongodb://localhost:27017/UrbanAIDb",
+    "Jwt__Secret": "dev-jwt-secret-for-functions-local-development",
     "Jwt__Issuer": "urbanai-api",
     "Jwt__Audience": "urbanai-client",
     "Authentication__Google__ClientId": "your-google-client-id",
-    "Authentication__Google__ClientSecret": "your-google-client-secret",
+    "Authentication__Google__ClientSecret": "dev-google-secret-placeholder",
     "Authentication__Microsoft__ClientId": "62a3b9fb-2a17-4c82-b300-cdd8af057409",
-    "Authentication__Microsoft__ClientSecret": "nE48Q~EfLHtXyr5TDsZWAXlsoZRPDl4uSZjLfceB"
+    "Authentication__Microsoft__ClientSecret": "dev-microsoft-secret-placeholder"
   }
 }
