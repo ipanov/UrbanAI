@@ -76,7 +76,14 @@
       "Bash(git restore:*)",
       "Bash(dotnet add:*)",
       "Bash(git rebase:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(dotnet user-secrets:*)",
+      "mcp__azuredevops__searchWorkItems",
+      "Read(c:\\Users\\ilija\\OneDrive\\Pictures\\Screenshots/**)",
+      "Bash(azd up:*)",
+      "Bash(az:*)",
+      "Read(c:\\Users\\ilija\\Downloads/**)",
+      "Bash(taskkill:*)"
     ],
     "deny": [],
     "ask": []
