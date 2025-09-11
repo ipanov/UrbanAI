@@ -46,3 +46,30 @@ Core files (must exist in memory-bank/ and be read at task start):
 6. progress.md
 
 Additional context files may be added within memory-bank/ for features, integrations, testing, deployment,
+
+## Task Completion & Build Monitoring: MANDATORY
+- **CRITICAL REQUIREMENT**: For ANY task that introduces code changes, Cline MUST commit and push the changes to the appropriate branch (typically `develop`) BEFORE marking the task as completed.
+- **NO EXCEPTIONS**: Tasks cannot be marked as complete until changes are committed and pushed to remote repository.
+- **Workflow Enforcement**: This ensures all work is properly version controlled and available for CI/CD pipelines.
+- **Documentation**: All commits must include descriptive messages following conventional commit format.
+- **Verification**: After push, verify the commit appears in remote repository before task completion.
+
+## Concurrent Development Workflow
+- **Stash Strategy**: Use `git stash` to preserve work when switching between Claude Code and Cline
+- **Branch Management**: Keep tool-specific work isolated until ready for integration
+- **Configuration Sync**: Maintain separate configuration files for each tool
+- **Memory Bank**: Update memory-bank/progress.md with all development activities
+- **Conflict Resolution**: Manual merge when integrating work from different tools
+
+## Quality Assurance Requirements
+- **Testing**: All changes must include appropriate unit/integration tests
+- **Code Review**: Self-review code changes before committing
+- **Documentation**: Update relevant memory-bank files with implementation details
+- **Performance**: Ensure changes don't degrade application performance
+- **Security**: Verify security implications of all code changes
+
+## At task start:
+1) Read memory-bank core files
+2) Skim relevant docs/* files for the area of work
+3) Confirm understanding in Plan Mode before acting
+4) Commit and push changes before marking tasks complete
