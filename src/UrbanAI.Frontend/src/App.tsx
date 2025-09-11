@@ -3,7 +3,10 @@ import OAuthLoginPage from './components/OAuthLoginPage';
 import Dashboard from './components/Dashboard';
 import Issues from './components/Issues';
 import OAuthCallback from './components/OAuthCallback';
-import GDPRDataManagement from './components/GDPRDataManagement';
+import GDPRDataManagementPage from './components/GDPRDataManagementPage';
+import PrivacyPolicyPage from './components/PrivacyPolicyPage';
+import TermsOfServicePage from './components/TermsOfServicePage';
+import CookiePolicyPage from './components/CookiePolicyPage';
 import { UserProvider } from './contexts/UserContext';
 import './App.css';
 
@@ -37,7 +40,10 @@ function App() {
             } />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/issues" element={<Issues />} />
-            <Route path="/gdpr-data-management" element={<GDPRDataManagement />} />
+            <Route path="/gdpr-data-management" element={<GDPRDataManagementPage />} />
+            <Route path="/privacy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms" element={<TermsOfServicePage />} />
+            <Route path="/privacy/cookies" element={<CookiePolicyPage />} />
             <Route path="/auth/callback" element={<OAuthCallback />} />
           </Routes>
         </div>
