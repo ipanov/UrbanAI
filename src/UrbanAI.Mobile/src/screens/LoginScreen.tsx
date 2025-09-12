@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -52,10 +53,11 @@ const LoginScreen: React.FC = () => {
       <View style={styles.content}>
         {/* Logo and Title */}
         <View style={styles.logoContainer}>
-          <View style={styles.logoIcon}>
-            <Text style={styles.logoEmoji}>🏙️</Text>
-          </View>
-          <Text style={styles.title}>UrbanAI</Text>
+          <Image 
+            source={require('../../assets/images/urbanai-logo.png')}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
           <Text style={styles.subtitle}>Municipal Issue Reporting with AI-Powered Analysis</Text>
         </View>
 
@@ -134,22 +136,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 48,
   },
-  logoIcon: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#ffffff',
-    justifyContent: 'center',
-    alignItems: 'center',
+  logoImage: {
+    width: 240,
+    height: 60,
     marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  logoEmoji: {
-    fontSize: 40,
   },
   title: {
     fontSize: 32,

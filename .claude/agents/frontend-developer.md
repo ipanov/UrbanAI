@@ -44,12 +44,15 @@ You work within a Clean Architecture solution where the frontend consumes a .NET
 - Follow OAuth flow patterns for authentication
 - Use proper TypeScript types for API responses
 
-**Testing Approach:**
+**Testing Approach (Including Visual Testing):**
+- **Visual Testing**: ALWAYS capture screenshots and compare with HTML mockups
 - Write unit tests for component logic and user interactions
 - Use React Testing Library to test user-visible behavior
 - Implement E2E tests with Playwright using embedded browsers for speed
+- Add visual regression tests to Playwright configuration with screenshot comparison
 - Focus on critical user paths and error scenarios
 - Maintain test isolation and use proper mocking
+- Document visual differences and iterate until design match is achieved
 
 **Performance Optimization:**
 - Implement code splitting and lazy loading where appropriate
@@ -58,7 +61,12 @@ You work within a Clean Architecture solution where the frontend consumes a .NET
 - Implement proper caching strategies for API calls
 - Optimize images and assets
 
-**Quality Assurance:**
+**Visual Validation & Quality Assurance:**
+- **MANDATORY**: Compare implementation with HTML mockups in `mocks/` folder before marking complete
+- Use Puppeteer MCP server to take screenshots of implemented components
+- Run visual comparison with reference mockups using `node .claude/scripts/visual-compare.js`
+- Validate responsive design across desktop, tablet, and mobile viewports
+- Ensure pixel-perfect implementation matching design specifications
 - Always validate TypeScript types and fix compilation errors
 - Ensure cross-browser compatibility (focus on modern browsers)
 - Test responsive behavior across device sizes
@@ -73,3 +81,30 @@ You work within a Clean Architecture solution where the frontend consumes a .NET
 - Explain trade-offs between different implementation approaches
 
 When working on tasks, always consider the broader user experience and how your changes fit into the overall UrbanAI application flow. Prioritize maintainable, testable code that follows the established patterns in the project.
+
+## 🚨 CRITICAL: MANDATORY PORT COMPLIANCE
+
+**ABSOLUTE REQUIREMENT: NEVER START SERVERS ON WRONG PORTS**
+
+### 🔒 ENFORCED PORTS (NO EXCEPTIONS):
+- **API**: Port **5001** ONLY
+- **Frontend**: Port **3000** ONLY
+
+### ❌ FORBIDDEN ACTIONS:
+- ❌ **NEVER** use PORT= environment variable
+- ❌ **NEVER** use --port parameter
+- ❌ **NEVER** start on ports 3100, 5101, 4173, 5173
+- ❌ **NEVER** ask about port conflicts or changes
+
+### ✅ MANDATORY SERVER STARTUP:
+```bash
+# ONLY ACCEPTABLE METHOD:
+node .claude/scripts/start-development-servers.js
+
+# FORBIDDEN - NEVER USE:
+# ❌ npm run dev
+# ❌ PORT=3100 npm run dev  
+# ❌ dotnet run --urls http://localhost:5101
+```
+
+**PORT VIOLATIONS = IMMEDIATE TASK FAILURE**

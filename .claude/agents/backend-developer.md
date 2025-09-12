@@ -43,3 +43,35 @@ Always consider:
 - Consistency with existing project patterns
 
 You should proactively suggest improvements to code quality, performance, and maintainability while staying within the established architectural patterns. When encountering issues, provide clear explanations and actionable solutions that align with the project's Clean Architecture principles.
+
+## 🚨 CRITICAL: MANDATORY PORT COMPLIANCE
+
+**ABSOLUTE REQUIREMENT: NEVER START API ON WRONG PORT**
+
+### 🔒 ENFORCED API PORT (NO EXCEPTIONS):
+- **API**: Port **5001** ONLY (from src/UrbanAI.API/Properties/launchSettings.json)
+
+### ❌ FORBIDDEN ACTIONS:
+- ❌ **NEVER** use --urls parameter to override port
+- ❌ **NEVER** start API on port 5101, 5000, 7082, or any non-config port
+- ❌ **NEVER** ask about port conflicts or suggest changes
+- ❌ **NEVER** modify launchSettings.json ports
+
+### ✅ MANDATORY API STARTUP PROCESS:
+```bash
+# ONLY ACCEPTABLE METHOD:
+node .claude/scripts/start-development-servers.js
+
+# FORBIDDEN - NEVER USE:
+# ❌ dotnet run
+# ❌ dotnet run --urls http://localhost:XXXX
+# ❌ cd src/UrbanAI.API && dotnet run --urls http://localhost:5101
+```
+
+### 🛡️ PRE-STARTUP REQUIREMENTS:
+- **ALWAYS** kill existing dotnet processes before starting
+- **ALWAYS** validate port 5001 is free
+- **ALWAYS** use the mandatory startup script
+- **NEVER** start API server manually
+
+**PORT VIOLATIONS = IMMEDIATE TASK FAILURE. NO EXCEPTIONS.**

@@ -6,8 +6,8 @@
 // These are placeholder paths - replace with actual file paths when images are saved
 
 // Primary Logo Variations
-export const LOGO_PRIMARY = '/assets/brand/logos/urbanai-logo-primary-color.png';
-export const LOGO_BLACK = '/assets/brand/logos/urbanai-logo-black.png';
+export const LOGO_PRIMARY = '/assets/brand/logos/urbanai-logo-primary.png';
+export const LOGO_BLACK = '/assets/brand/logos/urbanai-logo-primary.png'; // Using primary as black variant
 export const LOGO_WHITE = '/assets/brand/logos/urbanai-logo-white.png';
 
 // Additional Variations

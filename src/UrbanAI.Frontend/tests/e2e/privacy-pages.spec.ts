@@ -2,13 +2,13 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Privacy Pages', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the app
-    await page.goto('http://localhost:8080/app');
+    // Navigate to the app using baseURL
+    await page.goto('/');
   });
 
   test('should navigate to cookie policy page', async ({ page }) => {
-    // Navigate to cookie policy page
-    await page.goto('http://localhost:8080/app/privacy/cookies');
+    // Navigate to cookie policy page using relative URL
+    await page.goto('/privacy/cookies');
 
     // Check page title and content
     await expect(page).toHaveTitle(/UrbanAI/);
@@ -51,7 +51,7 @@ test.describe('Privacy Pages', () => {
 
   test('should navigate to GDPR data management page', async ({ page }) => {
     // Navigate to GDPR data management page
-    await page.goto('http://localhost:8080/app/gdpr-data-management');
+    await page.goto('/gdpr-data-management');
 
     // Check page title and content
     await expect(page).toHaveTitle(/UrbanAI/);
@@ -71,7 +71,7 @@ test.describe('Privacy Pages', () => {
   });
 
   test('should switch between GDPR data management tabs', async ({ page }) => {
-    await page.goto('http://localhost:8080/app/gdpr-data-management');
+    await page.goto('/gdpr-data-management');
 
     // Click on My Data tab
     await page.locator('text=My Data').click();
@@ -99,7 +99,7 @@ test.describe('Privacy Pages', () => {
   });
 
   test('should test data export functionality', async ({ page }) => {
-    await page.goto('http://localhost:8080/app/gdpr-data-management');
+    await page.goto('/gdpr-data-management');
 
     // Navigate to export tab
     await page.locator('text=Export Data').click();
@@ -114,7 +114,7 @@ test.describe('Privacy Pages', () => {
   });
 
   test('should test delete account modal functionality', async ({ page }) => {
-    await page.goto('http://localhost:8080/app/gdpr-data-management');
+    await page.goto('/gdpr-data-management');
 
     // Navigate to delete account tab
     await page.locator('text=Delete Account').click();
@@ -139,7 +139,7 @@ test.describe('Privacy Pages', () => {
   });
 
   test('should test anonymize data modal functionality', async ({ page }) => {
-    await page.goto('http://localhost:8080/app/gdpr-data-management');
+    await page.goto('/gdpr-data-management');
 
     // Navigate to delete account tab
     await page.locator('text=Delete Account').click();
@@ -157,7 +157,7 @@ test.describe('Privacy Pages', () => {
   });
 
   test('should test cookie policy anchor navigation', async ({ page }) => {
-    await page.goto('http://localhost:8080/app/privacy/cookies');
+    await page.goto('/privacy/cookies');
 
     // Click on table of contents links
     await page.locator('text=1. What Are Cookies').click();
@@ -177,14 +177,14 @@ test.describe('Privacy Pages', () => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
 
-    await page.goto('http://localhost:8080/app/privacy/cookies');
+    await page.goto('/privacy/cookies');
 
     // Check that content is still accessible
     await expect(page.locator('h1')).toContainText('Cookie Policy');
     await expect(page.locator('text=Cookie Usage at a Glance')).toBeVisible();
 
     // Check GDPR data management page on mobile
-    await page.goto('http://localhost:8080/app/gdpr-data-management');
+    await page.goto('/gdpr-data-management');
     await expect(page.locator('h1')).toContainText('My Data & Privacy');
 
     // Test tab switching on mobile
@@ -193,7 +193,7 @@ test.describe('Privacy Pages', () => {
   });
 
   test('should test accessibility features', async ({ page }) => {
-    await page.goto('http://localhost:8080/app/privacy/cookies');
+    await page.goto('/privacy/cookies');
 
     // Check for proper heading hierarchy
     const h1Count = await page.locator('h1').count();
@@ -213,7 +213,7 @@ test.describe('Privacy Pages', () => {
     }
 
     // Check GDPR page accessibility
-    await page.goto('http://localhost:8080/app/gdpr-data-management');
+    await page.goto('/gdpr-data-management');
 
     // Check for proper button labels
     const buttons = await page.locator('button');
@@ -230,7 +230,7 @@ test.describe('Privacy Pages', () => {
   });
 
   test('should test GDPR compliance elements', async ({ page }) => {
-    await page.goto('http://localhost:8080/app/gdpr-data-management');
+    await page.goto('/gdpr-data-management');
 
     // Check for GDPR rights information
     await expect(page.locator('text=📋 Access your data')).toBeVisible();
@@ -243,7 +243,7 @@ test.describe('Privacy Pages', () => {
     await expect(page.locator('text=We don\'t store names, emails, or personal identifiers')).toBeVisible();
 
     // Check cookie policy GDPR compliance
-    await page.goto('http://localhost:8080/app/privacy/cookies');
+    await page.goto('/privacy/cookies');
     await expect(page.locator('text=GDPR')).toBeVisible();
     await expect(page.locator('text=CCPA')).toBeVisible();
     await expect(page.locator('text=European Union countries (GDPR compliant)')).toBeVisible();
@@ -251,18 +251,18 @@ test.describe('Privacy Pages', () => {
 
   test('should test navigation between privacy pages', async ({ page }) => {
     // Start at cookie policy
-    await page.goto('http://localhost:8080/app/privacy/cookies');
+    await page.goto('/privacy/cookies');
 
     // Navigate to privacy policy
     await page.locator('text=Privacy Policy →').click();
-    await expect(page).toHaveURL('http://localhost:8080/app/privacy');
+    await expect(page).toHaveURL('/privacy');
 
     // Navigate back to home
     await page.locator('text=← Back to Home').click();
-    await expect(page).toHaveURL('http://localhost:8080/app/');
+    await expect(page).toHaveURL('/');
 
     // Navigate to GDPR data management
-    await page.goto('http://localhost:8080/app/gdpr-data-management');
+    await page.goto('/gdpr-data-management');
     await expect(page.locator('text=My Data & Privacy')).toBeVisible();
   });
 });

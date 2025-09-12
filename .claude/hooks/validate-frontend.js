@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * Claude Hook: Frontend Validator
+ * Claude Hook: Enhanced Frontend Validator with Visual Testing
  * Runs after MultiEdit operations to validate frontend changes before CI runs
+ * Includes TypeScript, ESLint, Build, and Visual Regression Testing
  */
 
 const fs = require('fs');
@@ -72,21 +73,51 @@ function validateFrontend() {
       console.log('    Build errors detected - CI will fail');
     }
 
+    // Visual validation check
+    try {
+      console.log('  🎨 Checking for visual validation requirements...');
+      const referenceMapPath = path.join(process.cwd(), 'tests', 'visual-refs', 'reference-map.json');
+      
+      if (fs.existsSync(referenceMapPath)) {
+        const referenceMap = JSON.parse(fs.readFileSync(referenceMapPath, 'utf8'));
+        const hasReferences = referenceMap.mockups.some(m => m.status === 'captured');
+        
+        if (hasReferences) {
+          validations.push('✅ Visual: References available');
+          console.log('    📸 Visual references found - manual visual comparison recommended');
+        } else {
+          validations.push('⚠️  Visual: No reference screenshots');
+          console.log('    📸 Run: node .claude/scripts/capture-reference-screenshots.js');
+        }
+      } else {
+        validations.push('⚠️  Visual: No reference system');
+        console.log('    📸 Visual validation system not initialized');
+      }
+    } catch (error) {
+      validations.push('⚠️  Visual: Check failed');
+    }
+
     // Report results
-    console.log('\n📋 Frontend Validation Results:');
+    console.log('\n📋 Enhanced Frontend Validation Results:');
     validations.forEach(result => console.log(`  ${result}`));
     
     const hasErrors = validations.some(v => v.includes('❌'));
+    const hasWarnings = validations.some(v => v.includes('⚠️'));
+    
     if (hasErrors) {
-      console.log('\n⚠️  Issues detected - fix before pushing to avoid CI failures');
+      console.log('\n❌ Critical issues detected - fix before pushing to avoid CI failures');
       console.log('💡 Run individual commands in src/UrbanAI.Frontend/ to debug');
+    } else if (hasWarnings) {
+      console.log('\n⚠️  Warnings detected - consider addressing for better quality');
+      console.log('🎨 Visual validation: Ensure UI matches design mockups');
     } else {
       console.log('\n✅ All validations passed - ready for CI');
+      console.log('🎯 Don\'t forget to visually compare implementation with mockups!');
     }
     console.log('');
 
   } catch (error) {
-    console.log('\n⚠️  Frontend validation failed - check manually before pushing\n');
+    console.log('\n⚠️  Enhanced frontend validation failed - check manually before pushing\n');
   }
 }
 

@@ -83,7 +83,16 @@
       "Bash(azd up:*)",
       "Bash(az:*)",
       "Read(c:\\Users\\ilija\\Downloads/**)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Read(//c/Users/ilija/OneDrive/Pictures/Screenshots/**)",
+      "Read(//c/Users/ilija/OneDrive/Desktop/UrbanAI_UX_logos/**)",
+      "Bash(copy:*)",
+      "Bash(pkill:*)",
+      "Bash(PORT=3000 npm run dev)",
+      "Bash(netstat:*)",
+      "Bash(node:*)",
+      "WebFetch(domain:www.geeky-gadgets.com)",
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []
