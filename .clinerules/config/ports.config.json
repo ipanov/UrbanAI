@@ -1,0 +1,79 @@
+{
+  "development": {
+    "frontend": {
+      "port": 3000,
+      "service": "React Development Server",
+      "url": "http://localhost:3000",
+      "command": "npm run dev",
+      "workingDirectory": "src/UrbanAI.Frontend"
+    },
+    "backend": {
+      "port": 5001,
+      "service": ".NET API",
+      "url": "https://localhost:5001",
+      "command": "dotnet run",
+      "workingDirectory": "src/UrbanAI.API",
+      "ssl": true
+    },
+    "functions": {
+      "port": 7071,
+      "service": "Azure Functions",
+      "url": "http://localhost:7071",
+      "command": "func start",
+      "workingDirectory": "src/UrbanAI.Functions"
+    }
+  },
+  "production": {
+    "frontend": {
+      "port": 80,
+      "service": "Static Frontend",
+      "url": "https://urbanai-frontend.azurewebsites.net"
+    },
+    "backend": {
+      "port": 443,
+      "service": "Azure App Service",
+      "url": "https://urbanai-api.azurewebsites.net",
+      "ssl": true
+    },
+    "functions": {
+      "port": 443,
+      "service": "Azure Functions",
+      "url": "https://urbanai-functions.azurewebsites.net",
+      "ssl": true
+    }
+  },
+  "staging": {
+    "frontend": {
+      "port": 80,
+      "service": "Static Frontend (Staging)",
+      "url": "https://urbanai-frontend-staging.azurewebsites.net"
+    },
+    "backend": {
+      "port": 443,
+      "service": "Azure App Service (Staging)",
+      "url": "https://urbanai-api-staging.azurewebsites.net",
+      "ssl": true
+    },
+    "functions": {
+      "port": 443,
+      "service": "Azure Functions (Staging)",
+      "url": "https://urbanai-functions-staging.azurewebsites.net",
+      "ssl": true
+    }
+  },
+  "portConflictResolution": {
+    "maxRetries": 3,
+    "alternativePorts": {
+      "frontend": [3001, 3002, 3003],
+      "backend": [5002, 5003, 5004],
+      "functions": [7072, 7073, 7074]
+    },
+    "safeProcesses": [
+      "node.exe",
+      "dotnet.exe",
+      "func.exe",
+      "npm",
+      "yarn"
+    ]
+  }
+}
