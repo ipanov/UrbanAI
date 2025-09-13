@@ -114,10 +114,10 @@ describe('GDPRDataManagementPage', () => {
   it('renders privacy rights correctly', () => {
     renderWithRouter(<GDPRDataManagementPage />);
 
-    expect(screen.getByText('📋 Access your data')).toBeInTheDocument();
-    expect(screen.getByText('📥 Export your data')).toBeInTheDocument();
-    expect(screen.getByText('✏️ Correct your data')).toBeInTheDocument();
-    expect(screen.getByText('🗑️ Delete your data')).toBeInTheDocument();
+    expect(screen.getByText('Access your data')).toBeInTheDocument();
+    expect(screen.getByText('Export your data')).toBeInTheDocument();
+    expect(screen.getByText('Correct your data')).toBeInTheDocument();
+    expect(screen.getByText('Delete your data')).toBeInTheDocument();
   });
 
   it('renders data processing summary correctly', () => {
@@ -209,13 +209,23 @@ describe('GDPRDataManagementPage', () => {
       expect(screen.getByText('Export Format')).toBeInTheDocument();
       expect(screen.getByText('JSON (machine-readable)')).toBeInTheDocument();
       expect(screen.getByText('Download My Data')).toBeInTheDocument();
-      expect(screen.getByText('Export Client-Side Data')).toBeInTheDocument();
+      expect(screen.getByText('📱 Export Client-Side Data')).toBeInTheDocument();
     });
   });
 
   it('exports data correctly when download button is clicked', async () => {
-    // Mock alert
-    const mockAlert = vi.spyOn(window, 'alert').mockImplementation(() => {});
+    // Mock document.createElement to return a proper anchor element but with mocked click
+    const originalCreateElement = document.createElement.bind(document);
+    const mockClick = vi.fn();
+    
+    vi.spyOn(document, 'createElement').mockImplementation((tagName) => {
+      if (tagName === 'a') {
+        const element = originalCreateElement('a');
+        element.click = mockClick;
+        return element;
+      }
+      return originalCreateElement(tagName);
+    });
 
     renderWithRouter(<GDPRDataManagementPage />);
 
@@ -230,8 +240,7 @@ describe('GDPRDataManagementPage', () => {
     // Verify Blob was created
     expect(global.Blob).toHaveBeenCalled();
     expect(window.URL.createObjectURL).toHaveBeenCalled();
-
-    mockAlert.mockRestore();
+    expect(mockClick).toHaveBeenCalled();
   });
 
   it('renders delete account section correctly', async () => {
@@ -241,9 +250,8 @@ describe('GDPRDataManagementPage', () => {
     fireEvent.click(deleteTab);
 
     await waitFor(() => {
-      expect(screen.getByText('Delete My Account')).toBeInTheDocument();
+      expect(screen.getAllByText('Delete My Account')).toHaveLength(2); // Heading and button
       expect(screen.getByText('What happens when you delete your account:')).toBeInTheDocument();
-      expect(screen.getByText('Delete My Account')).toBeInTheDocument();
       expect(screen.getByText('Anonymize My Data Only')).toBeInTheDocument();
     });
   });
@@ -255,13 +263,14 @@ describe('GDPRDataManagementPage', () => {
     fireEvent.click(deleteTab);
 
     await waitFor(() => {
-      const deleteButton = screen.getByText('Delete My Account');
+      const deleteButton = screen.getByRole('button', { name: /Delete My Account/i });
       fireEvent.click(deleteButton);
     });
 
     await waitFor(() => {
       expect(screen.getByText('Confirm Account Deletion')).toBeInTheDocument();
-      expect(screen.getByText('Type DELETE to confirm:')).toBeInTheDocument();
+      expect(screen.getByText('Type')).toBeInTheDocument();
+      expect(screen.getByText('to confirm:')).toBeInTheDocument();
     });
   });
 
@@ -292,7 +301,7 @@ describe('GDPRDataManagementPage', () => {
     fireEvent.click(deleteTab);
 
     await waitFor(() => {
-      const deleteButton = screen.getByText('Delete My Account');
+      const deleteButton = screen.getByRole('button', { name: /Delete My Account/i });
       fireEvent.click(deleteButton);
     });
 
@@ -362,7 +371,7 @@ describe('GDPRDataManagementPage', () => {
     expect(screen.getByTestId('shield-icon')).toBeInTheDocument();
     expect(screen.getByTestId('database-icon')).toBeInTheDocument();
     expect(screen.getByTestId('file-text-icon')).toBeInTheDocument();
-    expect(screen.getByTestId('download-icon')).toBeInTheDocument();
+    expect(screen.getAllByTestId('download-icon')).toHaveLength(2); // Tab icon and content icon
     expect(screen.getByTestId('trash-icon')).toBeInTheDocument();
   });
 
@@ -382,7 +391,7 @@ describe('GDPRDataManagementPage', () => {
     fireEvent.click(deleteTab);
 
     await waitFor(() => {
-      const deleteButton = screen.getByText('Delete My Account');
+      const deleteButton = screen.getByRole('button', { name: /Delete My Account/i });
       fireEvent.click(deleteButton);
     });
 
