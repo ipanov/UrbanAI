@@ -5,79 +5,86 @@
     {
       "mockFile": "android-landing-screen.html",
       "component": "Android Landing Screen",
-      "references": {
-        "desktop": "tests/visual-refs/android-landing-screen-desktop.png",
-        "mobile": "tests/visual-refs/android-landing-screen-mobile.png",
-        "tablet": "tests/visual-refs/android-landing-screen-tablet.png"
-      },
       "mockPath": "mocks/android-landing-screen.html",
-      "status": "pending_capture"
-    },
-    {
-      "mockFile": "android-login-screen.html",
-      "component": "Android Login Screen",
+      "status": "captured",
+      "capturedAt": "2025-09-12T22:42:25.000Z",
       "references": {
-        "desktop": "tests/visual-refs/android-login-screen-desktop.png",
-        "mobile": "tests/visual-refs/android-login-screen-mobile.png",
-        "tablet": "tests/visual-refs/android-login-screen-tablet.png"
-      },
-      "mockPath": "mocks/android-login-screen.html",
-      "status": "pending_capture"
-    },
-    {
-      "mockFile": "dashboard-page.html",
-      "component": "Dashboard Page",
-      "references": {
-        "desktop": "tests/visual-refs/dashboard-page-desktop.png",
-        "mobile": "tests/visual-refs/dashboard-page-mobile.png",
-        "tablet": "tests/visual-refs/dashboard-page-tablet.png"
-      },
-      "mockPath": "mocks/dashboard-page.html",
-      "status": "pending_capture"
+        "desktop": "tests/visual-refs/android-landing-screen-desktop-2025-09-12T22-41-45-973Z.png",
+        "mobile": "tests/visual-refs/android-landing-screen-mobile-2025-09-12T22-42-04-874Z.png",
+        "tablet": "tests/visual-refs/android-landing-screen-tablet-2025-09-12T22-42-23-738Z.png"
+      }
     },
     {
       "mockFile": "gdpr-compliance-page.html",
       "component": "Gdpr Compliance Page",
-      "references": {
-        "desktop": "tests/visual-refs/gdpr-compliance-page-desktop.png",
-        "mobile": "tests/visual-refs/gdpr-compliance-page-mobile.png",
-        "tablet": "tests/visual-refs/gdpr-compliance-page-tablet.png"
-      },
       "mockPath": "mocks/gdpr-compliance-page.html",
-      "status": "pending_capture"
+      "status": "captured",
+      "capturedAt": "2025-09-12T23:15:48.000Z",
+      "references": {
+        "desktop": "tests/visual-refs/gdpr-compliance-page-desktop-2025-09-12T23-14-58-732Z.png",
+        "mobile": "tests/visual-refs/gdpr-compliance-page-mobile-2025-09-12T23-15-21-741Z.png",
+        "tablet": "tests/visual-refs/gdpr-compliance-page-tablet-2025-09-12T23-15-44-650Z.png"
+      }
     },
     {
       "mockFile": "gdpr-data-management.html",
       "component": "Gdpr Data Management",
-      "references": {
-        "desktop": "tests/visual-refs/gdpr-data-management-desktop.png",
-        "mobile": "tests/visual-refs/gdpr-data-management-mobile.png",
-        "tablet": "tests/visual-refs/gdpr-data-management-tablet.png"
-      },
       "mockPath": "mocks/gdpr-data-management.html",
-      "status": "pending_capture"
+      "status": "captured",
+      "capturedAt": "2025-09-12T23:19:59.000Z",
+      "references": {
+        "desktop": "tests/visual-refs/gdpr-data-management-desktop-2025-09-12T23-16-47-300Z.png",
+        "mobile": "tests/visual-refs/gdpr-data-management-mobile-2025-09-12T23-18-20-476Z.png",
+        "tablet": "tests/visual-refs/gdpr-data-management-tablet-2025-09-12T23-19-55-599Z.png"
+      }
+    },
+    {
+      "mockFile": "dashboard-page.html",
+      "component": "Dashboard Page",
+      "mockPath": "mocks/dashboard-page.html",
+      "status": "captured",
+      "capturedAt": "2025-09-12T23:02:57.000Z",
+      "references": {
+        "desktop": "tests/visual-refs/dashboard-page-desktop-2025-09-12T22-56-37-204Z.png",
+        "mobile": "tests/visual-refs/dashboard-page-mobile-2025-09-12T23-01-06-281Z.png",
+        "tablet": "tests/visual-refs/dashboard-page-tablet-2025-09-12T23-02-54-657Z.png"
+      }
+    },
+    {
+      "mockFile": "android-login-screen.html",
+      "component": "Android Login Screen",
+      "mockPath": "mocks/android-login-screen.html",
+      "status": "captured",
+      "capturedAt": "2025-09-12T22:45:20.000Z",
+      "references": {
+        "desktop": "tests/visual-refs/android-login-screen-desktop-2025-09-12T22-44-38-620Z.png",
+        "mobile": "tests/visual-refs/android-login-screen-mobile-2025-09-12T22-44-58-891Z.png",
+        "tablet": "tests/visual-refs/android-login-screen-tablet-2025-09-12T22-45-18-095Z.png"
+      }
+    },
+    {
+      "mockFile": "web-login-page.html",
+      "component": "Web Login Page",
+      "mockPath": "mocks/web-login-page.html",
+      "status": "captured",
+      "capturedAt": "2025-09-12T23:25:09.000Z",
+      "references": {
+        "desktop": "tests/visual-refs/web-login-page-desktop-2025-09-12T23-21-16-686Z.png",
+        "mobile": "tests/visual-refs/web-login-page-mobile-2025-09-12T23-23-10-880Z.png",
+        "tablet": "tests/visual-refs/web-login-page-tablet-2025-09-12T23-25-06-051Z.png"
+      }
     },
     {
       "mockFile": "web-landing-page.html",
       "component": "Web Landing Page",
       "references": {
-        "desktop": "tests/visual-refs/web-landing-page-desktop.png",
-        "mobile": "tests/visual-refs/web-landing-page-mobile.png",
-        "tablet": "tests/visual-refs/web-landing-page-tablet.png"
+        "desktop": "tests/visual-refs/web-landing-page-desktop-2025-09-12T22-38-56-085Z.png",
+        "mobile": "tests/visual-refs/web-landing-page-mobile-2025-09-12T22-39-15-092Z.png",
+        "tablet": "tests/visual-refs/web-landing-page-tablet-2025-09-12T22-41-00-503Z.png"
       },
       "mockPath": "mocks/web-landing-page.html",
-      "status": "pending_capture"
-    },
-    {
-      "mockFile": "web-login-page.html",
-      "component": "Web Login Page",
-      "references": {
-        "desktop": "tests/visual-refs/web-login-page-desktop.png",
-        "mobile": "tests/visual-refs/web-login-page-mobile.png",
-        "tablet": "tests/visual-refs/web-login-page-tablet.png"
-      },
-      "mockPath": "mocks/web-login-page.html",
-      "status": "pending_capture"
+      "status": "captured",
+      "capturedAt": "2025-09-12T22:41:00.000Z"
     }
   ]
 }

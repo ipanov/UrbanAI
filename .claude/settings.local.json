@@ -92,7 +92,9 @@
       "Bash(netstat:*)",
       "Bash(node:*)",
       "WebFetch(domain:www.geeky-gadgets.com)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "mcp__github__get_job_logs",
+      "Bash(npm test:*)"
     ],
     "deny": [],
     "ask": []
