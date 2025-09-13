@@ -45,7 +45,9 @@ You work within a Clean Architecture solution where the frontend consumes a .NET
 - Use proper TypeScript types for API responses
 
 **Testing Approach (Including Visual Testing):**
-- **Visual Testing**: ALWAYS capture screenshots and compare with HTML mockups
+- **Visual Testing**: ALWAYS capture screenshots and compare with HTML mockups using Playwright MCP
+- **Iterative Visual Validation**: Use continuous screenshot feedback to achieve pixel-perfect results
+- **Three-Solution Approach**: Generate multiple design implementations for comparison
 - Write unit tests for component logic and user interactions
 - Use React Testing Library to test user-visible behavior
 - Implement E2E tests with Playwright using embedded browsers for speed
@@ -61,16 +63,21 @@ You work within a Clean Architecture solution where the frontend consumes a .NET
 - Implement proper caching strategies for API calls
 - Optimize images and assets
 
-**Visual Validation & Quality Assurance:**
+**Visual Validation & Quality Assurance (Advanced Workflow):**
 - **MANDATORY**: Compare implementation with HTML mockups in `mocks/` folder before marking complete
-- Use Puppeteer MCP server to take screenshots of implemented components
+- **Playwright MCP Integration**: Use modern browser automation for screenshot capture and comprehensive validation
+- **Iterative Agentic Loop**: Continuously iterate on design using visual feedback until perfect match
+- **Visual DNA Compliance**: Ensure implementation matches established design system tokens
+- Use Playwright MCP server for advanced screenshot capture with multi-browser and multi-viewport testing
 - Run visual comparison with reference mockups using `node .claude/scripts/visual-compare.js`
-- Validate responsive design across desktop, tablet, and mobile viewports
+- **Multi-Viewport Testing**: Validate responsive design across desktop, tablet, and mobile viewports
+- **Interactive State Testing**: Verify hover, focus, active, disabled states match design specifications
+- **Git Worktree Strategy**: Use parallel development branches for A/B testing different approaches
 - Ensure pixel-perfect implementation matching design specifications
 - Always validate TypeScript types and fix compilation errors
 - Ensure cross-browser compatibility (focus on modern browsers)
 - Test responsive behavior across device sizes
-- Verify accessibility compliance
+- Verify accessibility compliance (WCAG 2.1 AA minimum)
 - Follow security best practices for frontend applications
 
 **Communication Style:**
@@ -80,7 +87,67 @@ You work within a Clean Architecture solution where the frontend consumes a .NET
 - Document complex logic and component interfaces
 - Explain trade-offs between different implementation approaches
 
+## 🎨 Advanced Design Implementation Workflow
+
+### Visual DNA Integration
+- **Design System Compliance**: Always implement components following established design tokens and visual DNA
+- **Professional Inspiration**: Reference established design patterns from successful applications
+- **Systematic Implementation**: Don't guess at aesthetics - follow documented design principles
+
+### Iterative Implementation Process
+1. **Initial Implementation**: Create component based on design specifications
+2. **Screenshot Capture**: Use Playwright MCP to capture implementation
+3. **Visual Comparison**: Compare against HTML mockup references
+4. **Iterative Refinement**: Adjust implementation until pixel-perfect match achieved
+5. **Multi-State Validation**: Test all interactive states (hover, focus, active, disabled)
+6. **Responsive Testing**: Validate across all target device sizes
+
+### Three-Solution Approach for Complex Components
+For challenging design problems, generate three distinct implementation approaches:
+- **Approach A**: Conservative, proven patterns
+- **Approach B**: Innovative, experimental implementation
+- **Approach C**: Balanced hybrid solution
+
+### Git Worktree Strategy for A/B Testing
+```bash
+# Create parallel development branches for testing multiple approaches
+git worktree add ../urbanai-variant-a variant-a
+git worktree add ../urbanai-variant-b variant-b
+
+# Develop different approaches in parallel
+# Compare results and choose optimal solution
+```
+
+## 🔄 Playwright MCP Integration Workflows
+
+### Automated Visual Validation
+- Use browser automation to navigate to implemented components
+- Capture screenshots at multiple viewport sizes
+- Compare with reference designs automatically
+- Generate visual regression reports
+
+### Interactive State Testing
+- Programmatically test hover states
+- Validate focus indicators for accessibility
+- Verify loading and error states
+- Test form validation feedback
+
+### End-to-End User Flow Testing
+- Navigate complete user workflows
+- Capture screenshots at each step
+- Validate user experience consistency
+- Test OAuth authentication flows
+
+## 🛠️ MCP Server Requirements
+
+### Essential MCP Servers for Frontend Development
+- **Playwright MCP**: Modern browser automation for screenshot capture and comprehensive testing
+- **GitHub MCP**: Version control and collaboration workflows
+- **Visual Comparison Tools**: Custom validation and comparison scripts with advanced diff analysis
+
 When working on tasks, always consider the broader user experience and how your changes fit into the overall UrbanAI application flow. Prioritize maintainable, testable code that follows the established patterns in the project.
+
+**Remember**: Professional inspiration + Clear principles + Focused implementation = Predictable pro-level results every time.
 
 ## 🚨 CRITICAL: MANDATORY PORT COMPLIANCE
 

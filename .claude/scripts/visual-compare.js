@@ -71,12 +71,14 @@ function visualCompare(componentName, implementationScreenshot) {
     console.log('');
     
     // Instructions for Claude Code
-    console.log('🤖 FOR CLAUDE CODE:');
-    console.log('1. Use Puppeteer MCP server to take screenshot of implementation');
-    console.log('2. Compare side-by-side with reference images');
-    console.log('3. Identify specific differences');
-    console.log('4. Iterate implementation until visual match achieved');
-    console.log('5. Mark component as visually validated');
+    console.log('🤖 FOR CLAUDE CODE (September 2025):');
+    console.log('1. Use Playwright MCP server to take screenshot of implementation');
+    console.log('2. Capture multiple viewport sizes (desktop, tablet, mobile)');
+    console.log('3. Test interactive states (hover, focus, active, disabled)');
+    console.log('4. Compare side-by-side with reference images');
+    console.log('5. Identify specific differences and iterate implementation');
+    console.log('6. Validate Core Web Vitals and accessibility compliance');
+    console.log('7. Mark component as visually validated with performance metrics');
     console.log('');
     
     // Save comparison session

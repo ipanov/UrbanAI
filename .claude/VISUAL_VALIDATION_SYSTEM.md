@@ -7,9 +7,10 @@ A comprehensive visual validation system has been implemented to ensure all fron
 ## 🔧 Components Installed & Configured
 
 ### 1. **MCP Server Integration**
-- ✅ **Puppeteer MCP Server** installed and configured
-- ✅ Claude Code can now take screenshots using browser automation
-- ✅ Global installation: `@modelcontextprotocol/server-puppeteer`
+- ✅ **Playwright MCP Server** installed and configured (modern replacement for Puppeteer)
+- ✅ Claude Code can now take screenshots using advanced browser automation
+- ✅ Multi-browser testing support: Chromium, Firefox, WebKit
+- ✅ Device-accurate emulation and performance metrics integration
 
 ### 2. **Visual Reference System**
 - ✅ **Reference screenshot library** structure created in `tests/visual-refs/`
@@ -84,12 +85,13 @@ npm run test:e2e:visual
 ## 🎨 Mandatory Workflow (Now Enforced)
 
 ### Before Any Frontend Task is Complete:
-1. **Take Implementation Screenshot** using Puppeteer MCP server
-2. **Compare with HTML Mockup** from `mocks/` folder  
+1. **Take Implementation Screenshots** using Playwright MCP server (multi-viewport and multi-browser)
+2. **Compare with HTML Mockup** from `mocks/` folder
 3. **Run Visual Comparison Tool** `node .claude/scripts/visual-compare.js <component>`
-4. **Validate Responsive Design** (desktop, tablet, mobile)
-5. **Test Interactive States** (hover, focus, active, disabled)
-6. **Iterate Until Perfect Match** - no exceptions
+4. **Validate Responsive Design** (desktop, tablet, mobile with real device profiles)
+5. **Test Interactive States** (hover, focus, active, disabled) programmatically
+6. **Measure Performance Metrics** (Core Web Vitals, accessibility scores)
+7. **Iterate Until Perfect Match** - no exceptions
 
 ### Automatic Validation System:
 - ✅ **MultiEdit Hook** runs enhanced validation automatically

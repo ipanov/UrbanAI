@@ -291,12 +291,13 @@ node .claude/scripts/start-development-servers.js
 **ALL FRONTEND/UI TASKS MUST INCLUDE VISUAL VALIDATION:**
 
 ### Before Marking Any Frontend Task Complete:
-1. **MANDATORY**: Take screenshot of implementation using Puppeteer MCP server
-2. **MANDATORY**: Compare with corresponding HTML mockup in `mocks/` folder  
+1. **MANDATORY**: Take screenshots of implementation using Playwright MCP server (multi-browser, multi-viewport)
+2. **MANDATORY**: Compare with corresponding HTML mockup in `mocks/` folder
 3. **MANDATORY**: Run visual comparison: `node .claude/scripts/visual-compare.js <component-name>`
-4. **MANDATORY**: Validate responsive design (desktop, tablet, mobile viewports)
-5. **MANDATORY**: Test interactive states (hover, focus, active, disabled)
-6. **MANDATORY**: Iterate implementation until pixel-perfect match achieved
+4. **MANDATORY**: Validate responsive design (desktop, tablet, mobile with real device profiles)
+5. **MANDATORY**: Test interactive states (hover, focus, active, disabled) programmatically
+6. **MANDATORY**: Measure Core Web Vitals and accessibility compliance
+7. **MANDATORY**: Iterate implementation until pixel-perfect match achieved
 
 ### Visual Validation Workflow:
 ```bash
@@ -304,8 +305,9 @@ node .claude/scripts/start-development-servers.js
 node .claude/scripts/capture-reference-screenshots.js
 
 # 2. For each component implementation:
-# - Take implementation screenshot with Puppeteer MCP
-# - Compare with HTML mockup reference  
+# - Take implementation screenshots with Playwright MCP (multi-browser, multi-viewport)
+# - Compare with HTML mockup reference
+# - Test interactive states programmatically
 # - Run comparison tool
 node .claude/scripts/visual-compare.js "component-name"
 

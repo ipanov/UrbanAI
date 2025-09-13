@@ -1,0 +1,3589 @@
+{
+  "video_id": "wMSIE8SF0xQ",
+  "video_url": "https://www.youtube.com/watch?v=wMSIE8SF0xQ",
+  "full_transcript": "So, are you ready to check out what we made? Boom. And wow, pretty nice designs out of the box. I think this is actually really cool, too, the way that they did this. If you're sick and tired of your apps looking like they came out of a high school computer class, well then do I have good news for you, cuz I'm about to break down a twostep system that turns basic ideas into fangle level designs. And the best part is that it is predictable. Getting nice UIs used to feel like luck, but with this blueprint, you can force LLM to give you professional designs every single time. An ugly UI will often kill your app before it even launches. And I'd venture to say that it's one of the biggest bottlenecks for vibe coders. That's why the second step that I'm going to show you, I call the design principles engine. And I spent dozens of hours researching the different pieces that go into this. And it's the secret ingredient that makes this process so dope. Because the biggest mistake I see when people prompt an AI to build them something is they'll say something like, \"Make it beautiful.\" That's not going to do you much good. Instead, you need to show the system what you consider to be beautiful and codify that a visual DNA. if you will. That's why our first phase is going to be inspiration mining. Meaning step one is to stop guessing and start mining what professional designs actually look like. Most people prompt blind, hoping for a miracle. So, in the spirit of zigging while other people are zagging, we're just gonna not do that. Instead, we're going to go build a visual mood board and then turn it into a token-based design system. That system is going to act as a non-negotiable guide in later steps. Now, I use a tool called Mobin to do this. Long story short, they compile entire UI workflows and screens from large BTOC consumer mobile and web apps. So, we can come through, we can check out different screens like this. We could say, \"Hey, we want to look at specific UI elements.\" We could say, \"Hey, we want to look at entire flows. For example, an entire onboarding flow and what those look like.\" So, a really great app for you to go through and mine inspiration from. So, I recommend finding a few apps that you really love, things that catch your eye for one reason or another. Now, pro tip, get inspiration from outside of your apps category. So, if you're building a news app, don't just go copy a news app. And so then once you found some that you like, we're just going to go through and we're gonna actually download those screens. So let's say I like Perplexity. We could come through here, click this little icon, and then hit download screen. And so as I'm looking through these, there's a few things that I'm thinking through. primary, secondary colors, strategic color accents, what's the like information presentation, the density of the information they're displaying, and how do they kind of like progressively reveal that information to users? Are there specific onboarding workflows that I'm thinking my app might have? How does the app use spacing? How does it make me feel? Right, just looking at it. Like for example, this one doesn't really make me feel much, but if I look at some of these other apps, they're kind of giving off a very specific vibe for me. So, one that I popped open that I liked is this Phantom Crypto Wallet. And so, what I'm going to do is I'm going to come through here and I'm going to just download a few of these screens. So, I like that one. I do like this splash screen design with like a base background color and a little logo there. I like that. I like some of the use of these gradients. So I'm just going to come through again and I'm just going to download some of these screens. Okay. So I think I downloaded about five of them there. So really the last step now in this first step is that we want to tell Claude or whatever language model that we're using to take this information and analyze it and use what it sees to build out a style guide. But we're going to do that in a very specific way. So here's the first prompt that we're going to use in order to make that happen. So, we're telling it that it's an expert UI designer. And the thing that's interesting about this is we're going to tell it that before it responds, we want it to wrap its thought process in tags. Okay? So, I don't just want the output, I actually want its kind of like metaanalysis of what it's thinking about before it goes in and does this. And the reason I do that is so that I get this description of what it sees the app as. And we're going to see exactly what I mean by that in a second. So, we give it that prompt and then we have an example of what one of these outputs actually looks like. Okay. And then important, make sure you attach those images you just downloaded. So, you're going to copy that entire thing. We're going to pop over into Claude. And then we can see I already populated this in there. So, I downloaded a few of those images. And then I just plopped in this prompt, exact same prompt. And then I give it an output format. And I say you can add or subtract from this if you want to. Now what this is doing is it's again it's codifying this style guide. What does it mean to design something in the style of our app? So we go through primary colors, secondary colors, accents, functional colors like successes and errors and warnings and all of that. Background colors, typography, right? Font weights, the text style, body text, special text, different component styling for shared components, icons, how spacing is going to be used, all of that type of stuff. And then again, we wrap it in this pondering tag. And you can see why it did that because it's providing a really in-depth analysis outside of just giving me the the tokens for our system. It's going to actually tell us what it thought about the app. So, for example, app uses sophisticated dark theme, which is very common in blah blah blah blah blah. Strong emphasis on gradients and modern visual effects. Typography is clear and modern. UX philosophy. It feels like it's designed for both crypto newcomers and power users. The interface is clean enough not to intimidate, but has enough depth and information density for experienced traders. The dark theme with bright accents creates a sense of sophistication and it being cutting edge, right? And so kind of taking this and then we have it build out a design system based on what it saw. Okay, so it's basically it's just giving a design system for that specific app. Now the next thing that we are going to do is obviously what we want to do is we want to take our idea for an app and now fuse it with this. Say hey take everything that you did there. This is going to serve as inspiration for our app. And so the way we do that is we have this next prompt called an MVP generator. Now if you've watched my other videos, you've seen this prompt before because we use it to build our initial ideas out for our app. And so we're just going to copy this prompt. All of these prompts, by the way, are available for free inside of the school group link below the video. We're going to copy this prompt. We're going to pop back over into Claude and we're actually going to create a new chat. And so, we can see where I already pasted this in, right? So, it's the exact same prompt. And then all we're doing is we're filling in the idea. Okay? What's our primary idea for this app? And then what is the MVP for this app? And so for this example, I want to create an app that a user can put on their phone to lock themselves out of specific apps, mostly social media apps like Instagram. The intention is for it to be for productivity. The thing that's going to make it kind of unique is that in order to unlock the locked apps, they're going to have to basically do self-development work. So if you're saying, \"Hey, I want to be locked out of Instagram between 9 and 5, 9:00 a.m. and 5:00 p.m. and now it's 3 p.m. and I'm trying to get into it. I have to go through something educational is my first idea or watch a sponsored video. I'm thinking like that's a way you could monetize it. But I really like this component where they have to actually do something valuable for themselves. And then we're saying what is the basic idea of the MVP? So they sign up, they select the apps that they want to ban. Any attempt to open that app locks them out. If they want to access that app, they need to go into the app and specifically say, \"Hey, I want to unfocus right now.\" They can choose the amount of time that they want to allow themselves access and then in order to unlock it again they have to do something additional. I have a few different thoughts on how that could be. Again, they have to solve some sort of puzzle. They have to watch like sponsored videos or maybe they just have to pay. It's like, okay, you really want to Instagram that bad? You got to pay five bucks. So, a few different things that I'm thinking. And so, this is basically going to output us a very very very basic kind of like pitch of this app. So we get our elevator pitch, the main problem statement, the primary audience, so young professionals struggling with productivity. Secondarily, students, maybe people like in college that are trying to study for tests. Then it said tertiary parents wanting to model better digital habits for their children. I don't really I'm going to kind of cut that one out. That's not what I'm thinking of here. And then uh the USP, which is this like hey, you have to actually do something value adding if you want to get back in outside of the window you had specified. And then it's going to give us like some core features, right? So you got to be able to block, you got to be able to unlock, account settings, few other different things. So we're going to go back in to that prompt we had. Okay. And now we can see when we scroll down, we have where I had pasted this in. So I basically copied that entire output over and I just updated a few pieces of it. You can see that like I cut off some of the pieces at the end. You could also probably cut out these non-functional requirements. They don't need to be in here. I didn't cut that out for this, but you probably should do that. And then the last piece. So, we paste all of this in. Important. Update it with your actual app info. And then we have this last little I call it a fuser or fuser prompt that we're going to put in there. So, fuse your pondering analysis with the app idea below. And then wrap your thoughts in pontificating tags. After you're done, output an updated style guide based on the app below. And then the app below is just this pasted in. Okay. And so let's see what we're getting here, right? So proivi productivity app fundamentally different from that wallet app but equally sophisticated in its approach to user psychology where phantom needs to feel cutting edge and cryptonative focus lock needs to embody focus, mindfulness, and intentional design. The core challenge is creating visual language that reinforces that app's purpose, calming and focused, not overstimulating. Second, authoritative but not oppressive. We don't want people to feel like we're criticizing them for trying to go into that app. we're trying to feel supportive for them should be reward oriented where possible. So we should be celebrating the time spent not in that app and then mindfulness right so kind of the whole intent behind this is being more mindful with time and so that should be part of the core psychology and design of the app. So then again it starts to get into the color psychology, right? So colors should promote focus and calm and thoughtfulness. How should the typography be? How should interaction with the app be when it comes down to things like animations, for example? Visual hierarchy of how information is presented. And then if I was to target young professionals and students, how does the app need to feel, right? Modern, aspirational, something that it's like cool for them to have on their phone, doesn't feel dated. So it goes through all of that and then it builds us out a design system. So primary color, secondary accents, right? It's following that exact same thing that we had earlier. Okay? And then it even goes into brainstorming specific things like, hey, if we're going to visualize data, these are some components you should think about. Things like that. So in less than 5 minutes, we've got a really solid visual DNA for this app. And what this really means is now we have a very concrete professional framework of design that we can keep our app accountable to. And this is the first major milestone in eliminating guesswork, eliminating the unpredictability of those outputs that we get. Now, step two, we want to fuse that visual DNA with our actual app. Now, one of the hidden secrets here that I found is that you tend to get much better designs out of these systems when you don't ask it to also build the functionality behind the feature at the same time. When you have the language model fully focused on the design aspect of the work it's performing, that means I don't want it to actually build a functional graph that's pulling in real data. I want it to mock up what the design of a graph, for example, might look like. This is how you get predictably beautiful designs each time that actually have detail in them. A big drawback of traditional vibe coding hands-off tools is that they tend to forget details. They tend to miss out on details. are too focused on architecting something that actually works on like a oneshot basis that there's not a lot of detail in the designs that you get out of them. And so the theory behind this is if well if we focused all that language model processing power not on architecting something that is functionally working but rather something that looks really nice looks a specific way using all of that token bandwidth to actually go into solving this design problem that will get better outputs because of it. So let's look at how this process works. So here's the actual prompt that we're going to be using. So I'm going to go through the template and then I'm going to go back and show the filledin version of the template. So we start with the goal filled in. Okay, so we're just telling it like, hey, this is a UI exercise. We give it some different guidelines. So what do we want to generally accomplish with the aesthetics of this app? I like to break down some practicalities. So specifically, what I'm saying is anytime you're using icons, I want you to use this library. We're using Tailwind for our CSS and our styling. And then we're going to be simulating iPhone frames. So I want this to actually look like different app screens mocked up. So, I'm having it actually simulate each of these screens in an iPhone screen, and we're going to see what that looks like in a second. If there are any very specific app guidelines that you think it needs to know that haven't been included, you can put those in there. Then, we're going to give an overview of our app our app. This is where we're actually just going to paste in that MVP generator that we had done. And then this last section, we're going to go through and we're going to tell it what screens we want made. Okay? And so, we can look at what that looks like filled in. So, we can see this is all the same. This is all the same. Okay, we added this little section in. Hey, remember it's a design exercise. We add in our style guide. Okay, so that style guide that we pulled out again, this was the last output that we got. I just copied it. I literally just copied the entire output and pasted it in here saying this is our design system. And then we have our app overview, right? The elevator pitch all the way down. And again, I cut out some of the things that I didn't want in there. So, for example, I didn't want that like tertiary audience of, hey, it's for parents to lock their kids out of apps. So, I removed that. So, I just dialed this in a tiny bit based on what I wanted to see. So, here's our task. We want you to follow the guidelines above to ensure correctness. Okay? So, follow everything above. And then your output should be a bunch of screens basically going horizontally. And we'll see what that looks like in one second. Now, here's the thing that's cool. For each problem, we wanted to brainstorm three different solutions to that problem. Three different solutions. So, if the problem was the user onboarding, how to do the user onboarding properly and allow someone to onboard and select the apps they want to block, show me three different unique solutions to solving that specific problem. Don't just build the first one. I want to see different takes on that problem solution. Each angle should be unique, but it should still conform to the overall UX UI parameters of the app. And then this is where we're going to go through and we're going to tell them what section we want them brainstorming. And so we're going to look at this in one second. But for example, when a user has run out of free emergency unlocks, the only way they can unlock is to withdraw money from their account. So, I'm thinking like, okay, you start off the app where you preload like 25 bucks in there and every time you want to unlock the app during the time that you said you didn't want to, you have to pay five bucks. I don't know, sounds legit to me. What would that look like, though? Right? There's a lot of different ways that UI could come to be. And so, let's look at what that would be for the user. Let's get some different takes on that. Now, what do we actually do with this? Now, the way that I like to do this kind of design exercise is that I like to use a vanilla create react app, right? Vanilla create react app. And then I just tell it to use Tailwind and React Lucid for the icons. So, I will literally come in here and say that and say create me a basic create react app using Tailwind and React Lucid. I'm going to hit enter on that and I'm going to let it go and just install all of this into the project and configure in the project. Now, I've already done that, which is why you see all of this here, but this is the first step. Now, after we've done that, all we're going to do is we're going to go, we're going to copy that entire prompt that we had. We're going to pop back into cursor, and we are just going to paste that in there, hit enter, and we're going to let it fly. Now, while that was off screen, I went through and I actually did this exercise for a few different features. So, we're going to see a few different rows pop up on the screen. So, I did some analytic stuff. I did some onboarding stuff like emergency unlock screens. But the way that I have this prompt configured is that every screen, right? So think of like every iPhone screenshot of our app goes into its own file. That way if we need to edit that one specifically, it's really well scoped and we don't get these huge files with these huge context windows when we're trying to update things later. So are you ready to check out what we made? Boom. And wow, pretty nice designs out of the box. So, we have like a basic splash screen here. What an upgrade to the premium version might do with a nice little pulsing icon there. An example of a emergency unlock screen. Here we have an example of like what a focusing schedule might actually look like. Now, obviously, this would be on a phone, so this scroll bar wouldn't be here, but a nice little UI for what focus sessions would look like and apps that we're attempting to block during that focus time. So, maybe like we have a 9 to2 block, which is active every day. Hey, there's two hours left on it. These are this is what we're blocking. And if I were to try to hit end session, this is what would trigger like one of those emergency unlocks, for example. So, that's that's pretty cool. your progress. I'm not like a huge hugest fan of what they did up here, but again, I think this is because it's rendering, you know, a mobile phone basically in the browser. So, this styling would be a little bit more compact. So, if that's the case, kind of like how it's doing like the daily progress, the streaks has different achievements in there. Pretty cool. Here's what it would look like if we wanted to configure blocks. I think this looks really nice, actually. All the different ways we can do this. Starting a focus session. Um, really pretty nice. And then we get down to that section where I was telling you where we were brainstorming different approaches to the app, right? So, for example, this one was, hey, how do we demonstrate the positive impact we're having on users in in terms of like the time that they're saving? What's the benefit of the app? And it brainstormed three different ways that we could show that to the user, right? So, it could be what does their growth journey look like? Longest focus streak, 47 days, how many hours they blocked. I I thought this was pretty cool. how many books worth of time that is. Okay. Then they have this little chart that's not rendering right now, but we would have a chart there telling them like if they're improving and then what their milestones actually look like. So first step, week one, you know, habit former. So this is like a pretty cool idea where it's like a timeline of your personal journey. Then we have this community stat focused one which is pretty cool. You could gify it and make it like a leaderboard type thing to see who's best at blocking themselves out of apps. Um, I probably won't go with this one, but I do like uh how it thought about doing that and I do like how it's displaying these achievements like this. I I like the styling of that one. And then I thought this is cool. It like kind of can programmatically create challenges for the user. And then we have time reclaimed. I really like this one too. Like the impact this is actually having on your life, how many hours per day on average you are saving and how many full work days over the course of like a year that equates to. It's kind of crazy. And then it has these little like analogs of like it's this many workout sessions, it's this much quality time with friends, it's this much time you could have spent learning. Um I I really like this one actually. So this was an example of showing the app's benefits to people. And then we have three different approaches to that emergency unlock payw wall. This is the one we actually started with. So this was the first one and then I went through and was experimenting and adding in all those other sections. And so these are three different ways that we could handle that $5 unlock. Okay. And now this is a big reason why we do that like, hey, give me three different angles because we're going to see how meaningfully different these things actually are from one another. So the first one is like a mindfulnessbased payw wall. And so we say, hey, you've already used your free emergency unlock for this month. Let's pause and reflect before we open up this app. Why do you want to unlock it right now? Right? I'm just bored. Okay. Choose a question to reflect on for 30 seconds. How will I feel? Right? A lot of us when we're done doom scrolling we feel like right so maybe that's an important thing to reflect on right and then a gentle reminder unlocking this now means I wouldn't say investing in this context from like a copyrightiting perspective u because it's not an investment right an investment is something that's positively focused um so I would say right now means spending $5 in this moment is this the best use of your focus fund I like how they called it a focus fund um remember that every unlock is a choice between immediate gratification and your long-term goals so So, I do kind of like this one. And then it gives you some alternate ideas and then it has a little style for choosing what you want to do. But then we can see this one's a lot harsher, right? This one's a lot more focused on like, hey, you're kind of screwing yourself financially. Look at the total cost of everything you're doing. Like, oh my god, is this really worth it to you? Now, I don't like this one because I think it could accidentally deter someone from even wanting to use the app, right? Where they see this more as like, oh my god, this app's costing me this much. It's going to cost me this much every other day, right? as opposed to this being something that's focused on them, this is now focused on something that could be seen as it's just taking from them unnecessarily. And then we have this challenge mode, which I really like, which is like how can we turn this and reframe it into a like a focus, right? And so maybe there's like community challenges. And so it's like, hey, instead of paying right now, how about we double or nothing? Um, I think this is actually really cool, too, the way that they did this. Um, so overall, pretty happy with a lot of these screens. I I did like this premium upgrade one. I might do something with this one down here, but the top piece of it I really liked. I really like this block configuration. I might go and update these two screens to match this style and design more closely. I like how it brainstormed these three different approaches to app benefits. I like how it did the different payw walls. And so basically what I would do is I would go and repeat this process iteratively for all of the major features and screens of my app. So stunning designs and simply because we gave it a professional UI to model off of. We had it describe what that UI actually means qualitatively and then we had it build it into a concrete tokenbased design system. And when you take those two worlds together and fuse it with our actual app inspiration, we get a pretty awesome output. Again, professional inspiration, clear principles, and focused effort behind the UI design. That is the power of this visual fusion system. So, the biggest takeaway today is this. Stop asking the language models to be creative geniuses. Instead, give it professional inspiration and codify that inspiration into something it can follow as a process. Do that and you will get prolevel results every time. That's why I firmly hold the position that we will always need humans. We will always need professional designers. We will always need professional engineers. Creativity and productive achievement is what makes humanity great. So let's learn to leverage that, not seek to replace it mindlessly. So, now that you can design a stunning UI, it's time to turn it into an actual full stack application. To do that, check out the video linked at the end of this video where I show how this fits into an overarching eightstep vibe coding process that has a complete front end and backend. And before I forget, I would really love to see what designs and what apps you guys are building. So, feel free to drop those below in the comments. Drop a link to your favorite Mobin app that you're going to try to emulate or drop a link to an app that you've actually built using some of these systems that I show you guys in the video. I would love to see that stuff. But that is it for this video. I will catch you in the next one. [Music]",
+  "structured_transcript": [
+    {
+      "text": "So, are you ready to check out what we",
+      "start": 0.24,
+      "duration": 7.2
+    },
+    {
+      "text": "made? Boom. And wow, pretty nice designs",
+      "start": 3.52,
+      "duration": 7.039
+    },
+    {
+      "text": "out of the box. I think this is actually",
+      "start": 7.44,
+      "duration": 4.64
+    },
+    {
+      "text": "really cool, too, the way that they did",
+      "start": 10.559,
+      "duration": 3.681
+    },
+    {
+      "text": "this. If you're sick and tired of your",
+      "start": 12.08,
+      "duration": 4.32
+    },
+    {
+      "text": "apps looking like they came out of a",
+      "start": 14.24,
+      "duration": 4.64
+    },
+    {
+      "text": "high school computer class, well then do",
+      "start": 16.4,
+      "duration": 5.68
+    },
+    {
+      "text": "I have good news for you, cuz I'm about",
+      "start": 18.88,
+      "duration": 6.08
+    },
+    {
+      "text": "to break down a twostep system that",
+      "start": 22.08,
+      "duration": 7.119
+    },
+    {
+      "text": "turns basic ideas into fangle level",
+      "start": 24.96,
+      "duration": 7.599
+    },
+    {
+      "text": "designs. And the best part is that it is",
+      "start": 29.199,
+      "duration": 6.481
+    },
+    {
+      "text": "predictable. Getting nice UIs used to",
+      "start": 32.559,
+      "duration": 6.081
+    },
+    {
+      "text": "feel like luck, but with this blueprint,",
+      "start": 35.68,
+      "duration": 5.28
+    },
+    {
+      "text": "you can force LLM to give you",
+      "start": 38.64,
+      "duration": 6.239
+    },
+    {
+      "text": "professional designs every single time.",
+      "start": 40.96,
+      "duration": 6.96
+    },
+    {
+      "text": "An ugly UI will often kill your app",
+      "start": 44.879,
+      "duration": 5.281
+    },
+    {
+      "text": "before it even launches. And I'd venture",
+      "start": 47.92,
+      "duration": 4.479
+    },
+    {
+      "text": "to say that it's one of the biggest",
+      "start": 50.16,
+      "duration": 4.879
+    },
+    {
+      "text": "bottlenecks for vibe coders. That's why",
+      "start": 52.399,
+      "duration": 4.16
+    },
+    {
+      "text": "the second step that I'm going to show",
+      "start": 55.039,
+      "duration": 4.241
+    },
+    {
+      "text": "you, I call the design principles",
+      "start": 56.559,
+      "duration": 6.16
+    },
+    {
+      "text": "engine. And I spent dozens of hours",
+      "start": 59.28,
+      "duration": 6.159
+    },
+    {
+      "text": "researching the different pieces that go",
+      "start": 62.719,
+      "duration": 4.641
+    },
+    {
+      "text": "into this. And it's the secret",
+      "start": 65.439,
+      "duration": 4.481
+    },
+    {
+      "text": "ingredient that makes this process so",
+      "start": 67.36,
+      "duration": 5.119
+    },
+    {
+      "text": "dope. Because the biggest mistake I see",
+      "start": 69.92,
+      "duration": 4.879
+    },
+    {
+      "text": "when people prompt an AI to build them",
+      "start": 72.479,
+      "duration": 4.241
+    },
+    {
+      "text": "something is they'll say something like,",
+      "start": 74.799,
+      "duration": 4.64
+    },
+    {
+      "text": "\"Make it beautiful.\" That's not going to",
+      "start": 76.72,
+      "duration": 5.439
+    },
+    {
+      "text": "do you much good. Instead, you need to",
+      "start": 79.439,
+      "duration": 5.841
+    },
+    {
+      "text": "show the system what you consider to be",
+      "start": 82.159,
+      "duration": 7.361
+    },
+    {
+      "text": "beautiful and codify that a visual DNA.",
+      "start": 85.28,
+      "duration": 6.96
+    },
+    {
+      "text": "if you will. That's why our first phase",
+      "start": 89.52,
+      "duration": 5.52
+    },
+    {
+      "text": "is going to be inspiration mining.",
+      "start": 92.24,
+      "duration": 5.44
+    },
+    {
+      "text": "Meaning step one is to stop guessing and",
+      "start": 95.04,
+      "duration": 6.16
+    },
+    {
+      "text": "start mining what professional designs",
+      "start": 97.68,
+      "duration": 6.799
+    },
+    {
+      "text": "actually look like. Most people prompt",
+      "start": 101.2,
+      "duration": 6.16
+    },
+    {
+      "text": "blind, hoping for a miracle. So, in the",
+      "start": 104.479,
+      "duration": 5.761
+    },
+    {
+      "text": "spirit of zigging while other people are",
+      "start": 107.36,
+      "duration": 5.439
+    },
+    {
+      "text": "zagging, we're just gonna not do that.",
+      "start": 110.24,
+      "duration": 4.0
+    },
+    {
+      "text": "Instead, we're going to go build a",
+      "start": 112.799,
+      "duration": 3.6
+    },
+    {
+      "text": "visual mood board and then turn it into",
+      "start": 114.24,
+      "duration": 5.76
+    },
+    {
+      "text": "a token-based design system. That system",
+      "start": 116.399,
+      "duration": 6.4
+    },
+    {
+      "text": "is going to act as a non-negotiable",
+      "start": 120.0,
+      "duration": 5.68
+    },
+    {
+      "text": "guide in later steps. Now, I use a tool",
+      "start": 122.799,
+      "duration": 4.96
+    },
+    {
+      "text": "called Mobin to do this. Long story",
+      "start": 125.68,
+      "duration": 5.44
+    },
+    {
+      "text": "short, they compile entire UI workflows",
+      "start": 127.759,
+      "duration": 6.001
+    },
+    {
+      "text": "and screens from large BTOC consumer",
+      "start": 131.12,
+      "duration": 5.28
+    },
+    {
+      "text": "mobile and web apps. So, we can come",
+      "start": 133.76,
+      "duration": 3.839
+    },
+    {
+      "text": "through, we can check out different",
+      "start": 136.4,
+      "duration": 3.04
+    },
+    {
+      "text": "screens like this. We could say, \"Hey,",
+      "start": 137.599,
+      "duration": 3.28
+    },
+    {
+      "text": "we want to look at specific UI",
+      "start": 139.44,
+      "duration": 3.04
+    },
+    {
+      "text": "elements.\" We could say, \"Hey, we want",
+      "start": 140.879,
+      "duration": 3.761
+    },
+    {
+      "text": "to look at entire flows. For example, an",
+      "start": 142.48,
+      "duration": 4.72
+    },
+    {
+      "text": "entire onboarding flow and what those",
+      "start": 144.64,
+      "duration": 5.2
+    },
+    {
+      "text": "look like.\" So, a really great app for",
+      "start": 147.2,
+      "duration": 4.96
+    },
+    {
+      "text": "you to go through and mine inspiration",
+      "start": 149.84,
+      "duration": 4.56
+    },
+    {
+      "text": "from. So, I recommend finding a few apps",
+      "start": 152.16,
+      "duration": 4.0
+    },
+    {
+      "text": "that you really love, things that catch",
+      "start": 154.4,
+      "duration": 4.8
+    },
+    {
+      "text": "your eye for one reason or another. Now,",
+      "start": 156.16,
+      "duration": 6.32
+    },
+    {
+      "text": "pro tip, get inspiration from outside of",
+      "start": 159.2,
+      "duration": 5.44
+    },
+    {
+      "text": "your apps category. So, if you're",
+      "start": 162.48,
+      "duration": 3.839
+    },
+    {
+      "text": "building a news app, don't just go copy",
+      "start": 164.64,
+      "duration": 3.84
+    },
+    {
+      "text": "a news app. And so then once you found",
+      "start": 166.319,
+      "duration": 3.521
+    },
+    {
+      "text": "some that you like, we're just going to",
+      "start": 168.48,
+      "duration": 3.44
+    },
+    {
+      "text": "go through and we're gonna actually",
+      "start": 169.84,
+      "duration": 3.6
+    },
+    {
+      "text": "download those screens. So let's say I",
+      "start": 171.92,
+      "duration": 3.599
+    },
+    {
+      "text": "like Perplexity. We could come through",
+      "start": 173.44,
+      "duration": 5.519
+    },
+    {
+      "text": "here, click this little icon, and then",
+      "start": 175.519,
+      "duration": 5.921
+    },
+    {
+      "text": "hit download screen. And so as I'm",
+      "start": 178.959,
+      "duration": 3.681
+    },
+    {
+      "text": "looking through these, there's a few",
+      "start": 181.44,
+      "duration": 2.799
+    },
+    {
+      "text": "things that I'm thinking through.",
+      "start": 182.64,
+      "duration": 4.239
+    },
+    {
+      "text": "primary, secondary colors, strategic",
+      "start": 184.239,
+      "duration": 4.961
+    },
+    {
+      "text": "color accents, what's the like",
+      "start": 186.879,
+      "duration": 4.321
+    },
+    {
+      "text": "information presentation, the density of",
+      "start": 189.2,
+      "duration": 4.399
+    },
+    {
+      "text": "the information they're displaying, and",
+      "start": 191.2,
+      "duration": 5.039
+    },
+    {
+      "text": "how do they kind of like progressively",
+      "start": 193.599,
+      "duration": 4.881
+    },
+    {
+      "text": "reveal that information to users? Are",
+      "start": 196.239,
+      "duration": 4.161
+    },
+    {
+      "text": "there specific onboarding workflows that",
+      "start": 198.48,
+      "duration": 5.2
+    },
+    {
+      "text": "I'm thinking my app might have? How does",
+      "start": 200.4,
+      "duration": 6.479
+    },
+    {
+      "text": "the app use spacing? How does it make me",
+      "start": 203.68,
+      "duration": 4.8
+    },
+    {
+      "text": "feel? Right, just looking at it. Like",
+      "start": 206.879,
+      "duration": 2.961
+    },
+    {
+      "text": "for example, this one doesn't really",
+      "start": 208.48,
+      "duration": 3.36
+    },
+    {
+      "text": "make me feel much, but if I look at some",
+      "start": 209.84,
+      "duration": 3.52
+    },
+    {
+      "text": "of these other apps, they're kind of",
+      "start": 211.84,
+      "duration": 4.56
+    },
+    {
+      "text": "giving off a very specific vibe for me.",
+      "start": 213.36,
+      "duration": 4.879
+    },
+    {
+      "text": "So, one that I popped open that I liked",
+      "start": 216.4,
+      "duration": 5.28
+    },
+    {
+      "text": "is this Phantom Crypto Wallet. And so,",
+      "start": 218.239,
+      "duration": 4.401
+    },
+    {
+      "text": "what I'm going to do is I'm going to",
+      "start": 221.68,
+      "duration": 2.16
+    },
+    {
+      "text": "come through here and I'm going to just",
+      "start": 222.64,
+      "duration": 2.959
+    },
+    {
+      "text": "download a few of these screens. So, I",
+      "start": 223.84,
+      "duration": 3.679
+    },
+    {
+      "text": "like that one. I do like this splash",
+      "start": 225.599,
+      "duration": 4.0
+    },
+    {
+      "text": "screen design with like a base",
+      "start": 227.519,
+      "duration": 4.321
+    },
+    {
+      "text": "background color and a little logo",
+      "start": 229.599,
+      "duration": 4.72
+    },
+    {
+      "text": "there. I like that. I like some of the",
+      "start": 231.84,
+      "duration": 3.92
+    },
+    {
+      "text": "use of these gradients. So I'm just",
+      "start": 234.319,
+      "duration": 3.12
+    },
+    {
+      "text": "going to come through again and I'm just",
+      "start": 235.76,
+      "duration": 4.399
+    },
+    {
+      "text": "going to download some of these screens.",
+      "start": 237.439,
+      "duration": 4.241
+    },
+    {
+      "text": "Okay. So I think I downloaded about five",
+      "start": 240.159,
+      "duration": 3.201
+    },
+    {
+      "text": "of them there. So really the last step",
+      "start": 241.68,
+      "duration": 3.759
+    },
+    {
+      "text": "now in this first step is that we want",
+      "start": 243.36,
+      "duration": 3.92
+    },
+    {
+      "text": "to tell Claude or whatever language",
+      "start": 245.439,
+      "duration": 4.0
+    },
+    {
+      "text": "model that we're using to take this",
+      "start": 247.28,
+      "duration": 5.76
+    },
+    {
+      "text": "information and analyze it and use what",
+      "start": 249.439,
+      "duration": 7.121
+    },
+    {
+      "text": "it sees to build out a style guide. But",
+      "start": 253.04,
+      "duration": 5.199
+    },
+    {
+      "text": "we're going to do that in a very",
+      "start": 256.56,
+      "duration": 3.919
+    },
+    {
+      "text": "specific way. So here's the first prompt",
+      "start": 258.239,
+      "duration": 3.68
+    },
+    {
+      "text": "that we're going to use in order to make",
+      "start": 260.479,
+      "duration": 3.361
+    },
+    {
+      "text": "that happen. So, we're telling it that",
+      "start": 261.919,
+      "duration": 3.921
+    },
+    {
+      "text": "it's an expert UI designer. And the",
+      "start": 263.84,
+      "duration": 3.28
+    },
+    {
+      "text": "thing that's interesting about this is",
+      "start": 265.84,
+      "duration": 2.72
+    },
+    {
+      "text": "we're going to tell it that before it",
+      "start": 267.12,
+      "duration": 4.079
+    },
+    {
+      "text": "responds, we want it to wrap its thought",
+      "start": 268.56,
+      "duration": 5.68
+    },
+    {
+      "text": "process in tags. Okay? So, I don't just",
+      "start": 271.199,
+      "duration": 5.28
+    },
+    {
+      "text": "want the output, I actually want its",
+      "start": 274.24,
+      "duration": 4.56
+    },
+    {
+      "text": "kind of like metaanalysis",
+      "start": 276.479,
+      "duration": 4.961
+    },
+    {
+      "text": "of what it's thinking about before it",
+      "start": 278.8,
+      "duration": 4.48
+    },
+    {
+      "text": "goes in and does this. And the reason I",
+      "start": 281.44,
+      "duration": 4.16
+    },
+    {
+      "text": "do that is so that I get this",
+      "start": 283.28,
+      "duration": 5.68
+    },
+    {
+      "text": "description of what it sees the app as.",
+      "start": 285.6,
+      "duration": 4.72
+    },
+    {
+      "text": "And we're going to see exactly what I",
+      "start": 288.96,
+      "duration": 3.28
+    },
+    {
+      "text": "mean by that in a second. So, we give it",
+      "start": 290.32,
+      "duration": 3.84
+    },
+    {
+      "text": "that prompt and then we have an example",
+      "start": 292.24,
+      "duration": 4.08
+    },
+    {
+      "text": "of what one of these outputs actually",
+      "start": 294.16,
+      "duration": 3.92
+    },
+    {
+      "text": "looks like. Okay. And then important,",
+      "start": 296.32,
+      "duration": 3.36
+    },
+    {
+      "text": "make sure you attach those images you",
+      "start": 298.08,
+      "duration": 2.559
+    },
+    {
+      "text": "just downloaded. So, you're going to",
+      "start": 299.68,
+      "duration": 2.4
+    },
+    {
+      "text": "copy that entire thing. We're going to",
+      "start": 300.639,
+      "duration": 3.761
+    },
+    {
+      "text": "pop over into Claude. And then we can",
+      "start": 302.08,
+      "duration": 4.0
+    },
+    {
+      "text": "see I already populated this in there.",
+      "start": 304.4,
+      "duration": 3.76
+    },
+    {
+      "text": "So, I downloaded a few of those images.",
+      "start": 306.08,
+      "duration": 5.04
+    },
+    {
+      "text": "And then I just plopped in this prompt,",
+      "start": 308.16,
+      "duration": 4.56
+    },
+    {
+      "text": "exact same prompt. And then I give it an",
+      "start": 311.12,
+      "duration": 3.919
+    },
+    {
+      "text": "output format. And I say you can add or",
+      "start": 312.72,
+      "duration": 4.479
+    },
+    {
+      "text": "subtract from this if you want to. Now",
+      "start": 315.039,
+      "duration": 4.401
+    },
+    {
+      "text": "what this is doing is it's again it's",
+      "start": 317.199,
+      "duration": 4.801
+    },
+    {
+      "text": "codifying this style guide. What does it",
+      "start": 319.44,
+      "duration": 5.28
+    },
+    {
+      "text": "mean to design something in the style of",
+      "start": 322.0,
+      "duration": 5.12
+    },
+    {
+      "text": "our app? So we go through primary",
+      "start": 324.72,
+      "duration": 5.12
+    },
+    {
+      "text": "colors, secondary colors, accents,",
+      "start": 327.12,
+      "duration": 4.48
+    },
+    {
+      "text": "functional colors like successes and",
+      "start": 329.84,
+      "duration": 3.52
+    },
+    {
+      "text": "errors and warnings and all of that.",
+      "start": 331.6,
+      "duration": 4.96
+    },
+    {
+      "text": "Background colors, typography, right?",
+      "start": 333.36,
+      "duration": 6.24
+    },
+    {
+      "text": "Font weights, the text style, body text,",
+      "start": 336.56,
+      "duration": 4.479
+    },
+    {
+      "text": "special text, different component",
+      "start": 339.6,
+      "duration": 3.599
+    },
+    {
+      "text": "styling for shared components, icons,",
+      "start": 341.039,
+      "duration": 3.921
+    },
+    {
+      "text": "how spacing is going to be used, all of",
+      "start": 343.199,
+      "duration": 3.84
+    },
+    {
+      "text": "that type of stuff. And then again, we",
+      "start": 344.96,
+      "duration": 3.519
+    },
+    {
+      "text": "wrap it in this pondering tag. And you",
+      "start": 347.039,
+      "duration": 3.201
+    },
+    {
+      "text": "can see why it did that because it's",
+      "start": 348.479,
+      "duration": 4.881
+    },
+    {
+      "text": "providing a really in-depth analysis",
+      "start": 350.24,
+      "duration": 5.84
+    },
+    {
+      "text": "outside of just giving me the the tokens",
+      "start": 353.36,
+      "duration": 5.279
+    },
+    {
+      "text": "for our system. It's going to actually",
+      "start": 356.08,
+      "duration": 4.399
+    },
+    {
+      "text": "tell us what it thought about the app.",
+      "start": 358.639,
+      "duration": 4.241
+    },
+    {
+      "text": "So, for example, app uses sophisticated",
+      "start": 360.479,
+      "duration": 5.601
+    },
+    {
+      "text": "dark theme, which is very common in blah",
+      "start": 362.88,
+      "duration": 5.2
+    },
+    {
+      "text": "blah blah blah blah. Strong emphasis on",
+      "start": 366.08,
+      "duration": 4.72
+    },
+    {
+      "text": "gradients and modern visual effects.",
+      "start": 368.08,
+      "duration": 5.28
+    },
+    {
+      "text": "Typography is clear and modern. UX",
+      "start": 370.8,
+      "duration": 4.72
+    },
+    {
+      "text": "philosophy. It feels like it's designed",
+      "start": 373.36,
+      "duration": 3.839
+    },
+    {
+      "text": "for both crypto newcomers and power",
+      "start": 375.52,
+      "duration": 3.92
+    },
+    {
+      "text": "users. The interface is clean enough not",
+      "start": 377.199,
+      "duration": 4.161
+    },
+    {
+      "text": "to intimidate, but has enough depth and",
+      "start": 379.44,
+      "duration": 3.759
+    },
+    {
+      "text": "information density for experienced",
+      "start": 381.36,
+      "duration": 4.399
+    },
+    {
+      "text": "traders. The dark theme with bright",
+      "start": 383.199,
+      "duration": 4.641
+    },
+    {
+      "text": "accents creates a sense of",
+      "start": 385.759,
+      "duration": 3.761
+    },
+    {
+      "text": "sophistication and it being cutting",
+      "start": 387.84,
+      "duration": 4.16
+    },
+    {
+      "text": "edge, right? And so kind of taking this",
+      "start": 389.52,
+      "duration": 5.6
+    },
+    {
+      "text": "and then we have it build out a design",
+      "start": 392.0,
+      "duration": 6.0
+    },
+    {
+      "text": "system based on what it saw. Okay, so",
+      "start": 395.12,
+      "duration": 4.56
+    },
+    {
+      "text": "it's basically it's just giving a design",
+      "start": 398.0,
+      "duration": 4.56
+    },
+    {
+      "text": "system for that specific app. Now the",
+      "start": 399.68,
+      "duration": 4.959
+    },
+    {
+      "text": "next thing that we are going to do is",
+      "start": 402.56,
+      "duration": 3.28
+    },
+    {
+      "text": "obviously what we want to do is we want",
+      "start": 404.639,
+      "duration": 3.761
+    },
+    {
+      "text": "to take our idea for an app and now fuse",
+      "start": 405.84,
+      "duration": 4.639
+    },
+    {
+      "text": "it with this. Say hey take everything",
+      "start": 408.4,
+      "duration": 3.84
+    },
+    {
+      "text": "that you did there. This is going to",
+      "start": 410.479,
+      "duration": 5.44
+    },
+    {
+      "text": "serve as inspiration for our app. And so",
+      "start": 412.24,
+      "duration": 6.399
+    },
+    {
+      "text": "the way we do that is we have this next",
+      "start": 415.919,
+      "duration": 4.881
+    },
+    {
+      "text": "prompt called an MVP generator. Now if",
+      "start": 418.639,
+      "duration": 3.441
+    },
+    {
+      "text": "you've watched my other videos, you've",
+      "start": 420.8,
+      "duration": 3.519
+    },
+    {
+      "text": "seen this prompt before because we use",
+      "start": 422.08,
+      "duration": 4.72
+    },
+    {
+      "text": "it to build our initial ideas out for",
+      "start": 424.319,
+      "duration": 4.72
+    },
+    {
+      "text": "our app. And so we're just going to copy",
+      "start": 426.8,
+      "duration": 4.32
+    },
+    {
+      "text": "this prompt. All of these prompts, by",
+      "start": 429.039,
+      "duration": 4.481
+    },
+    {
+      "text": "the way, are available for free inside",
+      "start": 431.12,
+      "duration": 4.079
+    },
+    {
+      "text": "of the school group link below the",
+      "start": 433.52,
+      "duration": 4.079
+    },
+    {
+      "text": "video. We're going to copy this prompt.",
+      "start": 435.199,
+      "duration": 4.961
+    },
+    {
+      "text": "We're going to pop back over into Claude",
+      "start": 437.599,
+      "duration": 5.6
+    },
+    {
+      "text": "and we're actually going to create a new",
+      "start": 440.16,
+      "duration": 5.439
+    },
+    {
+      "text": "chat. And so, we can see where I already",
+      "start": 443.199,
+      "duration": 3.761
+    },
+    {
+      "text": "pasted this in, right? So, it's the",
+      "start": 445.599,
+      "duration": 3.521
+    },
+    {
+      "text": "exact same prompt. And then all we're",
+      "start": 446.96,
+      "duration": 4.079
+    },
+    {
+      "text": "doing is we're filling in the idea.",
+      "start": 449.12,
+      "duration": 3.68
+    },
+    {
+      "text": "Okay? What's our primary idea for this",
+      "start": 451.039,
+      "duration": 4.641
+    },
+    {
+      "text": "app? And then what is the MVP for this",
+      "start": 452.8,
+      "duration": 5.76
+    },
+    {
+      "text": "app? And so for this example, I want to",
+      "start": 455.68,
+      "duration": 4.4
+    },
+    {
+      "text": "create an app that a user can put on",
+      "start": 458.56,
+      "duration": 3.12
+    },
+    {
+      "text": "their phone to lock themselves out of",
+      "start": 460.08,
+      "duration": 3.76
+    },
+    {
+      "text": "specific apps, mostly social media apps",
+      "start": 461.68,
+      "duration": 4.4
+    },
+    {
+      "text": "like Instagram. The intention is for it",
+      "start": 463.84,
+      "duration": 4.0
+    },
+    {
+      "text": "to be for productivity. The thing that's",
+      "start": 466.08,
+      "duration": 3.04
+    },
+    {
+      "text": "going to make it kind of unique is that",
+      "start": 467.84,
+      "duration": 3.6
+    },
+    {
+      "text": "in order to unlock the locked apps,",
+      "start": 469.12,
+      "duration": 4.4
+    },
+    {
+      "text": "they're going to have to basically do",
+      "start": 471.44,
+      "duration": 3.52
+    },
+    {
+      "text": "self-development work. So if you're",
+      "start": 473.52,
+      "duration": 2.72
+    },
+    {
+      "text": "saying, \"Hey, I want to be locked out of",
+      "start": 474.96,
+      "duration": 4.239
+    },
+    {
+      "text": "Instagram between 9 and 5, 9:00 a.m. and",
+      "start": 476.24,
+      "duration": 5.2
+    },
+    {
+      "text": "5:00 p.m. and now it's 3 p.m. and I'm",
+      "start": 479.199,
+      "duration": 3.761
+    },
+    {
+      "text": "trying to get into it. I have to go",
+      "start": 481.44,
+      "duration": 3.36
+    },
+    {
+      "text": "through something educational is my",
+      "start": 482.96,
+      "duration": 4.4
+    },
+    {
+      "text": "first idea or watch a sponsored video.",
+      "start": 484.8,
+      "duration": 3.76
+    },
+    {
+      "text": "I'm thinking like that's a way you could",
+      "start": 487.36,
+      "duration": 3.6
+    },
+    {
+      "text": "monetize it. But I really like this",
+      "start": 488.56,
+      "duration": 4.0
+    },
+    {
+      "text": "component where they have to actually do",
+      "start": 490.96,
+      "duration": 4.0
+    },
+    {
+      "text": "something valuable for themselves. And",
+      "start": 492.56,
+      "duration": 3.919
+    },
+    {
+      "text": "then we're saying what is the basic idea",
+      "start": 494.96,
+      "duration": 4.079
+    },
+    {
+      "text": "of the MVP? So they sign up, they select",
+      "start": 496.479,
+      "duration": 4.241
+    },
+    {
+      "text": "the apps that they want to ban. Any",
+      "start": 499.039,
+      "duration": 3.761
+    },
+    {
+      "text": "attempt to open that app locks them out.",
+      "start": 500.72,
+      "duration": 4.0
+    },
+    {
+      "text": "If they want to access that app, they",
+      "start": 502.8,
+      "duration": 4.64
+    },
+    {
+      "text": "need to go into the app and specifically",
+      "start": 504.72,
+      "duration": 4.879
+    },
+    {
+      "text": "say, \"Hey, I want to unfocus right now.\"",
+      "start": 507.44,
+      "duration": 4.159
+    },
+    {
+      "text": "They can choose the amount of time that",
+      "start": 509.599,
+      "duration": 4.8
+    },
+    {
+      "text": "they want to allow themselves access and",
+      "start": 511.599,
+      "duration": 4.32
+    },
+    {
+      "text": "then in order to unlock it again they",
+      "start": 514.399,
+      "duration": 3.2
+    },
+    {
+      "text": "have to do something additional. I have",
+      "start": 515.919,
+      "duration": 2.961
+    },
+    {
+      "text": "a few different thoughts on how that",
+      "start": 517.599,
+      "duration": 3.521
+    },
+    {
+      "text": "could be. Again, they have to solve some",
+      "start": 518.88,
+      "duration": 3.519
+    },
+    {
+      "text": "sort of puzzle. They have to watch like",
+      "start": 521.12,
+      "duration": 3.92
+    },
+    {
+      "text": "sponsored videos or maybe they just have",
+      "start": 522.399,
+      "duration": 4.161
+    },
+    {
+      "text": "to pay. It's like, okay, you really want",
+      "start": 525.04,
+      "duration": 3.28
+    },
+    {
+      "text": "to Instagram that bad? You got to pay",
+      "start": 526.56,
+      "duration": 3.279
+    },
+    {
+      "text": "five bucks. So, a few different things",
+      "start": 528.32,
+      "duration": 3.199
+    },
+    {
+      "text": "that I'm thinking. And so, this is",
+      "start": 529.839,
+      "duration": 4.081
+    },
+    {
+      "text": "basically going to output us a very very",
+      "start": 531.519,
+      "duration": 5.361
+    },
+    {
+      "text": "very basic kind of like pitch of this",
+      "start": 533.92,
+      "duration": 5.599
+    },
+    {
+      "text": "app. So we get our elevator pitch, the",
+      "start": 536.88,
+      "duration": 4.959
+    },
+    {
+      "text": "main problem statement, the primary",
+      "start": 539.519,
+      "duration": 3.601
+    },
+    {
+      "text": "audience, so young professionals",
+      "start": 541.839,
+      "duration": 2.961
+    },
+    {
+      "text": "struggling with productivity.",
+      "start": 543.12,
+      "duration": 3.92
+    },
+    {
+      "text": "Secondarily, students, maybe people like",
+      "start": 544.8,
+      "duration": 3.84
+    },
+    {
+      "text": "in college that are trying to study for",
+      "start": 547.04,
+      "duration": 3.52
+    },
+    {
+      "text": "tests. Then it said tertiary parents",
+      "start": 548.64,
+      "duration": 3.199
+    },
+    {
+      "text": "wanting to model better digital habits",
+      "start": 550.56,
+      "duration": 2.64
+    },
+    {
+      "text": "for their children. I don't really I'm",
+      "start": 551.839,
+      "duration": 2.401
+    },
+    {
+      "text": "going to kind of cut that one out.",
+      "start": 553.2,
+      "duration": 3.199
+    },
+    {
+      "text": "That's not what I'm thinking of here.",
+      "start": 554.24,
+      "duration": 5.44
+    },
+    {
+      "text": "And then uh the USP, which is this like",
+      "start": 556.399,
+      "duration": 4.481
+    },
+    {
+      "text": "hey, you have to actually do something",
+      "start": 559.68,
+      "duration": 2.88
+    },
+    {
+      "text": "value adding if you want to get back in",
+      "start": 560.88,
+      "duration": 3.76
+    },
+    {
+      "text": "outside of the window you had specified.",
+      "start": 562.56,
+      "duration": 3.36
+    },
+    {
+      "text": "And then it's going to give us like some",
+      "start": 564.64,
+      "duration": 3.12
+    },
+    {
+      "text": "core features, right? So you got to be",
+      "start": 565.92,
+      "duration": 2.96
+    },
+    {
+      "text": "able to block, you got to be able to",
+      "start": 567.76,
+      "duration": 4.56
+    },
+    {
+      "text": "unlock, account settings, few other",
+      "start": 568.88,
+      "duration": 4.72
+    },
+    {
+      "text": "different things. So we're going to go",
+      "start": 572.32,
+      "duration": 4.48
+    },
+    {
+      "text": "back in to that prompt we had. Okay. And",
+      "start": 573.6,
+      "duration": 4.799
+    },
+    {
+      "text": "now we can see when we scroll down, we",
+      "start": 576.8,
+      "duration": 3.52
+    },
+    {
+      "text": "have where I had pasted this in. So I",
+      "start": 578.399,
+      "duration": 4.321
+    },
+    {
+      "text": "basically copied that entire output over",
+      "start": 580.32,
+      "duration": 6.16
+    },
+    {
+      "text": "and I just updated a few pieces of it.",
+      "start": 582.72,
+      "duration": 5.2
+    },
+    {
+      "text": "You can see that like I cut off some of",
+      "start": 586.48,
+      "duration": 4.0
+    },
+    {
+      "text": "the pieces at the end. You could also",
+      "start": 587.92,
+      "duration": 4.0
+    },
+    {
+      "text": "probably cut out these non-functional",
+      "start": 590.48,
+      "duration": 2.72
+    },
+    {
+      "text": "requirements. They don't need to be in",
+      "start": 591.92,
+      "duration": 2.56
+    },
+    {
+      "text": "here. I didn't cut that out for this,",
+      "start": 593.2,
+      "duration": 2.88
+    },
+    {
+      "text": "but you probably should do that. And",
+      "start": 594.48,
+      "duration": 4.08
+    },
+    {
+      "text": "then the last piece. So, we paste all of",
+      "start": 596.08,
+      "duration": 4.8
+    },
+    {
+      "text": "this in. Important. Update it with your",
+      "start": 598.56,
+      "duration": 4.959
+    },
+    {
+      "text": "actual app info. And then we have this",
+      "start": 600.88,
+      "duration": 5.36
+    },
+    {
+      "text": "last little I call it a fuser or fuser",
+      "start": 603.519,
+      "duration": 4.081
+    },
+    {
+      "text": "prompt that we're going to put in there.",
+      "start": 606.24,
+      "duration": 3.12
+    },
+    {
+      "text": "So, fuse your pondering analysis with",
+      "start": 607.6,
+      "duration": 3.76
+    },
+    {
+      "text": "the app idea below. And then wrap your",
+      "start": 609.36,
+      "duration": 4.8
+    },
+    {
+      "text": "thoughts in pontificating tags. After",
+      "start": 611.36,
+      "duration": 4.719
+    },
+    {
+      "text": "you're done, output an updated style",
+      "start": 614.16,
+      "duration": 4.48
+    },
+    {
+      "text": "guide based on the app below. And then",
+      "start": 616.079,
+      "duration": 5.121
+    },
+    {
+      "text": "the app below is just this pasted in.",
+      "start": 618.64,
+      "duration": 5.199
+    },
+    {
+      "text": "Okay. And so let's see what we're",
+      "start": 621.2,
+      "duration": 4.4
+    },
+    {
+      "text": "getting here, right? So proivi",
+      "start": 623.839,
+      "duration": 3.281
+    },
+    {
+      "text": "productivity app fundamentally different",
+      "start": 625.6,
+      "duration": 3.6
+    },
+    {
+      "text": "from that wallet app but equally",
+      "start": 627.12,
+      "duration": 3.92
+    },
+    {
+      "text": "sophisticated in its approach to user",
+      "start": 629.2,
+      "duration": 3.84
+    },
+    {
+      "text": "psychology where phantom needs to feel",
+      "start": 631.04,
+      "duration": 3.68
+    },
+    {
+      "text": "cutting edge and cryptonative focus lock",
+      "start": 633.04,
+      "duration": 3.68
+    },
+    {
+      "text": "needs to embody focus, mindfulness, and",
+      "start": 634.72,
+      "duration": 4.0
+    },
+    {
+      "text": "intentional design. The core challenge",
+      "start": 636.72,
+      "duration": 3.359
+    },
+    {
+      "text": "is creating visual language that",
+      "start": 638.72,
+      "duration": 3.679
+    },
+    {
+      "text": "reinforces that app's purpose, calming",
+      "start": 640.079,
+      "duration": 4.88
+    },
+    {
+      "text": "and focused, not overstimulating.",
+      "start": 642.399,
+      "duration": 4.081
+    },
+    {
+      "text": "Second, authoritative but not",
+      "start": 644.959,
+      "duration": 2.88
+    },
+    {
+      "text": "oppressive. We don't want people to feel",
+      "start": 646.48,
+      "duration": 3.359
+    },
+    {
+      "text": "like we're criticizing them for trying",
+      "start": 647.839,
+      "duration": 4.0
+    },
+    {
+      "text": "to go into that app. we're trying to",
+      "start": 649.839,
+      "duration": 4.0
+    },
+    {
+      "text": "feel supportive for them should be",
+      "start": 651.839,
+      "duration": 4.081
+    },
+    {
+      "text": "reward oriented where possible. So we",
+      "start": 653.839,
+      "duration": 4.24
+    },
+    {
+      "text": "should be celebrating the time spent not",
+      "start": 655.92,
+      "duration": 5.76
+    },
+    {
+      "text": "in that app and then mindfulness right",
+      "start": 658.079,
+      "duration": 5.041
+    },
+    {
+      "text": "so kind of the whole intent behind this",
+      "start": 661.68,
+      "duration": 3.68
+    },
+    {
+      "text": "is being more mindful with time and so",
+      "start": 663.12,
+      "duration": 3.76
+    },
+    {
+      "text": "that should be part of the core",
+      "start": 665.36,
+      "duration": 3.68
+    },
+    {
+      "text": "psychology and design of the app. So",
+      "start": 666.88,
+      "duration": 4.639
+    },
+    {
+      "text": "then again it starts to get into the",
+      "start": 669.04,
+      "duration": 4.32
+    },
+    {
+      "text": "color psychology, right? So colors",
+      "start": 671.519,
+      "duration": 4.801
+    },
+    {
+      "text": "should promote focus and calm and",
+      "start": 673.36,
+      "duration": 4.719
+    },
+    {
+      "text": "thoughtfulness. How should the",
+      "start": 676.32,
+      "duration": 3.68
+    },
+    {
+      "text": "typography be? How should interaction",
+      "start": 678.079,
+      "duration": 4.241
+    },
+    {
+      "text": "with the app be when it comes down to",
+      "start": 680.0,
+      "duration": 4.48
+    },
+    {
+      "text": "things like animations, for example?",
+      "start": 682.32,
+      "duration": 4.16
+    },
+    {
+      "text": "Visual hierarchy of how information is",
+      "start": 684.48,
+      "duration": 3.84
+    },
+    {
+      "text": "presented. And then if I was to target",
+      "start": 686.48,
+      "duration": 3.599
+    },
+    {
+      "text": "young professionals and students, how",
+      "start": 688.32,
+      "duration": 2.959
+    },
+    {
+      "text": "does the app need to feel, right?",
+      "start": 690.079,
+      "duration": 3.601
+    },
+    {
+      "text": "Modern, aspirational, something that",
+      "start": 691.279,
+      "duration": 4.24
+    },
+    {
+      "text": "it's like cool for them to have on their",
+      "start": 693.68,
+      "duration": 4.24
+    },
+    {
+      "text": "phone, doesn't feel dated. So it goes",
+      "start": 695.519,
+      "duration": 3.44
+    },
+    {
+      "text": "through all of that and then it builds",
+      "start": 697.92,
+      "duration": 3.359
+    },
+    {
+      "text": "us out a design system. So primary",
+      "start": 698.959,
+      "duration": 4.161
+    },
+    {
+      "text": "color, secondary accents, right? It's",
+      "start": 701.279,
+      "duration": 4.24
+    },
+    {
+      "text": "following that exact same thing that we",
+      "start": 703.12,
+      "duration": 4.88
+    },
+    {
+      "text": "had earlier. Okay? And then it even goes",
+      "start": 705.519,
+      "duration": 4.641
+    },
+    {
+      "text": "into brainstorming specific things like,",
+      "start": 708.0,
+      "duration": 3.6
+    },
+    {
+      "text": "hey, if we're going to visualize data,",
+      "start": 710.16,
+      "duration": 2.64
+    },
+    {
+      "text": "these are some components you should",
+      "start": 711.6,
+      "duration": 3.679
+    },
+    {
+      "text": "think about. Things like that. So in",
+      "start": 712.8,
+      "duration": 4.56
+    },
+    {
+      "text": "less than 5 minutes, we've got a really",
+      "start": 715.279,
+      "duration": 5.201
+    },
+    {
+      "text": "solid visual DNA for this app. And what",
+      "start": 717.36,
+      "duration": 5.12
+    },
+    {
+      "text": "this really means is now we have a very",
+      "start": 720.48,
+      "duration": 5.039
+    },
+    {
+      "text": "concrete professional framework of",
+      "start": 722.48,
+      "duration": 5.2
+    },
+    {
+      "text": "design that we can keep our app",
+      "start": 725.519,
+      "duration": 4.161
+    },
+    {
+      "text": "accountable to. And this is the first",
+      "start": 727.68,
+      "duration": 4.32
+    },
+    {
+      "text": "major milestone in eliminating",
+      "start": 729.68,
+      "duration": 4.24
+    },
+    {
+      "text": "guesswork, eliminating the",
+      "start": 732.0,
+      "duration": 4.24
+    },
+    {
+      "text": "unpredictability of those outputs that",
+      "start": 733.92,
+      "duration": 4.8
+    },
+    {
+      "text": "we get. Now, step two, we want to fuse",
+      "start": 736.24,
+      "duration": 6.56
+    },
+    {
+      "text": "that visual DNA with our actual app.",
+      "start": 738.72,
+      "duration": 5.679
+    },
+    {
+      "text": "Now, one of the hidden secrets here that",
+      "start": 742.8,
+      "duration": 4.159
+    },
+    {
+      "text": "I found is that you tend to get much",
+      "start": 744.399,
+      "duration": 5.921
+    },
+    {
+      "text": "better designs out of these systems when",
+      "start": 746.959,
+      "duration": 6.081
+    },
+    {
+      "text": "you don't ask it to also build the",
+      "start": 750.32,
+      "duration": 5.04
+    },
+    {
+      "text": "functionality behind the feature at the",
+      "start": 753.04,
+      "duration": 4.32
+    },
+    {
+      "text": "same time. When you have the language",
+      "start": 755.36,
+      "duration": 5.84
+    },
+    {
+      "text": "model fully focused on the design aspect",
+      "start": 757.36,
+      "duration": 6.32
+    },
+    {
+      "text": "of the work it's performing, that means",
+      "start": 761.2,
+      "duration": 5.04
+    },
+    {
+      "text": "I don't want it to actually build a",
+      "start": 763.68,
+      "duration": 4.399
+    },
+    {
+      "text": "functional graph that's pulling in real",
+      "start": 766.24,
+      "duration": 4.159
+    },
+    {
+      "text": "data. I want it to mock up what the",
+      "start": 768.079,
+      "duration": 4.401
+    },
+    {
+      "text": "design of a graph, for example, might",
+      "start": 770.399,
+      "duration": 3.601
+    },
+    {
+      "text": "look like. This is how you get",
+      "start": 772.48,
+      "duration": 4.479
+    },
+    {
+      "text": "predictably beautiful designs each time",
+      "start": 774.0,
+      "duration": 5.839
+    },
+    {
+      "text": "that actually have detail in them. A big",
+      "start": 776.959,
+      "duration": 5.201
+    },
+    {
+      "text": "drawback of traditional vibe coding",
+      "start": 779.839,
+      "duration": 5.68
+    },
+    {
+      "text": "hands-off tools is that they tend to",
+      "start": 782.16,
+      "duration": 6.239
+    },
+    {
+      "text": "forget details. They tend to miss out on",
+      "start": 785.519,
+      "duration": 6.0
+    },
+    {
+      "text": "details. are too focused on architecting",
+      "start": 788.399,
+      "duration": 4.88
+    },
+    {
+      "text": "something that actually works on like a",
+      "start": 791.519,
+      "duration": 4.401
+    },
+    {
+      "text": "oneshot basis that there's not a lot of",
+      "start": 793.279,
+      "duration": 4.641
+    },
+    {
+      "text": "detail in the designs that you get out",
+      "start": 795.92,
+      "duration": 3.599
+    },
+    {
+      "text": "of them. And so the theory behind this",
+      "start": 797.92,
+      "duration": 3.52
+    },
+    {
+      "text": "is if well if we focused all that",
+      "start": 799.519,
+      "duration": 4.32
+    },
+    {
+      "text": "language model processing power not on",
+      "start": 801.44,
+      "duration": 4.0
+    },
+    {
+      "text": "architecting something that is",
+      "start": 803.839,
+      "duration": 3.841
+    },
+    {
+      "text": "functionally working but rather",
+      "start": 805.44,
+      "duration": 5.04
+    },
+    {
+      "text": "something that looks really nice looks a",
+      "start": 807.68,
+      "duration": 5.52
+    },
+    {
+      "text": "specific way using all of that token",
+      "start": 810.48,
+      "duration": 4.88
+    },
+    {
+      "text": "bandwidth to actually go into solving",
+      "start": 813.2,
+      "duration": 4.48
+    },
+    {
+      "text": "this design problem that will get better",
+      "start": 815.36,
+      "duration": 4.32
+    },
+    {
+      "text": "outputs because of it. So let's look at",
+      "start": 817.68,
+      "duration": 4.56
+    },
+    {
+      "text": "how this process works. So here's the",
+      "start": 819.68,
+      "duration": 3.52
+    },
+    {
+      "text": "actual prompt that we're going to be",
+      "start": 822.24,
+      "duration": 2.0
+    },
+    {
+      "text": "using. So I'm going to go through the",
+      "start": 823.2,
+      "duration": 2.079
+    },
+    {
+      "text": "template and then I'm going to go back",
+      "start": 824.24,
+      "duration": 2.32
+    },
+    {
+      "text": "and show the filledin version of the",
+      "start": 825.279,
+      "duration": 3.12
+    },
+    {
+      "text": "template. So we start with the goal",
+      "start": 826.56,
+      "duration": 3.36
+    },
+    {
+      "text": "filled in. Okay, so we're just telling",
+      "start": 828.399,
+      "duration": 3.921
+    },
+    {
+      "text": "it like, hey, this is a UI exercise. We",
+      "start": 829.92,
+      "duration": 4.64
+    },
+    {
+      "text": "give it some different guidelines. So",
+      "start": 832.32,
+      "duration": 4.959
+    },
+    {
+      "text": "what do we want to generally accomplish",
+      "start": 834.56,
+      "duration": 4.88
+    },
+    {
+      "text": "with the aesthetics of this app? I like",
+      "start": 837.279,
+      "duration": 4.0
+    },
+    {
+      "text": "to break down some practicalities. So",
+      "start": 839.44,
+      "duration": 3.519
+    },
+    {
+      "text": "specifically, what I'm saying is anytime",
+      "start": 841.279,
+      "duration": 3.841
+    },
+    {
+      "text": "you're using icons, I want you to use",
+      "start": 842.959,
+      "duration": 4.401
+    },
+    {
+      "text": "this library. We're using Tailwind for",
+      "start": 845.12,
+      "duration": 4.48
+    },
+    {
+      "text": "our CSS and our styling. And then we're",
+      "start": 847.36,
+      "duration": 4.159
+    },
+    {
+      "text": "going to be simulating iPhone frames. So",
+      "start": 849.6,
+      "duration": 3.679
+    },
+    {
+      "text": "I want this to actually look like",
+      "start": 851.519,
+      "duration": 4.401
+    },
+    {
+      "text": "different app screens mocked up. So, I'm",
+      "start": 853.279,
+      "duration": 4.24
+    },
+    {
+      "text": "having it actually simulate each of",
+      "start": 855.92,
+      "duration": 3.2
+    },
+    {
+      "text": "these screens in an iPhone screen, and",
+      "start": 857.519,
+      "duration": 2.56
+    },
+    {
+      "text": "we're going to see what that looks like",
+      "start": 859.12,
+      "duration": 3.2
+    },
+    {
+      "text": "in a second. If there are any very",
+      "start": 860.079,
+      "duration": 4.0
+    },
+    {
+      "text": "specific app guidelines that you think",
+      "start": 862.32,
+      "duration": 3.12
+    },
+    {
+      "text": "it needs to know that haven't been",
+      "start": 864.079,
+      "duration": 2.961
+    },
+    {
+      "text": "included, you can put those in there.",
+      "start": 865.44,
+      "duration": 2.8
+    },
+    {
+      "text": "Then, we're going to give an overview of",
+      "start": 867.04,
+      "duration": 2.96
+    },
+    {
+      "text": "our app our app. This is where we're",
+      "start": 868.24,
+      "duration": 3.599
+    },
+    {
+      "text": "actually just going to paste in that MVP",
+      "start": 870.0,
+      "duration": 4.24
+    },
+    {
+      "text": "generator that we had done. And then",
+      "start": 871.839,
+      "duration": 4.0
+    },
+    {
+      "text": "this last section, we're going to go",
+      "start": 874.24,
+      "duration": 3.039
+    },
+    {
+      "text": "through and we're going to tell it what",
+      "start": 875.839,
+      "duration": 4.321
+    },
+    {
+      "text": "screens we want made. Okay? And so, we",
+      "start": 877.279,
+      "duration": 4.641
+    },
+    {
+      "text": "can look at what that looks like filled",
+      "start": 880.16,
+      "duration": 4.96
+    },
+    {
+      "text": "in. So, we can see this is all the same.",
+      "start": 881.92,
+      "duration": 5.039
+    },
+    {
+      "text": "This is all the same. Okay, we added",
+      "start": 885.12,
+      "duration": 3.2
+    },
+    {
+      "text": "this little section in. Hey, remember",
+      "start": 886.959,
+      "duration": 4.0
+    },
+    {
+      "text": "it's a design exercise. We add in our",
+      "start": 888.32,
+      "duration": 5.6
+    },
+    {
+      "text": "style guide. Okay, so that style guide",
+      "start": 890.959,
+      "duration": 4.88
+    },
+    {
+      "text": "that we pulled out again, this was the",
+      "start": 893.92,
+      "duration": 3.76
+    },
+    {
+      "text": "last output that we got. I just copied",
+      "start": 895.839,
+      "duration": 3.36
+    },
+    {
+      "text": "it. I literally just copied the entire",
+      "start": 897.68,
+      "duration": 3.519
+    },
+    {
+      "text": "output and pasted it in here saying this",
+      "start": 899.199,
+      "duration": 4.801
+    },
+    {
+      "text": "is our design system. And then we have",
+      "start": 901.199,
+      "duration": 4.64
+    },
+    {
+      "text": "our app overview, right? The elevator",
+      "start": 904.0,
+      "duration": 4.079
+    },
+    {
+      "text": "pitch all the way down. And again, I cut",
+      "start": 905.839,
+      "duration": 3.68
+    },
+    {
+      "text": "out some of the things that I didn't",
+      "start": 908.079,
+      "duration": 3.521
+    },
+    {
+      "text": "want in there. So, for example, I didn't",
+      "start": 909.519,
+      "duration": 3.601
+    },
+    {
+      "text": "want that like tertiary audience of,",
+      "start": 911.6,
+      "duration": 3.039
+    },
+    {
+      "text": "hey, it's for parents to lock their kids",
+      "start": 913.12,
+      "duration": 3.6
+    },
+    {
+      "text": "out of apps. So, I removed that. So, I",
+      "start": 914.639,
+      "duration": 4.241
+    },
+    {
+      "text": "just dialed this in a tiny bit based on",
+      "start": 916.72,
+      "duration": 3.84
+    },
+    {
+      "text": "what I wanted to see. So, here's our",
+      "start": 918.88,
+      "duration": 2.88
+    },
+    {
+      "text": "task. We want you to follow the",
+      "start": 920.56,
+      "duration": 4.0
+    },
+    {
+      "text": "guidelines above to ensure correctness.",
+      "start": 921.76,
+      "duration": 5.04
+    },
+    {
+      "text": "Okay? So, follow everything above. And",
+      "start": 924.56,
+      "duration": 3.92
+    },
+    {
+      "text": "then your output should be a bunch of",
+      "start": 926.8,
+      "duration": 3.76
+    },
+    {
+      "text": "screens basically going horizontally.",
+      "start": 928.48,
+      "duration": 4.0
+    },
+    {
+      "text": "And we'll see what that looks like in",
+      "start": 930.56,
+      "duration": 3.839
+    },
+    {
+      "text": "one second. Now, here's the thing that's",
+      "start": 932.48,
+      "duration": 4.88
+    },
+    {
+      "text": "cool. For each problem, we wanted to",
+      "start": 934.399,
+      "duration": 6.24
+    },
+    {
+      "text": "brainstorm three different solutions to",
+      "start": 937.36,
+      "duration": 6.0
+    },
+    {
+      "text": "that problem. Three different solutions.",
+      "start": 940.639,
+      "duration": 5.121
+    },
+    {
+      "text": "So, if the problem was the user",
+      "start": 943.36,
+      "duration": 3.839
+    },
+    {
+      "text": "onboarding, how to do the user",
+      "start": 945.76,
+      "duration": 3.28
+    },
+    {
+      "text": "onboarding properly and allow someone to",
+      "start": 947.199,
+      "duration": 3.521
+    },
+    {
+      "text": "onboard and select the apps they want to",
+      "start": 949.04,
+      "duration": 4.479
+    },
+    {
+      "text": "block, show me three different unique",
+      "start": 950.72,
+      "duration": 4.88
+    },
+    {
+      "text": "solutions to solving that specific",
+      "start": 953.519,
+      "duration": 4.081
+    },
+    {
+      "text": "problem. Don't just build the first one.",
+      "start": 955.6,
+      "duration": 4.08
+    },
+    {
+      "text": "I want to see different takes on that",
+      "start": 957.6,
+      "duration": 3.919
+    },
+    {
+      "text": "problem solution. Each angle should be",
+      "start": 959.68,
+      "duration": 3.36
+    },
+    {
+      "text": "unique, but it should still conform to",
+      "start": 961.519,
+      "duration": 5.521
+    },
+    {
+      "text": "the overall UX UI parameters of the app.",
+      "start": 963.04,
+      "duration": 5.2
+    },
+    {
+      "text": "And then this is where we're going to go",
+      "start": 967.04,
+      "duration": 2.32
+    },
+    {
+      "text": "through and we're going to tell them",
+      "start": 968.24,
+      "duration": 3.36
+    },
+    {
+      "text": "what section we want them brainstorming.",
+      "start": 969.36,
+      "duration": 3.44
+    },
+    {
+      "text": "And so we're going to look at this in",
+      "start": 971.6,
+      "duration": 3.28
+    },
+    {
+      "text": "one second. But for example, when a user",
+      "start": 972.8,
+      "duration": 5.279
+    },
+    {
+      "text": "has run out of free emergency unlocks,",
+      "start": 974.88,
+      "duration": 4.639
+    },
+    {
+      "text": "the only way they can unlock is to",
+      "start": 978.079,
+      "duration": 2.961
+    },
+    {
+      "text": "withdraw money from their account. So,",
+      "start": 979.519,
+      "duration": 3.521
+    },
+    {
+      "text": "I'm thinking like, okay, you start off",
+      "start": 981.04,
+      "duration": 4.0
+    },
+    {
+      "text": "the app where you preload like 25 bucks",
+      "start": 983.04,
+      "duration": 4.0
+    },
+    {
+      "text": "in there and every time you want to",
+      "start": 985.04,
+      "duration": 3.84
+    },
+    {
+      "text": "unlock the app during the time that you",
+      "start": 987.04,
+      "duration": 3.68
+    },
+    {
+      "text": "said you didn't want to, you have to pay",
+      "start": 988.88,
+      "duration": 3.68
+    },
+    {
+      "text": "five bucks. I don't know, sounds legit",
+      "start": 990.72,
+      "duration": 3.6
+    },
+    {
+      "text": "to me. What would that look like,",
+      "start": 992.56,
+      "duration": 2.719
+    },
+    {
+      "text": "though? Right? There's a lot of",
+      "start": 994.32,
+      "duration": 3.439
+    },
+    {
+      "text": "different ways that UI could come to be.",
+      "start": 995.279,
+      "duration": 4.48
+    },
+    {
+      "text": "And so, let's look at what that would be",
+      "start": 997.759,
+      "duration": 3.361
+    },
+    {
+      "text": "for the user. Let's get some different",
+      "start": 999.759,
+      "duration": 4.08
+    },
+    {
+      "text": "takes on that. Now, what do we actually",
+      "start": 1001.12,
+      "duration": 4.32
+    },
+    {
+      "text": "do with this? Now, the way that I like",
+      "start": 1003.839,
+      "duration": 5.12
+    },
+    {
+      "text": "to do this kind of design exercise is",
+      "start": 1005.44,
+      "duration": 5.36
+    },
+    {
+      "text": "that I like to use a vanilla create",
+      "start": 1008.959,
+      "duration": 4.24
+    },
+    {
+      "text": "react app, right? Vanilla create react",
+      "start": 1010.8,
+      "duration": 3.92
+    },
+    {
+      "text": "app. And then I just tell it to use",
+      "start": 1013.199,
+      "duration": 5.121
+    },
+    {
+      "text": "Tailwind and React Lucid for the icons.",
+      "start": 1014.72,
+      "duration": 4.799
+    },
+    {
+      "text": "So, I will literally come in here and",
+      "start": 1018.32,
+      "duration": 4.079
+    },
+    {
+      "text": "say that and say create me a basic",
+      "start": 1019.519,
+      "duration": 6.241
+    },
+    {
+      "text": "create react app using Tailwind and",
+      "start": 1022.399,
+      "duration": 5.761
+    },
+    {
+      "text": "React Lucid. I'm going to hit enter on",
+      "start": 1025.76,
+      "duration": 4.0
+    },
+    {
+      "text": "that and I'm going to let it go and just",
+      "start": 1028.16,
+      "duration": 4.24
+    },
+    {
+      "text": "install all of this into the project and",
+      "start": 1029.76,
+      "duration": 4.0
+    },
+    {
+      "text": "configure in the project. Now, I've",
+      "start": 1032.4,
+      "duration": 2.799
+    },
+    {
+      "text": "already done that, which is why you see",
+      "start": 1033.76,
+      "duration": 3.84
+    },
+    {
+      "text": "all of this here, but this is the first",
+      "start": 1035.199,
+      "duration": 4.0
+    },
+    {
+      "text": "step. Now, after we've done that, all",
+      "start": 1037.6,
+      "duration": 2.56
+    },
+    {
+      "text": "we're going to do is we're going to go,",
+      "start": 1039.199,
+      "duration": 2.64
+    },
+    {
+      "text": "we're going to copy that entire prompt",
+      "start": 1040.16,
+      "duration": 3.44
+    },
+    {
+      "text": "that we had. We're going to pop back",
+      "start": 1041.839,
+      "duration": 3.681
+    },
+    {
+      "text": "into cursor, and we are just going to",
+      "start": 1043.6,
+      "duration": 4.64
+    },
+    {
+      "text": "paste that in there, hit enter, and",
+      "start": 1045.52,
+      "duration": 5.039
+    },
+    {
+      "text": "we're going to let it fly. Now, while",
+      "start": 1048.24,
+      "duration": 3.76
+    },
+    {
+      "text": "that was off screen, I went through and",
+      "start": 1050.559,
+      "duration": 3.921
+    },
+    {
+      "text": "I actually did this exercise for a few",
+      "start": 1052.0,
+      "duration": 3.919
+    },
+    {
+      "text": "different features. So, we're going to",
+      "start": 1054.48,
+      "duration": 4.079
+    },
+    {
+      "text": "see a few different rows pop up on the",
+      "start": 1055.919,
+      "duration": 4.481
+    },
+    {
+      "text": "screen. So, I did some analytic stuff. I",
+      "start": 1058.559,
+      "duration": 3.601
+    },
+    {
+      "text": "did some onboarding stuff like emergency",
+      "start": 1060.4,
+      "duration": 3.84
+    },
+    {
+      "text": "unlock screens. But the way that I have",
+      "start": 1062.16,
+      "duration": 4.48
+    },
+    {
+      "text": "this prompt configured is that every",
+      "start": 1064.24,
+      "duration": 4.16
+    },
+    {
+      "text": "screen, right? So think of like every",
+      "start": 1066.64,
+      "duration": 4.8
+    },
+    {
+      "text": "iPhone screenshot of our app goes into",
+      "start": 1068.4,
+      "duration": 4.88
+    },
+    {
+      "text": "its own file. That way if we need to",
+      "start": 1071.44,
+      "duration": 4.32
+    },
+    {
+      "text": "edit that one specifically, it's really",
+      "start": 1073.28,
+      "duration": 4.48
+    },
+    {
+      "text": "well scoped and we don't get these huge",
+      "start": 1075.76,
+      "duration": 3.68
+    },
+    {
+      "text": "files with these huge context windows",
+      "start": 1077.76,
+      "duration": 2.799
+    },
+    {
+      "text": "when we're trying to update things",
+      "start": 1079.44,
+      "duration": 4.56
+    },
+    {
+      "text": "later. So are you ready to check out",
+      "start": 1080.559,
+      "duration": 7.441
+    },
+    {
+      "text": "what we made? Boom. And wow, pretty nice",
+      "start": 1084.0,
+      "duration": 7.76
+    },
+    {
+      "text": "designs out of the box. So, we have like",
+      "start": 1088.0,
+      "duration": 6.32
+    },
+    {
+      "text": "a basic splash screen here. What an",
+      "start": 1091.76,
+      "duration": 4.56
+    },
+    {
+      "text": "upgrade to the premium version might do",
+      "start": 1094.32,
+      "duration": 4.0
+    },
+    {
+      "text": "with a nice little pulsing icon there.",
+      "start": 1096.32,
+      "duration": 4.64
+    },
+    {
+      "text": "An example of a emergency unlock screen.",
+      "start": 1098.32,
+      "duration": 4.239
+    },
+    {
+      "text": "Here we have an example of like what a",
+      "start": 1100.96,
+      "duration": 4.079
+    },
+    {
+      "text": "focusing schedule might actually look",
+      "start": 1102.559,
+      "duration": 3.921
+    },
+    {
+      "text": "like. Now, obviously, this would be on a",
+      "start": 1105.039,
+      "duration": 2.961
+    },
+    {
+      "text": "phone, so this scroll bar wouldn't be",
+      "start": 1106.48,
+      "duration": 3.92
+    },
+    {
+      "text": "here, but a nice little UI for what",
+      "start": 1108.0,
+      "duration": 4.559
+    },
+    {
+      "text": "focus sessions would look like and apps",
+      "start": 1110.4,
+      "duration": 4.0
+    },
+    {
+      "text": "that we're attempting to block during",
+      "start": 1112.559,
+      "duration": 3.521
+    },
+    {
+      "text": "that focus time. So, maybe like we have",
+      "start": 1114.4,
+      "duration": 4.159
+    },
+    {
+      "text": "a 9 to2 block, which is active every",
+      "start": 1116.08,
+      "duration": 4.32
+    },
+    {
+      "text": "day. Hey, there's two hours left on it.",
+      "start": 1118.559,
+      "duration": 3.041
+    },
+    {
+      "text": "These are this is what we're blocking.",
+      "start": 1120.4,
+      "duration": 3.2
+    },
+    {
+      "text": "And if I were to try to hit end session,",
+      "start": 1121.6,
+      "duration": 3.36
+    },
+    {
+      "text": "this is what would trigger like one of",
+      "start": 1123.6,
+      "duration": 3.04
+    },
+    {
+      "text": "those emergency unlocks, for example.",
+      "start": 1124.96,
+      "duration": 3.44
+    },
+    {
+      "text": "So, that's that's pretty cool. your",
+      "start": 1126.64,
+      "duration": 4.399
+    },
+    {
+      "text": "progress. I'm not like a huge hugest fan",
+      "start": 1128.4,
+      "duration": 4.08
+    },
+    {
+      "text": "of what they did up here, but again, I",
+      "start": 1131.039,
+      "duration": 3.76
+    },
+    {
+      "text": "think this is because it's rendering,",
+      "start": 1132.48,
+      "duration": 3.84
+    },
+    {
+      "text": "you know, a mobile phone basically in",
+      "start": 1134.799,
+      "duration": 3.521
+    },
+    {
+      "text": "the browser. So, this styling would be a",
+      "start": 1136.32,
+      "duration": 3.28
+    },
+    {
+      "text": "little bit more compact. So, if that's",
+      "start": 1138.32,
+      "duration": 2.96
+    },
+    {
+      "text": "the case, kind of like how it's doing",
+      "start": 1139.6,
+      "duration": 4.24
+    },
+    {
+      "text": "like the daily progress, the streaks has",
+      "start": 1141.28,
+      "duration": 4.0
+    },
+    {
+      "text": "different achievements in there. Pretty",
+      "start": 1143.84,
+      "duration": 2.959
+    },
+    {
+      "text": "cool. Here's what it would look like if",
+      "start": 1145.28,
+      "duration": 3.759
+    },
+    {
+      "text": "we wanted to configure blocks. I think",
+      "start": 1146.799,
+      "duration": 4.561
+    },
+    {
+      "text": "this looks really nice, actually. All",
+      "start": 1149.039,
+      "duration": 3.52
+    },
+    {
+      "text": "the different ways we can do this.",
+      "start": 1151.36,
+      "duration": 4.0
+    },
+    {
+      "text": "Starting a focus session. Um, really",
+      "start": 1152.559,
+      "duration": 4.321
+    },
+    {
+      "text": "pretty nice. And then we get down to",
+      "start": 1155.36,
+      "duration": 2.72
+    },
+    {
+      "text": "that section where I was telling you",
+      "start": 1156.88,
+      "duration": 2.799
+    },
+    {
+      "text": "where we were brainstorming different",
+      "start": 1158.08,
+      "duration": 4.959
+    },
+    {
+      "text": "approaches to the app, right? So, for",
+      "start": 1159.679,
+      "duration": 5.441
+    },
+    {
+      "text": "example, this one was, hey, how do we",
+      "start": 1163.039,
+      "duration": 3.681
+    },
+    {
+      "text": "demonstrate the positive impact we're",
+      "start": 1165.12,
+      "duration": 3.76
+    },
+    {
+      "text": "having on users in in terms of like the",
+      "start": 1166.72,
+      "duration": 3.52
+    },
+    {
+      "text": "time that they're saving? What's the",
+      "start": 1168.88,
+      "duration": 3.679
+    },
+    {
+      "text": "benefit of the app? And it brainstormed",
+      "start": 1170.24,
+      "duration": 4.0
+    },
+    {
+      "text": "three different ways that we could show",
+      "start": 1172.559,
+      "duration": 4.24
+    },
+    {
+      "text": "that to the user, right? So, it could be",
+      "start": 1174.24,
+      "duration": 4.16
+    },
+    {
+      "text": "what does their growth journey look",
+      "start": 1176.799,
+      "duration": 4.641
+    },
+    {
+      "text": "like? Longest focus streak, 47 days, how",
+      "start": 1178.4,
+      "duration": 5.279
+    },
+    {
+      "text": "many hours they blocked. I I thought",
+      "start": 1181.44,
+      "duration": 3.68
+    },
+    {
+      "text": "this was pretty cool. how many books",
+      "start": 1183.679,
+      "duration": 4.081
+    },
+    {
+      "text": "worth of time that is. Okay. Then they",
+      "start": 1185.12,
+      "duration": 3.84
+    },
+    {
+      "text": "have this little chart that's not",
+      "start": 1187.76,
+      "duration": 2.64
+    },
+    {
+      "text": "rendering right now, but we would have a",
+      "start": 1188.96,
+      "duration": 3.52
+    },
+    {
+      "text": "chart there telling them like if they're",
+      "start": 1190.4,
+      "duration": 4.48
+    },
+    {
+      "text": "improving and then what their milestones",
+      "start": 1192.48,
+      "duration": 4.48
+    },
+    {
+      "text": "actually look like. So first step, week",
+      "start": 1194.88,
+      "duration": 4.159
+    },
+    {
+      "text": "one, you know, habit former. So this is",
+      "start": 1196.96,
+      "duration": 4.719
+    },
+    {
+      "text": "like a pretty cool idea where it's like",
+      "start": 1199.039,
+      "duration": 5.041
+    },
+    {
+      "text": "a timeline of your personal journey.",
+      "start": 1201.679,
+      "duration": 4.081
+    },
+    {
+      "text": "Then we have this community stat focused",
+      "start": 1204.08,
+      "duration": 3.2
+    },
+    {
+      "text": "one which is pretty cool. You could gify",
+      "start": 1205.76,
+      "duration": 3.12
+    },
+    {
+      "text": "it and make it like a leaderboard type",
+      "start": 1207.28,
+      "duration": 3.759
+    },
+    {
+      "text": "thing to see who's best at blocking",
+      "start": 1208.88,
+      "duration": 4.56
+    },
+    {
+      "text": "themselves out of apps. Um, I probably",
+      "start": 1211.039,
+      "duration": 5.201
+    },
+    {
+      "text": "won't go with this one, but I do like uh",
+      "start": 1213.44,
+      "duration": 4.96
+    },
+    {
+      "text": "how it thought about doing that and I do",
+      "start": 1216.24,
+      "duration": 3.52
+    },
+    {
+      "text": "like how it's displaying these",
+      "start": 1218.4,
+      "duration": 2.88
+    },
+    {
+      "text": "achievements like this. I I like the",
+      "start": 1219.76,
+      "duration": 3.12
+    },
+    {
+      "text": "styling of that one. And then I thought",
+      "start": 1221.28,
+      "duration": 2.88
+    },
+    {
+      "text": "this is cool. It like kind of can",
+      "start": 1222.88,
+      "duration": 2.88
+    },
+    {
+      "text": "programmatically create challenges for",
+      "start": 1224.16,
+      "duration": 3.44
+    },
+    {
+      "text": "the user. And then we have time",
+      "start": 1225.76,
+      "duration": 3.44
+    },
+    {
+      "text": "reclaimed. I really like this one too.",
+      "start": 1227.6,
+      "duration": 3.12
+    },
+    {
+      "text": "Like the impact this is actually having",
+      "start": 1229.2,
+      "duration": 4.16
+    },
+    {
+      "text": "on your life, how many hours per day on",
+      "start": 1230.72,
+      "duration": 6.56
+    },
+    {
+      "text": "average you are saving and how many full",
+      "start": 1233.36,
+      "duration": 5.76
+    },
+    {
+      "text": "work days over the course of like a year",
+      "start": 1237.28,
+      "duration": 3.92
+    },
+    {
+      "text": "that equates to. It's kind of crazy. And",
+      "start": 1239.12,
+      "duration": 3.84
+    },
+    {
+      "text": "then it has these little like analogs of",
+      "start": 1241.2,
+      "duration": 3.28
+    },
+    {
+      "text": "like it's this many workout sessions,",
+      "start": 1242.96,
+      "duration": 3.04
+    },
+    {
+      "text": "it's this much quality time with",
+      "start": 1244.48,
+      "duration": 2.88
+    },
+    {
+      "text": "friends, it's this much time you could",
+      "start": 1246.0,
+      "duration": 4.159
+    },
+    {
+      "text": "have spent learning. Um I I really like",
+      "start": 1247.36,
+      "duration": 4.48
+    },
+    {
+      "text": "this one actually. So this was an",
+      "start": 1250.159,
+      "duration": 3.681
+    },
+    {
+      "text": "example of showing the app's benefits to",
+      "start": 1251.84,
+      "duration": 3.6
+    },
+    {
+      "text": "people. And then we have three different",
+      "start": 1253.84,
+      "duration": 4.24
+    },
+    {
+      "text": "approaches to that emergency unlock payw",
+      "start": 1255.44,
+      "duration": 3.76
+    },
+    {
+      "text": "wall. This is the one we actually",
+      "start": 1258.08,
+      "duration": 3.12
+    },
+    {
+      "text": "started with. So this was the first one",
+      "start": 1259.2,
+      "duration": 3.2
+    },
+    {
+      "text": "and then I went through and was",
+      "start": 1261.2,
+      "duration": 2.64
+    },
+    {
+      "text": "experimenting and adding in all those",
+      "start": 1262.4,
+      "duration": 3.44
+    },
+    {
+      "text": "other sections. And so these are three",
+      "start": 1263.84,
+      "duration": 3.92
+    },
+    {
+      "text": "different ways that we could handle that",
+      "start": 1265.84,
+      "duration": 4.8
+    },
+    {
+      "text": "$5 unlock. Okay. And now this is a big",
+      "start": 1267.76,
+      "duration": 4.799
+    },
+    {
+      "text": "reason why we do that like, hey, give me",
+      "start": 1270.64,
+      "duration": 3.44
+    },
+    {
+      "text": "three different angles because we're",
+      "start": 1272.559,
+      "duration": 3.281
+    },
+    {
+      "text": "going to see how meaningfully different",
+      "start": 1274.08,
+      "duration": 3.36
+    },
+    {
+      "text": "these things actually are from one",
+      "start": 1275.84,
+      "duration": 3.12
+    },
+    {
+      "text": "another. So the first one is like a",
+      "start": 1277.44,
+      "duration": 3.2
+    },
+    {
+      "text": "mindfulnessbased",
+      "start": 1278.96,
+      "duration": 3.36
+    },
+    {
+      "text": "payw wall. And so we say, hey, you've",
+      "start": 1280.64,
+      "duration": 3.519
+    },
+    {
+      "text": "already used your free emergency unlock",
+      "start": 1282.32,
+      "duration": 4.8
+    },
+    {
+      "text": "for this month. Let's pause and reflect",
+      "start": 1284.159,
+      "duration": 4.961
+    },
+    {
+      "text": "before we open up this app. Why do you",
+      "start": 1287.12,
+      "duration": 4.4
+    },
+    {
+      "text": "want to unlock it right now? Right? I'm",
+      "start": 1289.12,
+      "duration": 4.88
+    },
+    {
+      "text": "just bored. Okay. Choose a question to",
+      "start": 1291.52,
+      "duration": 4.8
+    },
+    {
+      "text": "reflect on for 30 seconds. How will I",
+      "start": 1294.0,
+      "duration": 4.32
+    },
+    {
+      "text": "feel? Right? A lot of us when we're done",
+      "start": 1296.32,
+      "duration": 4.08
+    },
+    {
+      "text": "doom scrolling we feel like right",
+      "start": 1298.32,
+      "duration": 3.92
+    },
+    {
+      "text": "so maybe that's an important thing to",
+      "start": 1300.4,
+      "duration": 3.519
+    },
+    {
+      "text": "reflect on right and then a gentle",
+      "start": 1302.24,
+      "duration": 4.559
+    },
+    {
+      "text": "reminder unlocking this now means I",
+      "start": 1303.919,
+      "duration": 4.561
+    },
+    {
+      "text": "wouldn't say investing in this context",
+      "start": 1306.799,
+      "duration": 4.161
+    },
+    {
+      "text": "from like a copyrightiting perspective u",
+      "start": 1308.48,
+      "duration": 4.24
+    },
+    {
+      "text": "because it's not an investment right an",
+      "start": 1310.96,
+      "duration": 2.719
+    },
+    {
+      "text": "investment is something that's",
+      "start": 1312.72,
+      "duration": 2.959
+    },
+    {
+      "text": "positively focused um so I would say",
+      "start": 1313.679,
+      "duration": 4.081
+    },
+    {
+      "text": "right now means spending $5 in this",
+      "start": 1315.679,
+      "duration": 3.36
+    },
+    {
+      "text": "moment is this the best use of your",
+      "start": 1317.76,
+      "duration": 3.12
+    },
+    {
+      "text": "focus fund I like how they called it a",
+      "start": 1319.039,
+      "duration": 4.801
+    },
+    {
+      "text": "focus fund um remember that every unlock",
+      "start": 1320.88,
+      "duration": 4.08
+    },
+    {
+      "text": "is a choice between immediate",
+      "start": 1323.84,
+      "duration": 2.719
+    },
+    {
+      "text": "gratification and your long-term goals",
+      "start": 1324.96,
+      "duration": 2.959
+    },
+    {
+      "text": "so So, I do kind of like this one. And",
+      "start": 1326.559,
+      "duration": 2.961
+    },
+    {
+      "text": "then it gives you some alternate ideas",
+      "start": 1327.919,
+      "duration": 4.0
+    },
+    {
+      "text": "and then it has a little style for",
+      "start": 1329.52,
+      "duration": 3.84
+    },
+    {
+      "text": "choosing what you want to do. But then",
+      "start": 1331.919,
+      "duration": 3.041
+    },
+    {
+      "text": "we can see this one's a lot harsher,",
+      "start": 1333.36,
+      "duration": 3.6
+    },
+    {
+      "text": "right? This one's a lot more focused on",
+      "start": 1334.96,
+      "duration": 3.12
+    },
+    {
+      "text": "like, hey, you're kind of screwing",
+      "start": 1336.96,
+      "duration": 2.8
+    },
+    {
+      "text": "yourself financially. Look at the total",
+      "start": 1338.08,
+      "duration": 3.12
+    },
+    {
+      "text": "cost of everything you're doing. Like,",
+      "start": 1339.76,
+      "duration": 3.039
+    },
+    {
+      "text": "oh my god, is this really worth it to",
+      "start": 1341.2,
+      "duration": 3.599
+    },
+    {
+      "text": "you? Now, I don't like this one because",
+      "start": 1342.799,
+      "duration": 4.24
+    },
+    {
+      "text": "I think it could accidentally deter",
+      "start": 1344.799,
+      "duration": 3.841
+    },
+    {
+      "text": "someone from even wanting to use the",
+      "start": 1347.039,
+      "duration": 3.361
+    },
+    {
+      "text": "app, right? Where they see this more as",
+      "start": 1348.64,
+      "duration": 3.519
+    },
+    {
+      "text": "like, oh my god, this app's costing me",
+      "start": 1350.4,
+      "duration": 3.36
+    },
+    {
+      "text": "this much. It's going to cost me this",
+      "start": 1352.159,
+      "duration": 3.76
+    },
+    {
+      "text": "much every other day, right? as opposed",
+      "start": 1353.76,
+      "duration": 3.44
+    },
+    {
+      "text": "to this being something that's focused",
+      "start": 1355.919,
+      "duration": 3.12
+    },
+    {
+      "text": "on them, this is now focused on",
+      "start": 1357.2,
+      "duration": 3.2
+    },
+    {
+      "text": "something that could be seen as it's",
+      "start": 1359.039,
+      "duration": 3.601
+    },
+    {
+      "text": "just taking from them unnecessarily. And",
+      "start": 1360.4,
+      "duration": 3.68
+    },
+    {
+      "text": "then we have this challenge mode, which",
+      "start": 1362.64,
+      "duration": 3.68
+    },
+    {
+      "text": "I really like, which is like how can we",
+      "start": 1364.08,
+      "duration": 5.36
+    },
+    {
+      "text": "turn this and reframe it into a like a",
+      "start": 1366.32,
+      "duration": 4.719
+    },
+    {
+      "text": "focus, right? And so maybe there's like",
+      "start": 1369.44,
+      "duration": 3.28
+    },
+    {
+      "text": "community challenges. And so it's like,",
+      "start": 1371.039,
+      "duration": 2.801
+    },
+    {
+      "text": "hey, instead of paying right now, how",
+      "start": 1372.72,
+      "duration": 3.04
+    },
+    {
+      "text": "about we double or nothing? Um, I think",
+      "start": 1373.84,
+      "duration": 3.36
+    },
+    {
+      "text": "this is actually really cool, too, the",
+      "start": 1375.76,
+      "duration": 4.24
+    },
+    {
+      "text": "way that they did this. Um, so overall,",
+      "start": 1377.2,
+      "duration": 4.08
+    },
+    {
+      "text": "pretty happy with a lot of these",
+      "start": 1380.0,
+      "duration": 3.12
+    },
+    {
+      "text": "screens. I I did like this premium",
+      "start": 1381.28,
+      "duration": 3.759
+    },
+    {
+      "text": "upgrade one. I might do something with",
+      "start": 1383.12,
+      "duration": 4.16
+    },
+    {
+      "text": "this one down here, but the top piece of",
+      "start": 1385.039,
+      "duration": 4.161
+    },
+    {
+      "text": "it I really liked. I really like this",
+      "start": 1387.28,
+      "duration": 3.759
+    },
+    {
+      "text": "block configuration. I might go and",
+      "start": 1389.2,
+      "duration": 4.0
+    },
+    {
+      "text": "update these two screens to match this",
+      "start": 1391.039,
+      "duration": 4.481
+    },
+    {
+      "text": "style and design more closely. I like",
+      "start": 1393.2,
+      "duration": 3.599
+    },
+    {
+      "text": "how it brainstormed these three",
+      "start": 1395.52,
+      "duration": 2.88
+    },
+    {
+      "text": "different approaches to app benefits. I",
+      "start": 1396.799,
+      "duration": 2.721
+    },
+    {
+      "text": "like how it did the different payw",
+      "start": 1398.4,
+      "duration": 3.04
+    },
+    {
+      "text": "walls. And so basically what I would do",
+      "start": 1399.52,
+      "duration": 4.159
+    },
+    {
+      "text": "is I would go and repeat this process",
+      "start": 1401.44,
+      "duration": 4.08
+    },
+    {
+      "text": "iteratively for all of the major",
+      "start": 1403.679,
+      "duration": 4.641
+    },
+    {
+      "text": "features and screens of my app. So",
+      "start": 1405.52,
+      "duration": 5.039
+    },
+    {
+      "text": "stunning designs and simply because we",
+      "start": 1408.32,
+      "duration": 5.12
+    },
+    {
+      "text": "gave it a professional UI to model off",
+      "start": 1410.559,
+      "duration": 6.641
+    },
+    {
+      "text": "of. We had it describe what that UI",
+      "start": 1413.44,
+      "duration": 7.119
+    },
+    {
+      "text": "actually means qualitatively and then we",
+      "start": 1417.2,
+      "duration": 5.76
+    },
+    {
+      "text": "had it build it into a concrete",
+      "start": 1420.559,
+      "duration": 4.561
+    },
+    {
+      "text": "tokenbased design system. And when you",
+      "start": 1422.96,
+      "duration": 4.4
+    },
+    {
+      "text": "take those two worlds together and fuse",
+      "start": 1425.12,
+      "duration": 5.36
+    },
+    {
+      "text": "it with our actual app inspiration, we",
+      "start": 1427.36,
+      "duration": 6.0
+    },
+    {
+      "text": "get a pretty awesome output. Again,",
+      "start": 1430.48,
+      "duration": 4.96
+    },
+    {
+      "text": "professional inspiration, clear",
+      "start": 1433.36,
+      "duration": 5.12
+    },
+    {
+      "text": "principles, and focused effort behind",
+      "start": 1435.44,
+      "duration": 6.719
+    },
+    {
+      "text": "the UI design. That is the power of this",
+      "start": 1438.48,
+      "duration": 6.319
+    },
+    {
+      "text": "visual fusion system. So, the biggest",
+      "start": 1442.159,
+      "duration": 5.841
+    },
+    {
+      "text": "takeaway today is this. Stop asking the",
+      "start": 1444.799,
+      "duration": 6.321
+    },
+    {
+      "text": "language models to be creative geniuses.",
+      "start": 1448.0,
+      "duration": 5.36
+    },
+    {
+      "text": "Instead, give it professional",
+      "start": 1451.12,
+      "duration": 5.12
+    },
+    {
+      "text": "inspiration and codify that inspiration",
+      "start": 1453.36,
+      "duration": 5.76
+    },
+    {
+      "text": "into something it can follow as a",
+      "start": 1456.24,
+      "duration": 5.2
+    },
+    {
+      "text": "process. Do that and you will get",
+      "start": 1459.12,
+      "duration": 6.24
+    },
+    {
+      "text": "prolevel results every time. That's why",
+      "start": 1461.44,
+      "duration": 6.0
+    },
+    {
+      "text": "I firmly hold the position that we will",
+      "start": 1465.36,
+      "duration": 4.559
+    },
+    {
+      "text": "always need humans. We will always need",
+      "start": 1467.44,
+      "duration": 4.239
+    },
+    {
+      "text": "professional designers. We will always",
+      "start": 1469.919,
+      "duration": 4.961
+    },
+    {
+      "text": "need professional engineers. Creativity",
+      "start": 1471.679,
+      "duration": 5.441
+    },
+    {
+      "text": "and productive achievement is what makes",
+      "start": 1474.88,
+      "duration": 5.679
+    },
+    {
+      "text": "humanity great. So let's learn to",
+      "start": 1477.12,
+      "duration": 6.72
+    },
+    {
+      "text": "leverage that, not seek to replace it",
+      "start": 1480.559,
+      "duration": 5.841
+    },
+    {
+      "text": "mindlessly. So, now that you can design",
+      "start": 1483.84,
+      "duration": 5.36
+    },
+    {
+      "text": "a stunning UI, it's time to turn it into",
+      "start": 1486.4,
+      "duration": 6.0
+    },
+    {
+      "text": "an actual full stack application. To do",
+      "start": 1489.2,
+      "duration": 5.44
+    },
+    {
+      "text": "that, check out the video linked at the",
+      "start": 1492.4,
+      "duration": 5.36
+    },
+    {
+      "text": "end of this video where I show how this",
+      "start": 1494.64,
+      "duration": 6.399
+    },
+    {
+      "text": "fits into an overarching eightstep vibe",
+      "start": 1497.76,
+      "duration": 6.0
+    },
+    {
+      "text": "coding process that has a complete front",
+      "start": 1501.039,
+      "duration": 5.601
+    },
+    {
+      "text": "end and backend. And before I forget, I",
+      "start": 1503.76,
+      "duration": 4.56
+    },
+    {
+      "text": "would really love to see what designs",
+      "start": 1506.64,
+      "duration": 3.6
+    },
+    {
+      "text": "and what apps you guys are building. So,",
+      "start": 1508.32,
+      "duration": 4.479
+    },
+    {
+      "text": "feel free to drop those below in the",
+      "start": 1510.24,
+      "duration": 4.88
+    },
+    {
+      "text": "comments. Drop a link to your favorite",
+      "start": 1512.799,
+      "duration": 4.24
+    },
+    {
+      "text": "Mobin app that you're going to try to",
+      "start": 1515.12,
+      "duration": 5.36
+    },
+    {
+      "text": "emulate or drop a link to an app that",
+      "start": 1517.039,
+      "duration": 4.961
+    },
+    {
+      "text": "you've actually built using some of",
+      "start": 1520.48,
+      "duration": 3.04
+    },
+    {
+      "text": "these systems that I show you guys in",
+      "start": 1522.0,
+      "duration": 3.2
+    },
+    {
+      "text": "the video. I would love to see that",
+      "start": 1523.52,
+      "duration": 3.84
+    },
+    {
+      "text": "stuff. But that is it for this video. I",
+      "start": 1525.2,
+      "duration": 4.59
+    },
+    {
+      "text": "will catch you in the next one.",
+      "start": 1527.36,
+      "duration": 7.509
+    },
+    {
+      "text": "[Music]",
+      "start": 1529.79,
+      "duration": 5.079
+    }
+  ],
+  "total_duration": 1534.869,
+  "word_count": 5100
+}
