@@ -1,5 +1,22 @@
 # UrbanAI Development Progress
 
+### Update (2025-09-14): Landing page UX improvements
+- Replaced header and footer UrbanAI logos with transparent-background white brand asset: static-site/assets/brand/logos/urbanai-logo-white.png (explicit width/height, decoding, fetchpriority/lazy to reduce CLS)
+- Lightened hero overlay to showcase hero-urban-skyline-new.jpg while preserving AA contrast; added preload for improved LCP
+- Replaced placeholder store badges with official vendor assets:
+  - App Store: https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg
+  - Google Play: https://play.google.com/intl/en/badges/static/images/badges/en_badge_web_generic.svg
+- Replaced placeholder social icons with brand-faithful vectors (white) via Simple Icons CDN:
+  - X: https://cdn.simpleicons.org/x/FFFFFF
+  - LinkedIn: https://cdn.simpleicons.org/linkedin/FFFFFF
+  - GitHub: https://cdn.simpleicons.org/github/FFFFFF
+- Accessibility/performance: ensured alt/ARIA labeling on links, added explicit image dimensions, decoding=async and loading=lazy where appropriate
+- File changed: mocks/unified-web-landing-page.html
+
+Validation planned (per .clinerules/workflows/ux-design):
+- Accessibility: Browser Tools MCP audit (contrast, focus, keyboard)
+- Responsive: Mobile MCP breakpoints (320/768/1024/1440)
+
 ## Current Implementation Status
 
 ### ✅ Completed Features
