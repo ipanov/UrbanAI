@@ -100,7 +100,8 @@
       "WebFetch(domain:www.youtube.com)",
       "Bash(npm search:*)",
       "Bash(python:*)",
-      "Bash(/agents)"
+      "Bash(/agents)",
+      "Bash(lsof -i :8080)"
     ],
     "deny": [],
     "ask": []

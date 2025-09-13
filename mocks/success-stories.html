@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success Stories - UrbanAI</title>
+    <meta name="description" content="See how cities worldwide are transforming urban services with UrbanAI's smart issue reporting platform.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-color: #2563EB;
+            --primary-dark: #1E40AF;
+            --secondary-color: #059669;
+            --accent-color: #F59E0B;
+            --text-primary: #1E293B;
+            --text-secondary: #64748B;
+            --text-light: #94A3B8;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F8FAFC;
+            --bg-accent: #F1F5F9;
+            --border-color: #E2E8F0;
+            --gradient-primary: linear-gradient(135deg, #2563EB 0%, #1E40AF 100%);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 0;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .logo-image {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .nav-back {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--primary-color);
+            background-color: var(--bg-accent);
+        }
+
+        /* Main Content */
+        .main {
+            padding: 80px 0;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .page-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            margin-bottom: 80px;
+            padding: 40px;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Testimonials Grid */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            margin-top: 40px;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 32px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .testimonial-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+
+        .testimonial-info {
+            flex: 1;
+        }
+
+        .testimonial-name {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .testimonial-role {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Case Study Section */
+        .case-study {
+            margin-top: 80px;
+            padding: 60px;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+        }
+
+        .case-study-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .case-study-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .case-study-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+        }
+
+        .case-study-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .case-study-metric {
+            text-align: center;
+            padding: 24px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .case-study-metric-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .case-study-metric-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .case-study {
+                padding: 40px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="unified-web-landing-page.html" class="logo">
+                <img src="./assets/logo1.png" alt="UrbanAI Logo" class="logo-image">
+                UrbanAI
+            </a>
+            <a href="unified-web-landing-page.html" class="nav-back">← Back to Home</a>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Success Stories</h1>
+                <p class="page-subtitle">
+                    See how UrbanAI is transforming municipal services and improving citizen engagement across the globe.
+                </p>
+            </div>
+
+            <!-- Key Statistics -->
+            <div class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Cities Using UrbanAI</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">2M+</div>
+                        <div class="stat-label">Issues Resolved</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">60%</div>
+                        <div class="stat-label">Faster Resolution</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Citizen Satisfaction</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonials -->
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "UrbanAI has revolutionized how we handle citizen complaints. Our response time improved by 60% and citizen satisfaction is at an all-time high. The AI-powered triage system has been a game-changer for our operations team."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">MJ</div>
+                        <div class="testimonial-info">
+                            <div class="testimonial-name">Maria Johnson</div>
+                            <div class="testimonial-role">City Manager, Seattle</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "As a citizen, I love how easy it is to report issues and track their progress. The app is intuitive and I always know what's happening with my reports. It's made me feel more connected to my community."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">RW</div>
+                        <div class="testimonial-info">
+                            <div class="testimonial-name">Robert Williams</div>
+                            <div class="testimonial-role">Resident, Austin</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "The AI-powered triage system has been revolutionary. We can now prioritize critical issues automatically and deploy resources more efficiently. Our team's productivity has increased significantly."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">SL</div>
+                        <div class="testimonial-info">
+                            <div class="testimonial-name">Sarah Lee</div>
+                            <div class="testimonial-role">Operations Director, Toronto</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "UrbanAI's comprehensive reporting capabilities have transformed our city council meetings. We now have data-driven insights that help us make better decisions for our community."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">DM</div>
+                        <div class="testimonial-info">
+                            <div class="testimonial-name">David Martinez</div>
+                            <div class="testimonial-role">Mayor, Barcelona</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "The multi-platform approach means our citizens can report issues however they prefer - web, mobile, or phone. The seamless experience has increased citizen engagement by 40%."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">LT</div>
+                        <div class="testimonial-info">
+                            <div class="testimonial-name">Lisa Thompson</div>
+                            <div class="testimonial-role">Digital Services Head, Singapore</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "The real-time tracking feature has eliminated most follow-up calls. Citizens can see exactly where their request stands, which has reduced our call center volume by 50%."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">JR</div>
+                        <div class="testimonial-info">
+                            <div class="testimonial-name">James Rodriguez</div>
+                            <div class="testimonial-role">Customer Service Manager, Phoenix</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Case Study -->
+            <div class="case-study">
+                <div class="case-study-header">
+                    <h2 class="case-study-title">Case Study: City of Austin</h2>
+                    <p class="case-study-subtitle">
+                        How Austin transformed their 311 service with UrbanAI in just 6 months
+                    </p>
+                </div>
+
+                <div class="case-study-content">
+                    <div class="case-study-metric">
+                        <div class="case-study-metric-number">65%</div>
+                        <div class="case-study-metric-label">Reduction in Response Time</div>
+                    </div>
+                    <div class="case-study-metric">
+                        <div class="case-study-metric-number">40%</div>
+                        <div class="case-study-metric-label">Increase in Citizen Reports</div>
+                    </div>
+                    <div class="case-study-metric">
+                        <div class="case-study-metric-number">85%</div>
+                        <div class="case-study-metric-label">Employee Satisfaction</div>
+                    </div>
+                    <div class="case-study-metric">
+                        <div class="case-study-metric-number">$2M</div>
+                        <div class="case-study-metric-label">Annual Cost Savings</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
