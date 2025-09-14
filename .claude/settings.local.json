@@ -101,7 +101,15 @@
       "Bash(npm search:*)",
       "Bash(python:*)",
       "Bash(/agents)",
-      "Bash(lsof -i :8080)"
+      "Bash(lsof -i :8080)",
+      "WebFetch(domain:simpleicons.org)",
+      "Bash(start:*)",
+      "Bash(git clone:*)",
+      "WebFetch(domain:tools.applemediaservices.com)",
+      "WebFetch(domain:toolbox.marketingtools.apple.com)",
+      "WebFetch(domain:play.google.com)",
+      "WebFetch(domain:partnermarketinghub.withgoogle.com)",
+      "mcp__ide__executeCode"
     ],
     "deny": [],
     "ask": []

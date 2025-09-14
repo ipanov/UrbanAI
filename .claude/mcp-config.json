@@ -1,0 +1,72 @@
+{
+  "mcpServers": {
+    "ux-design-toolkit": {
+      "description": "Enhanced UX design capabilities for 2025 standards",
+      "capabilities": [
+        "logo-sizing-validation",
+        "responsive-design-testing",
+        "accessibility-compliance-checking",
+        "visual-hierarchy-analysis",
+        "component-proportions-validation"
+      ],
+      "standards": {
+        "logoSizing": {
+          "header": { "minWidth": "400px", "recommended": "450px" },
+          "footer": { "minWidth": "350px", "recommended": "450px" },
+          "aspectRatio": "16:9 or 1:1",
+          "fileSize": "<200KB"
+        },
+        "responsiveBreakpoints": {
+          "mobile": "375px",
+          "tablet": "768px",
+          "desktop": "1920px"
+        },
+        "accessibility": {
+          "contrastRatio": "4.5:1 minimum",
+          "touchTargets": "44px minimum",
+          "focusStates": "2px outline minimum"
+        },
+        "typography": {
+          "baseSize": "16px",
+          "scaleRatio": "1.25 (major third)",
+          "lineHeight": "1.5 for body, 1.2 for headings"
+        },
+        "spacing": {
+          "gridSystem": "8pt base",
+          "componentPadding": "16px minimum",
+          "sectionSpacing": "64px minimum"
+        }
+      },
+      "validationWorkflow": [
+        "Take screenshot at multiple breakpoints",
+        "Validate logo proportions against standards",
+        "Check color contrast ratios",
+        "Test interactive states",
+        "Verify responsive behavior",
+        "Run accessibility audit"
+      ]
+    },
+    "design-system-integration": {
+      "description": "Modern design system tools and frameworks",
+      "tools": [
+        "tailwindcss",
+        "shadcn-ui",
+        "playwright-visual-testing",
+        "accessibility-checker"
+      ],
+      "patterns": [
+        "component-library",
+        "design-tokens",
+        "visual-regression-testing",
+        "progressive-enhancement"
+      ]
+    }
+  },
+  "automatedValidation": {
+    "logoSizing": true,
+    "responsiveDesign": true,
+    "accessibilityCompliance": true,
+    "visualRegression": true,
+    "performanceImpact": true
+  }
+}
