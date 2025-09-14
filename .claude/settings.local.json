@@ -116,7 +116,22 @@
       "Read(//d/repos/urbanai/**)",
       "Bash(cat:*)",
       "Read(//c/Users/ilija/**)",
-      "mcp__github__get_workflow_run"
+      "mcp__github__get_workflow_run",
+      "mcp__filesystem-mcp__list_directory",
+      "mcp__filesystem-mcp__read_text_file",
+      "mcp__playwright-mcp__playwright_navigate",
+      "mcp__playwright-mcp__playwright_screenshot",
+      "mcp__playwright-mcp__playwright_hover",
+      "Bash(sed:*)",
+      "mcp__context7-mcp__resolve-library-id",
+      "mcp__context7-mcp__get-library-docs",
+      "mcp__filesystem-mcp__directory_tree",
+      "mcp__firecrawl-mcp__firecrawl_search",
+      "mcp__sequential-thinking-mcp__sequentialthinking",
+      "mcp__browser-tools-mcp__runAccessibilityAudit",
+      "mcp__playwright-mcp__playwright_evaluate",
+      "mcp__playwright-mcp__playwright_close",
+      "mcp__firecrawl-mcp__firecrawl_scrape"
     ],
     "deny": [],
     "ask": []

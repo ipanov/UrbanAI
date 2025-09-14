@@ -1,5 +1,20 @@
 # UrbanAI Development Progress
 
+### Update (2025-09-15): Store Badges, Logos, and Step Icons (static-site)
+- Normalized App Store and Google Play badges to identical footprint:
+  - `.store-badge { width: clamp(200px, 26vw, 240px); height: clamp(60px, 7vw, 68px); }`
+  - `img { width: 100%; height: 100%; object-fit: contain; }` to preserve official artwork and equalize visual size.
+- Header and footer logos now maintain readable size at all breakpoints:
+  - `.logo img` and `.footer-brand img` use `height: max(64px, calc(var(--header-action-height, 48px) * 1))` to prevent shrinking below 64px while tracking CTA scale.
+- Replaced generic “AI-like” circles in “From Report to Resolution” with inline, meaningful SVG icons:
+  - Report: Camera, AI Analysis: CPU/Brain, Authority Action: Building; styled as white strokes within existing blue tokens for consistency with “Why Choose UrbanAI”.
+- Files changed: `static-site/index.html`. Visual validation completed on desktop, tablet, and mobile via local preview.
+
+### Update (2025-09-14): Static-site Header/Footer Logo Scaling
+- Increased header logo to responsive `height: clamp(40px, 6vw, 96px)` and footer logo to `height: clamp(36px, 4.5vw, 84px)` in `static-site/index.html`.
+- Ensured brand mark is at least as large as the largest adjacent text in header and footer, per UX guidance; capped at ~1.25× to avoid dominance; `width: auto` to keep aspect ratio; touch target ≥44px.
+- Validated visually on desktop/tablet/mobile via local preview.
+
 ### Update (2025-09-14): Comprehensive UX Enhancement & Layout Fixes
 - **HTML Layout Improvements**: Fixed static-site/index.html responsiveness issues
   - Logo sizing: Replaced fixed 450px width with responsive `clamp(120px, 25vw, 200px)`

@@ -1,0 +1,1462 @@
+
+Here's the truth. The reason your
+Here's the truth. The reason your
+
+Here's the truth. The reason your
+generated sites look bad isn't the fault
+generated sites look bad isn't the fault
+
+generated sites look bad isn't the fault
+of AI. It's the way you're using it. If
+of AI. It's the way you're using it. If
+
+of AI. It's the way you're using it. If
+you're still going into clawed code and
+you're still going into clawed code and
+
+you're still going into clawed code and
+asking it to build a beautiful website
+asking it to build a beautiful website
+
+asking it to build a beautiful website
+or make it look premium, then you're
+or make it look premium, then you're
+
+or make it look premium, then you're
+seriously going to get left behind.
+seriously going to get left behind.
+
+seriously going to get left behind.
+Today, I'll show you how to finally
+Today, I'll show you how to finally
+
+Today, I'll show you how to finally
+leave those boring generic sites behind
+leave those boring generic sites behind
+
+leave those boring generic sites behind
+and reveal three powerful methods that
+and reveal three powerful methods that
+
+and reveal three powerful methods that
+completely change how you build
+completely change how you build
+
+completely change how you build
+websites, plus some tricks to take your
+websites, plus some tricks to take your
+
+websites, plus some tricks to take your
+work to the next level with the most
+work to the next level with the most
+
+work to the next level with the most
+powerful coding agent available right
+powerful coding agent available right
+
+powerful coding agent available right
+now. Now, the real power of clawed code
+now. Now, the real power of clawed code
+
+now. Now, the real power of clawed code
+in UI comes from iterating repeatedly.
+in UI comes from iterating repeatedly.
+
+in UI comes from iterating repeatedly.
+They never tire, making them ideal for
+They never tire, making them ideal for
+
+They never tire, making them ideal for
+continuous refinement. There's a proper
+continuous refinement. There's a proper
+
+continuous refinement. There's a proper
+framework for effective iteration. It's
+framework for effective iteration. It's
+
+framework for effective iteration. It's
+also really important to use HTML files
+also really important to use HTML files
+
+also really important to use HTML files
+during initial iterations. They're much
+during initial iterations. They're much
+
+during initial iterations. They're much
+easier to modify than fully developed
+easier to modify than fully developed
+
+easier to modify than fully developed
+frameworks like Nex.js or React apps.
+frameworks like Nex.js or React apps.
+
+frameworks like Nex.js or React apps.
+For repeated iterations, cloud code
+For repeated iterations, cloud code
+
+For repeated iterations, cloud code
+stands out with features like /comands
+stands out with features like /comands
+
+stands out with features like /comands
+and multiple agent creation
+and multiple agent creation
+
+and multiple agent creation
+capabilities. But to effectively iterate
+capabilities. But to effectively iterate
+
+capabilities. But to effectively iterate
+on UI designs, you also need the right
+on UI designs, you also need the right
+
+on UI designs, you also need the right
+visualization tool. This is where
+visualization tool. This is where
+
+visualization tool. This is where
+superdesign.dev comes in. They call it
+superdesign.dev comes in. They call it
+
+superdesign.dev comes in. They call it
+the cursor for design and it lives up to
+the cursor for design and it lives up to
+
+the cursor for design and it lives up to
+that name. It provides an interactive
+that name. It provides an interactive
+
+that name. It provides an interactive
+canvas where you can watch your AI agent
+canvas where you can watch your AI agent
+
+canvas where you can watch your AI agent
+create and modify UI iterations in real
+create and modify UI iterations in real
+
+create and modify UI iterations in real
+time. Previously, this tool had a
+time. Previously, this tool had a
+
+time. Previously, this tool had a
+significant limitation. We could only
+significant limitation. We could only
+
+significant limitation. We could only
+use the built-in agent with a clawed API
+use the built-in agent with a clawed API
+
+use the built-in agent with a clawed API
+key. You couldn't use your existing
+key. You couldn't use your existing
+
+key. You couldn't use your existing
+cursor or claude code subscription. But
+cursor or claude code subscription. But
+
+cursor or claude code subscription. But
+now, they've solved this problem. You
+now, they've solved this problem. You
+
+now, they've solved this problem. You
+can use their powerful canvas feature
+can use their powerful canvas feature
+
+can use their powerful canvas feature
+and embedded workflow directly with your
+and embedded workflow directly with your
+
+and embedded workflow directly with your
+existing Claude Code subscription while
+existing Claude Code subscription while
+
+existing Claude Code subscription while
+still accessing all the benefits this
+still accessing all the benefits this
+
+still accessing all the benefits this
+remarkable tool provides. So, first let
+remarkable tool provides. So, first let
+
+remarkable tool provides. So, first let
+me show you how to install SuperDesign
+me show you how to install SuperDesign
+
+me show you how to install SuperDesign
+and use it with Claude Code. It's a
+and use it with Claude Code. It's a
+
+and use it with Claude Code. It's a
+simple extension that works in both
+simple extension that works in both
+
+simple extension that works in both
+cursor and VS Code. Open your extensions
+cursor and VS Code. Open your extensions
+
+cursor and VS Code. Open your extensions
+tab. Search for SuperDesign and install
+tab. Search for SuperDesign and install
+
+tab. Search for SuperDesign and install
+it. Once installed, you'll need to open
+it. Once installed, you'll need to open
+
+it. Once installed, you'll need to open
+the canvas view. Press command plus
+the canvas view. Press command plus
+
+the canvas view. Press command plus
+shift + P to open the command pallet.
+shift + P to open the command pallet.
+
+shift + P to open the command pallet.
+Type SuperDesign and select this option
+Type SuperDesign and select this option
+
+Type SuperDesign and select this option
+from the menu. This canvas view displays
+from the menu. This canvas view displays
+
+from the menu. This canvas view displays
+all your designs in real time, allowing
+all your designs in real time, allowing
+
+all your designs in real time, allowing
+you to see changes and iterate
+you to see changes and iterate
+
+you to see changes and iterate
+immediately. You can also change the
+immediately. You can also change the
+
+immediately. You can also change the
+device types to see how your designs
+device types to see how your designs
+
+device types to see how your designs
+appear on various screens. This is
+appear on various screens. This is
+
+appear on various screens. This is
+really useful for testing responsive
+really useful for testing responsive
+
+really useful for testing responsive
+layouts. Now, here's how to use the
+layouts. Now, here's how to use the
+
+layouts. Now, here's how to use the
+iterative workflow with Claude code. To
+iterative workflow with Claude code. To
+
+iterative workflow with Claude code. To
+use Claude code, we need to initialize a
+use Claude code, we need to initialize a
+
+use Claude code, we need to initialize a
+claude.md file that they've provided.
+claude.md file that they've provided.
+
+claude.md file that they've provided.
+This file will contain all the context
+This file will contain all the context
+
+This file will contain all the context
+and system prompts needed for claude
+and system prompts needed for claude
+
+and system prompts needed for claude
+code to function like their native
+code to function like their native
+
+code to function like their native
+agent. Open your command pallet again
+agent. Open your command pallet again
+
+agent. Open your command pallet again
+with command plus shift + p. Type
+with command plus shift + p. Type
+
+with command plus shift + p. Type
+superesign and this time select the
+superesign and this time select the
+
+superesign and this time select the
+initialize superdesign option. This
+initialize superdesign option. This
+
+initialize superdesign option. This
+creates the claude.md file right in your
+creates the claude.md file right in your
+
+creates the claude.md file right in your
+home directory. Now when you initialize
+home directory. Now when you initialize
+
+home directory. Now when you initialize
+claude in your current repository, it
+claude in your current repository, it
+
+claude in your current repository, it
+automatically loads all the context from
+automatically loads all the context from
+
+automatically loads all the context from
+this file and acts like a system prompt
+this file and acts like a system prompt
+
+this file and acts like a system prompt
+for claude code. The file tells Claude
+for claude code. The file tells Claude
+
+for claude code. The file tells Claude
+it's acting as super design, a senior
+it's acting as super design, a senior
+
+it's acting as super design, a senior
+front-end engineer. It also includes
+front-end engineer. It also includes
+
+front-end engineer. It also includes
+styling instructions for various
+styling instructions for various
+
+styling instructions for various
+libraries, font specifications, color
+libraries, font specifications, color
+
+libraries, font specifications, color
+schemes, and additional guidelines.
+schemes, and additional guidelines.
+
+schemes, and additional guidelines.
+Essentially, it provides all the
+Essentially, it provides all the
+
+Essentially, it provides all the
+information that makes SuperDesign an
+information that makes SuperDesign an
+
+information that makes SuperDesign an
+excellent design agent. First, we start
+excellent design agent. First, we start
+
+excellent design agent. First, we start
+with the layout phase for your app. I've
+with the layout phase for your app. I've
+
+with the layout phase for your app. I've
+asked Claude Code to build the main home
+asked Claude Code to build the main home
+
+asked Claude Code to build the main home
+screen of an Uber app. I requested five
+screen of an Uber app. I requested five
+
+screen of an Uber app. I requested five
+iterations. Claude Code updates its task
+iterations. Claude Code updates its task
+
+iterations. Claude Code updates its task
+list and begins generating the layouts.
+list and begins generating the layouts.
+
+list and begins generating the layouts.
+At the layout stage, SuperDesign uses
+At the layout stage, SuperDesign uses
+
+At the layout stage, SuperDesign uses
+ASKI format to visualize layouts
+ASKI format to visualize layouts
+
+ASKI format to visualize layouts
+directly in the terminal, eliminating
+directly in the terminal, eliminating
+
+directly in the terminal, eliminating
+the need for code at this point. This
+the need for code at this point. This
+
+the need for code at this point. This
+allows quick layout finalization. It
+allows quick layout finalization. It
+
+allows quick layout finalization. It
+makes the first layout followed by a
+makes the first layout followed by a
+
+makes the first layout followed by a
+second with the search bar repositioned
+second with the search bar repositioned
+
+second with the search bar repositioned
+lower. The third features a split screen
+lower. The third features a split screen
+
+lower. The third features a split screen
+design with the search bar divided into
+design with the search bar divided into
+
+design with the search bar divided into
+two fields and it also made two more.
+two fields and it also made two more.
+
+two fields and it also made two more.
+You can easily request modifications.
+You can easily request modifications.
+
+You can easily request modifications.
+For instance, if you like the photo
+For instance, if you like the photo
+
+For instance, if you like the photo
+layout but want recent rides instead of
+layout but want recent rides instead of
+
+layout but want recent rides instead of
+quick actions, you can ask Claude code
+quick actions, you can ask Claude code
+
+quick actions, you can ask Claude code
+to make that change immediately. I
+to make that change immediately. I
+
+to make that change immediately. I
+selected the second layout and move to
+selected the second layout and move to
+
+selected the second layout and move to
+stage two, theme design. Again, I
+stage two, theme design. Again, I
+
+stage two, theme design. Again, I
+requested five iterations focusing on
+requested five iterations focusing on
+
+requested five iterations focusing on
+style and design language variations.
+style and design language variations.
+
+style and design language variations.
+This stage typically includes color
+This stage typically includes color
+
+This stage typically includes color
+palette suggestions, but I had already
+palette suggestions, but I had already
+
+palette suggestions, but I had already
+chosen my colors. I used a website
+chosen my colors. I used a website
+
+chosen my colors. I used a website
+called colors where pressing the space
+called colors where pressing the space
+
+called colors where pressing the space
+bar generates different palettes. Once
+bar generates different palettes. Once
+
+bar generates different palettes. Once
+you find one you like, copy the CSS and
+you find one you like, copy the CSS and
+
+you find one you like, copy the CSS and
+provide it to your coding agent. Claude
+provide it to your coding agent. Claude
+
+provide it to your coding agent. Claude
+Code generated five distinct themes
+Code generated five distinct themes
+
+Code generated five distinct themes
+based on my specifications. These theme
+based on my specifications. These theme
+
+based on my specifications. These theme
+options come from super design system
+options come from super design system
+
+options come from super design system
+prompt, but you can provide your own
+prompt, but you can provide your own
+
+prompt, but you can provide your own
+variations without restrictions. The
+variations without restrictions. The
+
+variations without restrictions. The
+results show five uniquely styled
+results show five uniquely styled
+
+results show five uniquely styled
+interfaces. One has a cartoonish feel
+interfaces. One has a cartoonish feel
+
+interfaces. One has a cartoonish feel
+and another features glass morphism
+and another features glass morphism
+
+and another features glass morphism
+effects. There's a professional version
+effects. There's a professional version
+
+effects. There's a professional version
+and even a neon variation. Super design
+and even a neon variation. Super design
+
+and even a neon variation. Super design
+also includes built-in utilities. While
+also includes built-in utilities. While
+
+also includes built-in utilities. While
+the first two serve the agent itself,
+the first two serve the agent itself,
+
+the first two serve the agent itself,
+the copy prompt function extracts the
+the copy prompt function extracts the
+
+the copy prompt function extracts the
+design specifications for any HTML file.
+design specifications for any HTML file.
+
+design specifications for any HTML file.
+This lets you iterate, copy, or export
+This lets you iterate, copy, or export
+
+This lets you iterate, copy, or export
+designs elsewhere. You can also copy the
+designs elsewhere. You can also copy the
+
+designs elsewhere. You can also copy the
+design path for reference. Though it's
+design path for reference. Though it's
+
+design path for reference. Though it's
+simpler to tell Claude Code which design
+simpler to tell Claude Code which design
+
+simpler to tell Claude Code which design
+you prefer and proceed from there. I
+you prefer and proceed from there. I
+
+you prefer and proceed from there. I
+landed on this one design, but I needed
+landed on this one design, but I needed
+
+landed on this one design, but I needed
+to iterate on it because the color
+to iterate on it because the color
+
+to iterate on it because the color
+palette wasn't being properly applied. I
+palette wasn't being properly applied. I
+
+palette wasn't being properly applied. I
+returned to Claude Code and specified
+returned to Claude Code and specified
+
+returned to Claude Code and specified
+the design file I liked. And then I
+the design file I liked. And then I
+
+the design file I liked. And then I
+explained that the colors weren't being
+explained that the colors weren't being
+
+explained that the colors weren't being
+used effectively and requested five new
+used effectively and requested five new
+
+used effectively and requested five new
+variations with better color
+variations with better color
+
+variations with better color
+implementation. Claude Code updated its
+implementation. Claude Code updated its
+
+implementation. Claude Code updated its
+task list and began creating the
+task list and began creating the
+
+task list and began creating the
+variations. The five new designs showed
+variations. The five new designs showed
+
+variations. The five new designs showed
+improved color palette application. Some
+improved color palette application. Some
+
+improved color palette application. Some
+went slightly overboard with the colors,
+went slightly overboard with the colors,
+
+went slightly overboard with the colors,
+but that's fine since we're iterating,
+but that's fine since we're iterating,
+
+but that's fine since we're iterating,
+not finalizing. Among all the
+not finalizing. Among all the
+
+not finalizing. Among all the
+variations, one stood out with the
+variations, one stood out with the
+
+variations, one stood out with the
+perfect balance. It didn't go overboard
+perfect balance. It didn't go overboard
+
+perfect balance. It didn't go overboard
+and used all the colors perfectly. Now,
+and used all the colors perfectly. Now,
+
+and used all the colors perfectly. Now,
+this is the design that I'll move
+this is the design that I'll move
+
+this is the design that I'll move
+forward with. I provided Claude with the
+forward with. I provided Claude with the
+
+forward with. I provided Claude with the
+path of my finalized design and
+path of my finalized design and
+
+path of my finalized design and
+instructed it to delete all other
+instructed it to delete all other
+
+instructed it to delete all other
+iterations. Now, I could implement
+iterations. Now, I could implement
+
+iterations. Now, I could implement
+animation. Claude code completed this
+animation. Claude code completed this
+
+animation. Claude code completed this
+task efficiently. The beauty of
+task efficiently. The beauty of
+
+task efficiently. The beauty of
+superdesign.dev is that it creates fully
+superdesign.dev is that it creates fully
+
+superdesign.dev is that it creates fully
+interactive elements. You can click
+interactive elements. You can click
+
+interactive elements. You can click
+buttons, type in input fields, and
+buttons, type in input fields, and
+
+buttons, type in input fields, and
+experience a real functional app. In
+experience a real functional app. In
+
+experience a real functional app. In
+cursor, I can now interact with all
+cursor, I can now interact with all
+
+cursor, I can now interact with all
+elements. The buttons are clickable. The
+elements. The buttons are clickable. The
+
+elements. The buttons are clickable. The
+input fields accept text and subtle
+input fields accept text and subtle
+
+input fields accept text and subtle
+animations enhance the experience.
+animations enhance the experience.
+
+animations enhance the experience.
+However, I noticed an issue. The button
+However, I noticed an issue. The button
+
+However, I noticed an issue. The button
+animations only triggered on hover. I
+animations only triggered on hover. I
+
+animations only triggered on hover. I
+wanted a mechanical click animation that
+wanted a mechanical click animation that
+
+wanted a mechanical click animation that
+would resonate with our design language.
+would resonate with our design language.
+
+would resonate with our design language.
+I explained this requirement to Claude
+I explained this requirement to Claude
+
+I explained this requirement to Claude
+Code. It immediately began implementing
+Code. It immediately began implementing
+
+Code. It immediately began implementing
+the requested changes. Claude Code
+the requested changes. Claude Code
+
+the requested changes. Claude Code
+confirmed the mechanical click animation
+confirmed the mechanical click animation
+
+confirmed the mechanical click animation
+was successfully implemented. Returning
+was successfully implemented. Returning
+
+was successfully implemented. Returning
+to the preview, the buttons now provide
+to the preview, the buttons now provide
+
+to the preview, the buttons now provide
+that satisfying click response we
+that satisfying click response we
+
+that satisfying click response we
+wanted. Now that one page of my design
+wanted. Now that one page of my design
+
+wanted. Now that one page of my design
+is ready, I can ask it to reuse the
+is ready, I can ask it to reuse the
+
+is ready, I can ask it to reuse the
+design for other components and pages as
+design for other components and pages as
+
+design for other components and pages as
+well. For example, here I've asked it to
+well. For example, here I've asked it to
+
+well. For example, here I've asked it to
+create another page for ride booking and
+create another page for ride booking and
+
+create another page for ride booking and
+it has gone ahead and created this new
+it has gone ahead and created this new
+
+it has gone ahead and created this new
+page right here, fully animated and
+page right here, fully animated and
+
+page right here, fully animated and
+fully functional. Now I can use this to
+fully functional. Now I can use this to
+
+fully functional. Now I can use this to
+design my whole app. With the design
+design my whole app. With the design
+
+design my whole app. With the design
+complete, I can convert this into any
+complete, I can convert this into any
+
+complete, I can convert this into any
+framework I choose. Through this
+framework I choose. Through this
+
+framework I choose. Through this
+iterative process, you'll eventually
+iterative process, you'll eventually
+
+iterative process, you'll eventually
+reach a point where the UI meets your
+reach a point where the UI meets your
+
+reach a point where the UI meets your
+vision perfectly. I discovered another
+vision perfectly. I discovered another
+
+vision perfectly. I discovered another
+resource called Animattopi. This site
+resource called Animattopi. This site
+
+resource called Animattopi. This site
+offers a curated collection of detailed
+offers a curated collection of detailed
+
+offers a curated collection of detailed
+animation effects that can elevate your
+animation effects that can elevate your
+
+animation effects that can elevate your
+design. You can browse through various
+design. You can browse through various
+
+design. You can browse through various
+animations and select ones that
+animations and select ones that
+
+animations and select ones that
+complement your project. The
+complement your project. The
+
+complement your project. The
+implementation is straightforward.
+implementation is straightforward.
+
+implementation is straightforward.
+Simply copy the HTML and CSS code
+Simply copy the HTML and CSS code
+
+Simply copy the HTML and CSS code
+provided to your coding agent and it
+provided to your coding agent and it
+
+provided to your coding agent and it
+seamlessly integrates into your
+seamlessly integrates into your
+
+seamlessly integrates into your
+application. This tool is perfect for
+application. This tool is perfect for
+
+application. This tool is perfect for
+adding those small meaningful
+adding those small meaningful
+
+adding those small meaningful
+interactions that truly enhance user
+interactions that truly enhance user
+
+interactions that truly enhance user
+experience. Sometimes it's these subtle
+experience. Sometimes it's these subtle
+
+experience. Sometimes it's these subtle
+details that make the biggest difference
+details that make the biggest difference
+
+details that make the biggest difference
+in how users perceive and interact with
+in how users perceive and interact with
+
+in how users perceive and interact with
+your design. Over on the AI Labs Discord
+your design. Over on the AI Labs Discord
+
+your design. Over on the AI Labs Discord
+community, we're hosting our first ever
+community, we're hosting our first ever
+
+community, we're hosting our first ever
+hackathon, now extended until August
+hackathon, now extended until August
+
+hackathon, now extended until August
+11th. We heard your feedback and wanted
+11th. We heard your feedback and wanted
+
+11th. We heard your feedback and wanted
+to give you more time to build something
+to give you more time to build something
+
+to give you more time to build something
+awesome. We're also adding a $500 prize
+awesome. We're also adding a $500 prize
+
+awesome. We're also adding a $500 prize
+for the best overall submission. Plus,
+for the best overall submission. Plus,
+
+for the best overall submission. Plus,
+the top five projects will be featured
+the top five projects will be featured
+
+the top five projects will be featured
+in an upcoming YouTube video. So, take
+in an upcoming YouTube video. So, take
+
+in an upcoming YouTube video. So, take
+your time, push your creativity, and
+your time, push your creativity, and
+
+your time, push your creativity, and
+submit your best work. Join by clicking
+submit your best work. Join by clicking
+
+submit your best work. Join by clicking
+the link in the pinned comment below.
+the link in the pinned comment below.
+
+the link in the pinned comment below.
+And if you're enjoying the content, make
+And if you're enjoying the content, make
+
+And if you're enjoying the content, make
+sure to hit that subscribe button so you
+sure to hit that subscribe button so you
+
+sure to hit that subscribe button so you
+don't miss what's coming next. Now, what
+don't miss what's coming next. Now, what
+
+don't miss what's coming next. Now, what
+if you wanted to implement your design
+if you wanted to implement your design
+
+if you wanted to implement your design
+with pre-built components? Let's say
+with pre-built components? Let's say
+
+with pre-built components? Let's say
+Shad CN UI, which is one of the best
+Shad CN UI, which is one of the best
+
+Shad CN UI, which is one of the best
+component libraries out there. It has
+component libraries out there. It has
+
+component libraries out there. It has
+beautifully designed components and many
+beautifully designed components and many
+
+beautifully designed components and many
+sites like Superbase use it for their
+sites like Superbase use it for their
+
+sites like Superbase use it for their
+front end. The best solution I found is
+front end. The best solution I found is
+
+front end. The best solution I found is
+that you need to provide Claude code
+that you need to provide Claude code
+
+that you need to provide Claude code
+with the proper context of these
+with the proper context of these
+
+with the proper context of these
+components so it knows how they're built
+components so it knows how they're built
+
+components so it knows how they're built
+and how to structure them correctly. For
+and how to structure them correctly. For
+
+and how to structure them correctly. For
+that, I use the Shad CN MCP server. You
+that, I use the Shad CN MCP server. You
+
+that, I use the Shad CN MCP server. You
+can see that I've installed the Shad CN
+can see that I've installed the Shad CN
+
+can see that I've installed the Shad CN
+MCP server right inside Claude Code. And
+MCP server right inside Claude Code. And
+
+MCP server right inside Claude Code. And
+I've actually been using a workflow with
+I've actually been using a workflow with
+
+I've actually been using a workflow with
+this MCP server that ensures whenever I
+this MCP server that ensures whenever I
+
+this MCP server that ensures whenever I
+implement any front end using Shad CN,
+implement any front end using Shad CN,
+
+implement any front end using Shad CN,
+everything works perfectly and nothing
+everything works perfectly and nothing
+
+everything works perfectly and nothing
+breaks. So this is the usage rule that I
+breaks. So this is the usage rule that I
+
+breaks. So this is the usage rule that I
+use with this MCP server. And I've put
+use with this MCP server. And I've put
+
+use with this MCP server. And I've put
+this rule in a slash command. You can
+this rule in a slash command. You can
+
+this rule in a slash command. You can
+see the project structure right here.
+see the project structure right here.
+
+see the project structure right here.
+It's in the commands folder for the /ash
+It's in the commands folder for the /ash
+
+It's in the commands folder for the /ash
+commands. And I can basically call it
+commands. And I can basically call it
+
+commands. And I can basically call it
+whenever I want. What I use it for is
+whenever I want. What I use it for is
+
+whenever I want. What I use it for is
+first of all planning out whatever front
+first of all planning out whatever front
+
+first of all planning out whatever front
+end I want to build. So for example, in
+end I want to build. So for example, in
+
+end I want to build. So for example, in
+this prompt that you see right here, I
+this prompt that you see right here, I
+
+this prompt that you see right here, I
+ran the shad CN prompt and told it that
+ran the shad CN prompt and told it that
+
+ran the shad CN prompt and told it that
+I need to plan the app using shad CN
+I need to plan the app using shad CN
+
+I need to plan the app using shad CN
+components and put the whole plan it
+components and put the whole plan it
+
+components and put the whole plan it
+generates inside implementation.md. I
+generates inside implementation.md. I
+
+generates inside implementation.md. I
+then gave it the PRD for the app and
+then gave it the PRD for the app and
+
+then gave it the PRD for the app and
+what it was going to do. Claude Code
+what it was going to do. Claude Code
+
+what it was going to do. Claude Code
+went ahead and using this MCP server
+went ahead and using this MCP server
+
+went ahead and using this MCP server
+generated this implementation plan on
+generated this implementation plan on
+
+generated this implementation plan on
+how it was going to be built using the
+how it was going to be built using the
+
+how it was going to be built using the
+MCP server. After I'm done with the
+MCP server. After I'm done with the
+
+MCP server. After I'm done with the
+implementation plan, I call the shad CN/
+implementation plan, I call the shad CN/
+
+implementation plan, I call the shad CN/
+command again and tell it that it needs
+command again and tell it that it needs
+
+command again and tell it that it needs
+to implement the app and tag the
+to implement the app and tag the
+
+to implement the app and tag the
+implementation plan. And then using
+implementation plan. And then using
+
+implementation plan. And then using
+this, it actually goes ahead and
+this, it actually goes ahead and
+
+this, it actually goes ahead and
+implements it using the shad CN
+implements it using the shad CN
+
+implements it using the shad CN
+components. The reason why it's so
+components. The reason why it's so
+
+components. The reason why it's so
+effective is that the shad CN MCP server
+effective is that the shad CN MCP server
+
+effective is that the shad CN MCP server
+contains all the context for all the
+contains all the context for all the
+
+contains all the context for all the
+components. And in the plan it basically
+components. And in the plan it basically
+
+components. And in the plan it basically
+states that whenever it needs to plan or
+states that whenever it needs to plan or
+
+states that whenever it needs to plan or
+execute meaning apply the shad CN
+execute meaning apply the shad CN
+
+execute meaning apply the shad CN
+components it always needs to use that
+components it always needs to use that
+
+components it always needs to use that
+MCP. So it always has the context on how
+MCP. So it always has the context on how
+
+MCP. So it always has the context on how
+to do the implementation and therefore
+to do the implementation and therefore
+
+to do the implementation and therefore
+the chances of errors are reduced by a
+the chances of errors are reduced by a
+
+the chances of errors are reduced by a
+lot. I'll link a video in the
+lot. I'll link a video in the
+
+lot. I'll link a video in the
+description for its complete
+description for its complete
+
+description for its complete
+installation so you can set it up for
+installation so you can set it up for
+
+installation so you can set it up for
+yourself. Now this is the dashboard that
+yourself. Now this is the dashboard that
+
+yourself. Now this is the dashboard that
+it was able to make using the Shad CNMCP
+it was able to make using the Shad CNMCP
+
+it was able to make using the Shad CNMCP
+and you can see for yourself that it's
+and you can see for yourself that it's
+
+and you can see for yourself that it's
+much better and much more organized. If
+much better and much more organized. If
+
+much better and much more organized. If
+I had done it without the MCP, I would
+I had done it without the MCP, I would
+
+I had done it without the MCP, I would
+have had to organize a lot of things
+have had to organize a lot of things
+
+have had to organize a lot of things
+manually. There would have been
+manually. There would have been
+
+manually. There would have been
+overlapping elements and I would have
+overlapping elements and I would have
+
+overlapping elements and I would have
+had to fix all of that. But here,
+had to fix all of that. But here,
+
+had to fix all of that. But here,
+everything is working. Even dark mode
+everything is working. Even dark mode
+
+everything is working. Even dark mode
+and light mode have been implemented
+and light mode have been implemented
+
+and light mode have been implemented
+properly. And that wouldn't have been
+properly. And that wouldn't have been
+
+properly. And that wouldn't have been
+possible without the MCP server. But now
+possible without the MCP server. But now
+
+possible without the MCP server. But now
+that you've actually built and organized
+that you've actually built and organized
+
+that you've actually built and organized
+your site, what you can do is start
+your site, what you can do is start
+
+your site, what you can do is start
+customizing it. So the site that I use
+customizing it. So the site that I use
+
+customizing it. So the site that I use
+to customize the Shad CN UI components
+to customize the Shad CN UI components
+
+to customize the Shad CN UI components
+is called Tweak CN. And it's a really
+is called Tweak CN. And it's a really
+
+is called Tweak CN. And it's a really
+amazing site where you can basically
+amazing site where you can basically
+
+amazing site where you can basically
+just go ahead and either choose from a
+just go ahead and either choose from a
+
+just go ahead and either choose from a
+pre-made set of themes or create your
+pre-made set of themes or create your
+
+pre-made set of themes or create your
+own. For example, let's say I like this
+own. For example, let's say I like this
+
+own. For example, let's say I like this
+theme and I want to go ahead and
+theme and I want to go ahead and
+
+theme and I want to go ahead and
+implement it on the app I created. I can
+implement it on the app I created. I can
+
+implement it on the app I created. I can
+just go ahead and copy this CSS and you
+just go ahead and copy this CSS and you
+
+just go ahead and copy this CSS and you
+can see that I gave it to Claude code
+can see that I gave it to Claude code
+
+can see that I gave it to Claude code
+and this is what it gave me in return.
+and this is what it gave me in return.
+
+and this is what it gave me in return.
+You can see that the theme was correctly
+You can see that the theme was correctly
+
+You can see that the theme was correctly
+applied and it really is that easy to
+applied and it really is that easy to
+
+applied and it really is that easy to
+get a design language of your own using
+get a design language of your own using
+
+get a design language of your own using
+these shad CN components. Now, what if
+these shad CN components. Now, what if
+
+these shad CN components. Now, what if
+you don't want to create your own
+you don't want to create your own
+
+you don't want to create your own
+designs or don't want to implement the
+designs or don't want to implement the
+
+designs or don't want to implement the
+shad CN components? What you can do
+shad CN components? What you can do
+
+shad CN components? What you can do
+instead is take already existing designs
+instead is take already existing designs
+
+instead is take already existing designs
+and their structures and basically just
+and their structures and basically just
+
+and their structures and basically just
+copy them, then start implementing your
+copy them, then start implementing your
+
+copy them, then start implementing your
+own data from there. To do that, your
+own data from there. To do that, your
+
+own data from there. To do that, your
+best bet is using the firecrawl MCP.
+best bet is using the firecrawl MCP.
+
+best bet is using the firecrawl MCP.
+What this MCP does is crawl the site and
+What this MCP does is crawl the site and
+
+What this MCP does is crawl the site and
+fetch all of its metadata, the image
+fetch all of its metadata, the image
+
+fetch all of its metadata, the image
+links, the animations they use,
+links, the animations they use,
+
+links, the animations they use,
+everything. Using that, Claude Code can
+everything. Using that, Claude Code can
+
+everything. Using that, Claude Code can
+actually clone the sites. As you can
+actually clone the sites. As you can
+
+actually clone the sites. As you can
+see, the fire crawl MCP has been added
+see, the fire crawl MCP has been added
+
+see, the fire crawl MCP has been added
+to Claude Code. I came back and told it
+to Claude Code. I came back and told it
+
+to Claude Code. I came back and told it
+that I wanted a onetoone clone of the
+that I wanted a onetoone clone of the
+
+that I wanted a onetoone clone of the
+firecrawl site itself and it went ahead
+firecrawl site itself and it went ahead
+
+firecrawl site itself and it went ahead
+and started implementing it. This is
+and started implementing it. This is
+
+and started implementing it. This is
+what it came up with. The structure and
+what it came up with. The structure and
+
+what it came up with. The structure and
+the elements that were used were cloned,
+the elements that were used were cloned,
+
+the elements that were used were cloned,
+but the colors and the styling were a
+but the colors and the styling were a
+
+but the colors and the styling were a
+little bit off. So, I think adding a
+little bit off. So, I think adding a
+
+little bit off. So, I think adding a
+screenshot with the prompt would improve
+screenshot with the prompt would improve
+
+screenshot with the prompt would improve
+this. I've also used this before and we
+this. I've also used this before and we
+
+this. I've also used this before and we
+tried to clone the Obsidian website with
+tried to clone the Obsidian website with
+
+tried to clone the Obsidian website with
+this. It worked really well on that. You
+this. It worked really well on that. You
+
+this. It worked really well on that. You
+can see the result right here. This is
+can see the result right here. This is
+
+can see the result right here. This is
+what it cloned and it's a much better
+what it cloned and it's a much better
+
+what it cloned and it's a much better
+clone compared to the one it did here
+clone compared to the one it did here
+
+clone compared to the one it did here
+with Firecraw. I don't know why it
+with Firecraw. I don't know why it
+
+with Firecraw. I don't know why it
+didn't clone it as well here, but still
+didn't clone it as well here, but still
+
+didn't clone it as well here, but still
+this is your best bet for cloning one:1
+this is your best bet for cloning one:1
+
+this is your best bet for cloning one:1
+sites because of the metadata. But let's
+sites because of the metadata. But let's
+
+sites because of the metadata. But let's
+say that if you want to clone Figma
+say that if you want to clone Figma
+
+say that if you want to clone Figma
+designs instead of actual sites, then
+designs instead of actual sites, then
+
+designs instead of actual sites, then
+you can use the Figma MCP server as
+you can use the Figma MCP server as
+
+you can use the Figma MCP server as
+well. The Figma MCP server is really
+well. The Figma MCP server is really
+
+well. The Figma MCP server is really
+cool because you can just open up a
+cool because you can just open up a
+
+cool because you can just open up a
+Figma design, copy a link to a
+Figma design, copy a link to a
+
+Figma design, copy a link to a
+selection, and send it back to Claude
+selection, and send it back to Claude
+
+selection, and send it back to Claude
+Code. It will actually clone that design
+Code. It will actually clone that design
+
+Code. It will actually clone that design
+and make it exactly like the Figma file
+and make it exactly like the Figma file
+
+and make it exactly like the Figma file
+because essentially you're passing the
+because essentially you're passing the
+
+because essentially you're passing the
+Figma metadata of the design. I'll link
+Figma metadata of the design. I'll link
+
+Figma metadata of the design. I'll link
+an installation guide for both of these
+an installation guide for both of these
+
+an installation guide for both of these
+MCP servers and you can try them on your
+MCP servers and you can try them on your
+
+MCP servers and you can try them on your
+own. That brings us to the end of this
+own. That brings us to the end of this
+
+own. That brings us to the end of this
+video. If you'd like to support the
+video. If you'd like to support the
+
+video. If you'd like to support the
+channel and help us keep making videos
+channel and help us keep making videos
+
+channel and help us keep making videos
+like this, you can do so by using the
+like this, you can do so by using the
+
+like this, you can do so by using the
+super thanks button below. And as
+super thanks button below. And as
+
+super thanks button below. And as
+always, thank you for watching and I'll
+always, thank you for watching and I'll
+
+always, thank you for watching and I'll
+see you in the next one.
