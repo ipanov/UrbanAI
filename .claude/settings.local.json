@@ -109,7 +109,14 @@
       "WebFetch(domain:toolbox.marketingtools.apple.com)",
       "WebFetch(domain:play.google.com)",
       "WebFetch(domain:partnermarketinghub.withgoogle.com)",
-      "mcp__ide__executeCode"
+      "mcp__ide__executeCode",
+      "WebFetch(domain:medium.com)",
+      "WebFetch(domain:www.figma.com)",
+      "WebFetch(domain:www.anthropic.com)",
+      "Read(//d/repos/urbanai/**)",
+      "Bash(cat:*)",
+      "Read(//c/Users/ilija/**)",
+      "mcp__github__get_workflow_run"
     ],
     "deny": [],
     "ask": []

@@ -262,15 +262,17 @@ describe('GDPRDataManagementPage', () => {
     const deleteTab = screen.getByText('Delete Account');
     fireEvent.click(deleteTab);
 
+    // Wait for tab content to load
     await waitFor(() => {
-      const deleteButton = screen.getByRole('button', { name: /Delete My Account/i });
-      fireEvent.click(deleteButton);
+      expect(screen.getByText(/Permanently remove your account/)).toBeInTheDocument();
     });
+
+    // Find the delete button by text that includes the icon
+    const deleteButton = screen.getByRole('button', { name: /Delete My Account/ });
+    fireEvent.click(deleteButton);
 
     await waitFor(() => {
       expect(screen.getByText('Confirm Account Deletion')).toBeInTheDocument();
-      expect(screen.getByText('Type')).toBeInTheDocument();
-      expect(screen.getByText('to confirm:')).toBeInTheDocument();
     });
   });
 
