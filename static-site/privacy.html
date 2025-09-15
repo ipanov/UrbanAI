@@ -7,8 +7,18 @@
     <meta name="description" content="UrbanAI Privacy Policy - Learn how we protect your personal data and ensure GDPR compliance.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary-color: #475569;
+            --light-gray: #F1F5F9;
+            --dark-gray: #0F172A;
+            --white: #FFFFFF;
+            --font-family: 'Inter', sans-serif;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -16,59 +26,108 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-family);
+            color: var(--secondary-color);
+            background-color: var(--white);
             line-height: 1.6;
-            color: #1E293B;
-            background: #FFFFFF;
         }
 
-        .header {
-            background: #FFFFFF;
-            border-bottom: 1px solid #E2E8F0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-container {
+        .container {
             max-width: 1200px;
             margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 64px;
             padding: 0 20px;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
+        /* Header */
+        .header {
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        .logo-text {
-            font-size: 20px;
-            font-weight: 600;
-            color: #2563EB;
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo img {
+            /* Larger brand presence; never shrink below 200px and scale with CTA */
+            height: max(200px, calc(var(--header-action-height, 48px) * 1.2));
+            width: auto;
         }
 
         .nav-links {
             display: flex;
-            gap: 32px;
             list-style: none;
         }
 
-        .nav-links a {
-            font-size: 14px;
-            font-weight: 500;
-            color: #64748B;
-            text-decoration: none;
-            transition: color 0.2s;
+        .nav-links li {
+            margin-left: 30px;
         }
 
-        .nav-links a:hover {
-            color: #2563EB;
+        .nav-links a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-color);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .cta-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background-color: var(--dark-gray);
+            margin: 5px 0;
+            transition: 0.4s;
         }
 
         .main {
@@ -142,30 +201,160 @@
         .back-link:hover {
             text-decoration: underline;
         }
+
+        .cta-button {
+            background: linear-gradient(135deg, #2563EB, #1D4ED8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                background-color: var(--white);
+                padding: 20px 0;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .nav-links li {
+                margin: 10px 0;
+                text-align: center;
+            }
+            .hamburger {
+                display: block;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--dark-gray);
+            color: var(--white);
+            padding: 60px 0 20px;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-main {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .footer-brand, .footer-section {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-brand img {
+            /* Footer logo matches header logo exactly (bind to CTA height from header) */
+            height: max(200px, calc(var(--header-action-height, 48px) * 1.2));
+            width: auto;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .footer-social img {
+            height: 24px;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-social a:hover img {
+            opacity: 0.8;
+        }
+
+        .footer-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #a0aec0;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--secondary-color);
+            padding-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .footer-main {
+                flex-direction: column;
+                text-align: center;
+            }
+            .footer-social {
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
     <header class="header">
-        <nav class="nav-container">
-            <a href="/" class="logo">
-                <span class="logo-text">UrbanAI</span>
-            </a>
-            
-            <ul class="nav-links">
-                <li><a href="/#features">Features</a></li>
-                <li><a href="/privacy.html">Privacy</a></li>
-                <li><a href="/contact.html">Contact</a></li>
-            </ul>
-            
-            <a href="/app" class="cta-button">Get Started</a>
-        </nav>
+        <div class="container">
+            <nav class="nav-bar">
+                <a href="index.html" class="logo">
+                    <img src="assets/brand/logos/urbanai-logo-black.png" alt="UrbanAI Logo">
+                </a>
+                <ul class="nav-links">
+                    <li><a href="features.html">Features</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="security.html">Security</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <a href="/app" class="cta-button">Get Started</a>
+                <div class="hamburger">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </nav>
+        </div>
     </header>
 
     <main class="main">
-        <a href="/" class="back-link">← Back to Home</a>
+        <a href="index.html" class="back-link">← Back to Home</a>
         
         <h1 class="page-title">Privacy Policy</h1>
-        <p class="last-updated">Last updated: January 2025</p>
+        <p class="last-updated">Last updated: January 15, 2025</p>
 
         <div class="content">
             <div class="highlight-box">
@@ -173,43 +362,87 @@
                 <p><strong>UrbanAI is designed with privacy at its core.</strong> We use OAuth-only authentication and store no personal identifiable information (PII). Your privacy is not just protected—it's built into the architecture of our platform.</p>
             </div>
 
-            <h2>1. Information We Collect</h2>
-            
-            <h3>1.1 Authentication Data</h3>
-            <p>When you sign in using OAuth providers (Google, Microsoft), we receive:</p>
+            <h2>1. Legal Basis for Processing</h2>
+
+            <p>Under the General Data Protection Regulation (GDPR), we process personal data based on the following legal grounds:</p>
             <ul>
-                <li>Your unique OAuth identifier (not your email or name)</li>
-                <li>Authentication tokens (stored securely and encrypted)</li>
-                <li>No personal profile information is stored on our servers</li>
+                <li><strong>Legitimate Interest (Article 6(1)(f)):</strong> For providing civic technology services and improving urban governance</li>
+                <li><strong>Consent (Article 6(1)(a)):</strong> For optional features like location sharing and analytics</li>
+                <li><strong>Performance of Contract (Article 6(1)(b)):</strong> For delivering the core reporting service</li>
+                <li><strong>Public Interest (Article 6(1)(e)):</strong> For facilitating public urban issue reporting</li>
             </ul>
 
-            <h3>1.2 Issue Reports</h3>
-            <p>When you submit urban issue reports, we collect:</p>
+            <h2>2. Information We Collect</h2>
+
+            <h3>2.1 Identity and Authentication Data</h3>
+            <p>We implement a <strong>zero-PII architecture</strong>. When you authenticate via OAuth providers:</p>
             <ul>
-                <li>Issue description and category</li>
-                <li>Location data (if you choose to share it)</li>
-                <li>Photos or attachments you voluntarily upload</li>
-                <li>Timestamp of the report</li>
-                <li><strong>No connection to your personal identity</strong></li>
+                <li><strong>OAuth Identifier:</strong> Cryptographically hashed unique identifier (not your email, name, or profile)</li>
+                <li><strong>Authentication Tokens:</strong> Temporary access tokens, encrypted using AES-256, automatically expire within 24 hours</li>
+                <li><strong>Session State:</strong> Minimal session data for service continuity</li>
+                <li><strong>No Profile Data:</strong> We explicitly reject and do not store any personal profile information from OAuth providers</li>
             </ul>
 
-            <h3>1.3 Technical Data</h3>
-            <p>For service functionality and security:</p>
+            <div class="highlight-box">
+                <p><strong>Data Minimization Principle:</strong> We collect only the absolute minimum data required for service functionality. Your email, name, and profile information are never requested, stored, or processed by our systems.</p>
+            </div>
+
+            <h3>2.2 Issue Report Data</h3>
+            <p>When you submit urban issue reports, we process:</p>
             <ul>
-                <li>Session tokens (temporary, automatically expire)</li>
-                <li>Basic usage analytics (anonymized)</li>
-                <li>Error logs (no personal data included)</li>
+                <li><strong>Issue Content:</strong> Description, category, severity level (voluntarily provided)</li>
+                <li><strong>Geolocation Data:</strong> Approximate location coordinates (only if explicitly consented to, with precision limited to protect privacy)</li>
+                <li><strong>Media Attachments:</strong> Photos or documents you choose to upload (automatically processed to remove EXIF metadata)</li>
+                <li><strong>Temporal Data:</strong> Report timestamp and processing status</li>
+                <li><strong>Anonymous Linkage:</strong> Reports are linked to anonymous user sessions, not personal identities</li>
             </ul>
 
-            <h2>2. How We Use Your Information</h2>
-            
-            <p>We use the collected information solely for:</p>
+            <h3>2.3 Technical and Analytics Data</h3>
+            <p>For service operation, security, and improvement:</p>
             <ul>
-                <li><strong>Service Provision:</strong> Enabling you to report and track urban issues</li>
-                <li><strong>Municipal Coordination:</strong> Forwarding anonymous reports to relevant authorities</li>
-                <li><strong>Service Improvement:</strong> Analyzing usage patterns to enhance functionality</li>
-                <li><strong>Security:</strong> Preventing abuse and maintaining service integrity</li>
+                <li><strong>Service Analytics:</strong> Aggregated usage patterns, performance metrics (anonymized and stripped of personal identifiers)</li>
+                <li><strong>Security Logs:</strong> Access patterns for abuse prevention (IP addresses temporarily retained for security purposes)</li>
+                <li><strong>Error Diagnostics:</strong> Technical error logs for service improvement (personal data excluded)</li>
+                <li><strong>Browser Data:</strong> User agent strings and preferences for service optimization</li>
             </ul>
+
+            <h3>2.4 Special Categories of Personal Data</h3>
+            <p>We do not intentionally collect sensitive personal data. However, issue reports may inadvertently contain sensitive information. In such cases:</p>
+            <ul>
+                <li>Processing is based on explicit consent or substantial public interest</li>
+                <li>Additional safeguards are implemented for data protection</li>
+                <li>Data subjects may request removal of sensitive content</li>
+            </ul>
+
+            <h2>3. How We Process Your Information</h2>
+
+            <h3>3.1 Primary Processing Purposes</h3>
+            <ul>
+                <li><strong>Service Delivery:</strong> Enabling secure submission and tracking of urban issue reports</li>
+                <li><strong>Municipal Integration:</strong> Anonymously forwarding reports to relevant local authorities via secure APIs</li>
+                <li><strong>AI-Powered Classification:</strong> Using our multi-agent system to categorize issues and identify appropriate authorities</li>
+                <li><strong>Regulatory Discovery:</strong> Matching issues with relevant municipal regulations and compliance requirements</li>
+                <li><strong>Document Generation:</strong> Creating formal complaint documents when requested</li>
+            </ul>
+
+            <h3>3.2 Secondary Processing Activities</h3>
+            <ul>
+                <li><strong>Service Enhancement:</strong> Analyzing anonymized usage patterns to improve functionality</li>
+                <li><strong>Security Monitoring:</strong> Detecting and preventing platform abuse and fraudulent reports</li>
+                <li><strong>Compliance Monitoring:</strong> Ensuring municipal response rates and public service accountability</li>
+                <li><strong>Research and Development:</strong> Improving AI classification accuracy and system performance</li>
+            </ul>
+
+            <h3>3.3 Automated Decision-Making</h3>
+            <p>Our AI agents perform automated processing for:</p>
+            <ul>
+                <li><strong>Issue Classification:</strong> Automatically categorizing reports (with human oversight available)</li>
+                <li><strong>Authority Routing:</strong> Determining appropriate municipal departments or agencies</li>
+                <li><strong>Regulatory Matching:</strong> Identifying applicable laws and regulations</li>
+                <li><strong>Priority Assessment:</strong> Evaluating urgency based on public safety and environmental factors</li>
+            </ul>
+
+            <p><strong>Right to Human Review:</strong> You may request human review of any automated decision affecting your reports.</p>
 
             <div class="highlight-box">
                 <p><strong>We never:</strong></p>
@@ -221,139 +454,473 @@
                 </ul>
             </div>
 
-            <h2>3. Data Sharing and Disclosure</h2>
-            
-            <h3>3.1 Anonymous Issue Reports</h3>
-            <p>Issue reports are shared with municipal authorities in completely anonymous form, containing only:</p>
+            <h2>4. Data Sharing and Disclosure</h2>
+
+            <h3>4.1 Municipal Authority Sharing</h3>
+            <p>Issue reports are transmitted to relevant authorities in <strong>fully anonymized form</strong>:</p>
             <ul>
-                <li>Issue description and location</li>
-                <li>Photos or attachments (if provided)</li>
-                <li>Report timestamp</li>
-                <li>No identifying information about the reporter</li>
+                <li><strong>Report Content:</strong> Issue description, category, severity assessment</li>
+                <li><strong>Location Data:</strong> Approximate coordinates (precision reduced for privacy)</li>
+                <li><strong>Supporting Evidence:</strong> Photos/documents with metadata stripped</li>
+                <li><strong>Processing History:</strong> AI classification results and regulatory references</li>
+                <li><strong>No Personal Identifiers:</strong> Absolutely no information linking reports to individuals</li>
             </ul>
 
-            <h3>3.2 Legal Requirements</h3>
-            <p>We may disclose information if required by law, but given our minimal data collection, there is little personal information that could be disclosed.</p>
-
-            <h2>4. Data Storage and Security</h2>
-            
-            <h3>4.1 Data Location</h3>
-            <p>All data is stored in Azure data centers within the European Union, ensuring GDPR compliance.</p>
-
-            <h3>4.2 Security Measures</h3>
+            <h3>4.2 Third-Party Service Providers</h3>
+            <p>We may share data with carefully vetted processors under strict contracts:</p>
             <ul>
-                <li>End-to-end encryption for all data transmission</li>
-                <li>Encrypted storage using Azure Security standards</li>
-                <li>Regular security audits and penetration testing</li>
-                <li>Access controls and audit logging</li>
-                <li>Automatic data retention policies</li>
+                <li><strong>Cloud Infrastructure:</strong> Microsoft Azure (GDPR-compliant data processing agreement)</li>
+                <li><strong>AI Processing:</strong> Azure OpenAI services (with data isolation and retention controls)</li>
+                <li><strong>Authentication:</strong> OAuth providers (Google, Microsoft) receive only authentication requests</li>
+                <li><strong>Analytics:</strong> Anonymized usage data for service improvement (no personal identifiers)</li>
             </ul>
 
-            <h3>4.3 Data Retention</h3>
+            <h3>4.3 Legal Disclosure Requirements</h3>
+            <p>We may disclose information when legally required, but our data minimization approach limits exposure:</p>
             <ul>
-                <li><strong>Authentication tokens:</strong> Expire automatically (typically 24 hours)</li>
-                <li><strong>Issue reports:</strong> Retained for municipal record-keeping (typically 7 years)</li>
-                <li><strong>Usage analytics:</strong> Aggregated and anonymized after 90 days</li>
+                <li><strong>Lawful Requests:</strong> Court orders, subpoenas, or regulatory investigations</li>
+                <li><strong>Emergency Situations:</strong> Immediate threats to public safety or national security</li>
+                <li><strong>Legal Assessment:</strong> Each request evaluated by legal counsel for necessity and proportionality</li>
+                <li><strong>Data Protection:</strong> We challenge overly broad requests and notify users when legally permitted</li>
             </ul>
 
-            <h2>5. Your Rights Under GDPR</h2>
-            
-            <p>As a user in the European Union, you have the following rights:</p>
-            
-            <h3>5.1 Right to Access</h3>
-            <p>Request information about what data we hold about you (which is minimal due to our privacy-first design).</p>
+            <h3>4.4 Business Transfers</h3>
+            <p>In the event of merger, acquisition, or asset sale:</p>
+            <ul>
+                <li>Data would be transferred only with equivalent privacy protections</li>
+                <li>Users would be notified of any material changes to privacy practices</li>
+                <li>Options to delete data would be provided before transfer</li>
+            </ul>
 
-            <h3>5.2 Right to Rectification</h3>
-            <p>Request correction of any inaccurate data (limited applicability due to our OAuth-only approach).</p>
+            <h2>5. Data Security and Protection</h2>
 
-            <h3>5.3 Right to Erasure</h3>
-            <p>Request deletion of your data. Note that issue reports may be retained for legal municipal record-keeping requirements.</p>
+            <h3>5.1 Technical Security Measures</h3>
+            <p>We implement industry-leading security controls:</p>
+            <ul>
+                <li><strong>Encryption in Transit:</strong> TLS 1.3 for all communications with perfect forward secrecy</li>
+                <li><strong>Encryption at Rest:</strong> AES-256 encryption for all stored data using Azure Key Vault</li>
+                <li><strong>Database Security:</strong> Azure SQL Database with Advanced Threat Protection and transparent data encryption</li>
+                <li><strong>Application Security:</strong> Regular security assessments, dependency scanning, and code reviews</li>
+                <li><strong>Network Security:</strong> Azure Private Endpoints, Web Application Firewall, and DDoS protection</li>
+                <li><strong>Identity Protection:</strong> Multi-factor authentication for administrative access</li>
+            </ul>
 
-            <h3>5.4 Right to Data Portability</h3>
-            <p>Request export of your data in a machine-readable format.</p>
+            <h3>5.2 Organizational Security Measures</h3>
+            <ul>
+                <li><strong>Access Controls:</strong> Role-based access with principle of least privilege</li>
+                <li><strong>Staff Training:</strong> Regular privacy and security training for all personnel</li>
+                <li><strong>Incident Response:</strong> Documented procedures for security breach detection and response</li>
+                <li><strong>Audit Logging:</strong> Comprehensive logging of all data access and system changes</li>
+                <li><strong>Vendor Management:</strong> Due diligence and contractual security requirements for all third parties</li>
+            </ul>
 
-            <h3>5.5 Right to Object</h3>
-            <p>Object to processing of your data for specific purposes.</p>
+            <h3>5.3 Data Location and Sovereignty</h3>
+            <ul>
+                <li><strong>Primary Storage:</strong> Azure data centers in the European Union (Netherlands, Ireland)</li>
+                <li><strong>Backup Storage:</strong> Geo-redundant backups within EU boundaries only</li>
+                <li><strong>Processing Location:</strong> All AI processing occurs within EU data centers</li>
+                <li><strong>No Non-EU Transfers:</strong> Data never leaves the European Economic Area without explicit consent and adequate safeguards</li>
+            </ul>
+
+            <h3>5.4 Data Retention and Deletion</h3>
+            <p>We implement strict retention schedules aligned with legal requirements and data minimization:</p>
+            <ul>
+                <li><strong>Authentication Data:</strong> Session tokens expire within 24 hours; OAuth identifiers retained only during active use</li>
+                <li><strong>Issue Reports:</strong> Retained for 7 years for municipal compliance and public record requirements</li>
+                <li><strong>Technical Logs:</strong> Security logs retained for 1 year, diagnostic logs for 90 days</li>
+                <li><strong>Analytics Data:</strong> Anonymized immediately upon collection, aggregated data retained for 2 years</li>
+                <li><strong>Backup Data:</strong> Automated deletion following primary data retention schedule</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p><strong>Data Deletion Rights:</strong> You may request immediate deletion of your data at any time, subject to legitimate municipal record-keeping requirements. Environmental and public safety reports may be retained longer for regulatory compliance.</p>
+            </div>
+
+            <h2>6. Your Data Subject Rights</h2>
+
+            <p>Under GDPR, you have comprehensive rights regarding your personal data. We provide easy mechanisms to exercise these rights:</p>
+
+            <h3>6.1 Right of Access (Article 15)</h3>
+            <ul>
+                <li><strong>Data Report:</strong> Request a complete report of personal data we process about you</li>
+                <li><strong>Processing Information:</strong> Details about purposes, categories, recipients, and retention periods</li>
+                <li><strong>Source Information:</strong> Where we obtained your data (primarily direct from you or OAuth providers)</li>
+                <li><strong>Automated Decision Details:</strong> Information about AI processing affecting your reports</li>
+                <li><strong>Response Time:</strong> Within 30 days, extended to 60 days for complex requests</li>
+            </ul>
+
+            <h3>6.2 Right to Rectification (Article 16)</h3>
+            <ul>
+                <li><strong>Data Correction:</strong> Request correction of inaccurate or incomplete personal data</li>
+                <li><strong>Report Updates:</strong> Modify information in submitted issue reports (where technically feasible)</li>
+                <li><strong>Verification Process:</strong> We may request evidence to verify corrections</li>
+                <li><strong>Third-Party Notification:</strong> We inform municipal authorities of corrections to shared data</li>
+            </ul>
+
+            <h3>6.3 Right to Erasure ("Right to be Forgotten") (Article 17)</h3>
+            <ul>
+                <li><strong>Complete Deletion:</strong> Request removal of all personal data from our systems</li>
+                <li><strong>Grounds for Erasure:</strong> No longer necessary, consent withdrawn, unlawful processing, legal compliance</li>
+                <li><strong>Municipal Records:</strong> Some issue reports may be retained for legitimate public interest or legal obligations</li>
+                <li><strong>Secure Deletion:</strong> Cryptographic wiping ensuring data cannot be recovered</li>
+            </ul>
+
+            <h3>6.4 Right to Restrict Processing (Article 18)</h3>
+            <ul>
+                <li><strong>Temporary Suspension:</strong> Limit processing while accuracy or lawfulness is verified</li>
+                <li><strong>Objection Pending:</strong> Restrict processing during objection assessment</li>
+                <li><strong>Limited Processing:</strong> Storage-only for legal claims or protection of rights</li>
+            </ul>
+
+            <h3>6.5 Right to Data Portability (Article 20)</h3>
+            <ul>
+                <li><strong>Structured Export:</strong> Receive your data in machine-readable format (JSON, CSV)</li>
+                <li><strong>Direct Transfer:</strong> Request direct transmission to another service provider</li>
+                <li><strong>Scope:</strong> Applies to data processed by consent or contract performance</li>
+                <li><strong>Report History:</strong> Complete export of your issue reports and interactions</li>
+            </ul>
+
+            <h3>6.6 Right to Object (Article 21)</h3>
+            <ul>
+                <li><strong>Legitimate Interest Processing:</strong> Object to processing based on our legitimate interests</li>
+                <li><strong>Direct Marketing:</strong> Absolute right to opt-out (though we don't conduct direct marketing)</li>
+                <li><strong>Scientific Research:</strong> Object to processing for research purposes</li>
+                <li><strong>Automated Decision-Making:</strong> Object to AI-only decision making affecting you</li>
+            </ul>
+
+            <h3>6.7 Rights Related to Automated Decision-Making (Article 22)</h3>
+            <ul>
+                <li><strong>Human Review:</strong> Request human oversight of AI classification decisions</li>
+                <li><strong>Challenge Decisions:</strong> Contest AI determinations about issue priority or routing</li>
+                <li><strong>Explanation:</strong> Receive meaningful information about the logic involved in automated processing</li>
+            </ul>
+
+            <h3>6.8 Right to Lodge a Complaint</h3>
+            <p>You have the right to lodge a complaint with supervisory authorities:</p>
+            <ul>
+                <li><strong>EU Residents:</strong> Your national data protection authority</li>
+                <li><strong>Lead Authority:</strong> Irish Data Protection Commission (our primary establishment)</li>
+                <li><strong>Local Authority:</strong> The supervisory authority in your country of residence</li>
+            </ul>
 
             <div class="contact-info">
                 <h3>Exercising Your Rights</h3>
-                <p>To exercise any of these rights, please contact us at:</p>
-                <p><strong>Email:</strong> privacy@urbanai.site</p>
-                <p><strong>Response time:</strong> Within 30 days as required by GDPR</p>
+                <p><strong>Primary Contact:</strong> privacy@urbanai.site</p>
+                <p><strong>Data Protection Officer:</strong> dpo@urbanai.site</p>
+                <p><strong>Secure Portal:</strong> <a href="https://privacy.urbanai.site">privacy.urbanai.site</a> (coming soon)</p>
+                <p><strong>Response Time:</strong> Within 30 days (may extend to 60 days for complex requests with notification)</p>
+                <p><strong>Identity Verification:</strong> We may request verification to protect against fraudulent requests</p>
+                <p><strong>No Fees:</strong> Rights exercises are free unless requests are manifestly unfounded or excessive</p>
             </div>
 
-            <h2>6. Cookies and Tracking</h2>
-            
-            <h3>6.1 Essential Cookies</h3>
-            <p>We use only essential cookies necessary for the service to function:</p>
+            <h2>7. Cookies and Tracking Technology</h2>
+
+            <h3>7.1 Essential Cookies (No Consent Required)</h3>
+            <p>We use only technically necessary cookies for core functionality:</p>
             <ul>
-                <li>Authentication session cookies</li>
-                <li>Security tokens</li>
-                <li>User preference settings</li>
+                <li><strong>Authentication Session:</strong> Secure session management (expires when browser closes)</li>
+                <li><strong>Security Tokens:</strong> CSRF protection and security validation</li>
+                <li><strong>User Preferences:</strong> Language, accessibility settings, UI preferences</li>
+                <li><strong>Load Balancing:</strong> Technical routing for service availability</li>
             </ul>
 
-            <h3>6.2 No Tracking Cookies</h3>
-            <p>We do not use:</p>
+            <h3>7.2 Analytics Cookies (Consent-Based)</h3>
+            <p>With your explicit consent, we may use:</p>
             <ul>
-                <li>Advertising cookies</li>
-                <li>Social media tracking</li>
-                <li>Cross-site tracking</li>
-                <li>Analytics cookies that identify individuals</li>
+                <li><strong>Anonymized Usage Analytics:</strong> Aggregated service improvement data</li>
+                <li><strong>Performance Monitoring:</strong> Service availability and error tracking</li>
+                <li><strong>A/B Testing:</strong> Feature improvement experimentation (no personal profiling)</li>
             </ul>
 
-            <h2>7. Third-Party Services</h2>
-            
-            <h3>7.1 OAuth Providers</h3>
-            <p>We integrate with Google and Microsoft for authentication. Their privacy policies apply to the authentication process:</p>
+            <h3>7.3 Explicitly Prohibited</h3>
+            <p>We never use:</p>
             <ul>
-                <li><a href="https://policies.google.com/privacy" target="_blank">Google Privacy Policy</a></li>
-                <li><a href="https://privacy.microsoft.com/privacystatement" target="_blank">Microsoft Privacy Statement</a></li>
+                <li><strong>Advertising Cookies:</strong> No behavioral advertising or profiling</li>
+                <li><strong>Cross-Site Tracking:</strong> No tracking across other websites</li>
+                <li><strong>Social Media Pixels:</strong> No Facebook, Google, or social media tracking</li>
+                <li><strong>Third-Party Analytics:</strong> No Google Analytics or similar external tracking</li>
+                <li><strong>Fingerprinting:</strong> No device or browser fingerprinting</li>
             </ul>
 
-            <h3>7.2 Azure Cloud Services</h3>
-            <p>Our infrastructure is hosted on Microsoft Azure, which maintains ISO 27001 and SOC 2 compliance.</p>
-
-            <h2>8. Children's Privacy</h2>
-            
-            <p>UrbanAI is not intended for use by children under 16. We do not knowingly collect personal information from children under 16. If you become aware that a child has provided us with personal information, please contact us immediately.</p>
-
-            <h2>9. International Data Transfers</h2>
-            
-            <p>All data processing occurs within the European Union. In the rare case of international transfers, we ensure adequate protection through:</p>
+            <h3>7.4 Cookie Management</h3>
             <ul>
-                <li>Adequacy decisions by the European Commission</li>
-                <li>Standard Contractual Clauses (SCCs)</li>
-                <li>Other approved transfer mechanisms</li>
+                <li><strong>Browser Controls:</strong> You can block or delete cookies through browser settings</li>
+                <li><strong>Granular Consent:</strong> Separate opt-in for different cookie categories</li>
+                <li><strong>Consent Withdrawal:</strong> Easy mechanism to withdraw consent at any time</li>
+                <li><strong>Service Impact:</strong> Essential cookies required for basic functionality</li>
             </ul>
 
-            <h2>10. Changes to This Privacy Policy</h2>
-            
-            <p>We may update this privacy policy from time to time. When we do:</p>
+            <h2>8. Third-Party Data Processors</h2>
+
+            <h3>8.1 OAuth Authentication Providers</h3>
+            <p>We rely on external providers for secure authentication:</p>
             <ul>
-                <li>We will notify users through the application</li>
-                <li>The updated policy will be posted on this page</li>
-                <li>Significant changes will require explicit consent</li>
-                <li>The "Last updated" date will be revised</li>
+                <li><strong>Google OAuth 2.0:</strong> Secure authentication without storing personal data</li>
+                    <ul><li>Privacy Policy: <a href="https://policies.google.com/privacy" target="_blank">policies.google.com/privacy</a></li></ul>
+                <li><strong>Microsoft OAuth 2.0:</strong> Enterprise and personal account authentication</li>
+                    <ul><li>Privacy Statement: <a href="https://privacy.microsoft.com/privacystatement" target="_blank">privacy.microsoft.com/privacystatement</a></li></ul>
+                <li><strong>Data Sharing:</strong> Only authentication requests sent; no personal profile data requested or received</li>
+                <li><strong>User Control:</strong> You control which data (if any) OAuth providers share with us</li>
             </ul>
 
-            <h2>11. Contact Information</h2>
-            
+            <h3>8.2 Cloud Infrastructure (Microsoft Azure)</h3>
+            <p>Our technical infrastructure operates within Microsoft Azure's compliance framework:</p>
+            <ul>
+                <li><strong>Data Processing Agreement:</strong> GDPR-compliant data processing terms</li>
+                <li><strong>Certifications:</strong> ISO 27001, SOC 2 Type II, FedRAMP High</li>
+                <li><strong>Geographic Controls:</strong> EU-only data residency and processing</li>
+                <li><strong>Security Features:</strong> Advanced threat protection, encryption, access controls</li>
+                <li><strong>Subprocessor Oversight:</strong> Contractual privacy protections for all Azure services</li>
+            </ul>
+
+            <h3>8.3 AI and ML Services</h3>
+            <ul>
+                <li><strong>Azure OpenAI Service:</strong> Issue classification and natural language processing</li>
+                <li><strong>Data Isolation:</strong> Dedicated instances with no data sharing across customers</li>
+                <li><strong>Model Training:</strong> Customer data not used for model training or improvement</li>
+                <li><strong>Data Retention:</strong> AI processing logs automatically deleted after 30 days</li>
+            </ul>
+
+            <h3>8.4 Municipal Integration Partners</h3>
+            <ul>
+                <li><strong>Government APIs:</strong> Direct integration with municipal reporting systems</li>
+                <li><strong>Data Transfer:</strong> Only anonymized issue reports shared</li>
+                <li><strong>Legal Agreements:</strong> Data sharing agreements with participating municipalities</li>
+                <li><strong>Public Records:</strong> Issue reports become part of public municipal records</li>
+            </ul>
+
+            <h2>9. Children's Privacy Protection</h2>
+
+            <p><strong>Age Restrictions:</strong> UrbanAI requires users to be at least 16 years old in accordance with GDPR Article 8.</p>
+
+            <h3>9.1 Age Verification</h3>
+            <ul>
+                <li><strong>Account Creation:</strong> Age confirmation required during OAuth authentication</li>
+                <li><strong>No Collection:</strong> We do not knowingly collect data from children under 16</li>
+                <li><strong>Immediate Deletion:</strong> Any inadvertently collected children's data is immediately deleted</li>
+                <li><strong>Parental Notification:</strong> If we discover underage use, we will attempt to notify parents/guardians</li>
+            </ul>
+
+            <h3>9.2 Educational Use</h3>
+            <p>For civic education purposes in schools:</p>
+            <ul>
+                <li><strong>Teacher Supervision:</strong> Required adult supervision for classroom demonstrations</li>
+                <li><strong>No Personal Accounts:</strong> Students may not create individual accounts</li>
+                <li><strong>Anonymous Examples:</strong> Educational content uses only anonymized, example data</li>
+                <li><strong>School Consent:</strong> Institutional consent and parental notification required</li>
+            </ul>
+
+            <h3>9.3 Reporting Underage Use</h3>
+            <p>If you become aware of underage use:</p>
+            <ul>
+                <li><strong>Immediate Contact:</strong> Email privacy@urbanai.site immediately</li>
+                <li><strong>Account Suspension:</strong> Immediate suspension pending age verification</li>
+                <li><strong>Data Deletion:</strong> Complete removal of any collected data</li>
+                <li><strong>Response Time:</strong> Within 24 hours of notification</li>
+            </ul>
+
+            <h2>10. International Data Transfers</h2>
+
+            <h3>10.1 EU-Only Processing</h3>
+            <p><strong>Primary Commitment:</strong> All personal data processing occurs exclusively within the European Economic Area.</p>
+
+            <h3>10.2 Transfer Safeguards (Emergency Situations Only)</h3>
+            <p>In extraordinary circumstances requiring data transfer outside the EEA:</p>
+            <ul>
+                <li><strong>Adequacy Decisions:</strong> Only to countries with European Commission adequacy decisions</li>
+                <li><strong>Standard Contractual Clauses:</strong> EU Commission-approved SCCs for commercial transfers</li>
+                <li><strong>Binding Corporate Rules:</strong> For transfers within multinational organizations</li>
+                <li><strong>Explicit Consent:</strong> Individual consent for specific transfer purposes</li>
+                <li><strong>Public Interest:</strong> Transfers necessary for public authority tasks</li>
+            </ul>
+
+            <h3>10.3 Current Transfer Status</h3>
+            <ul>
+                <li><strong>No Routine Transfers:</strong> Normal operations do not involve international transfers</li>
+                <li><strong>OAuth Providers:</strong> Authentication occurs within provider's EU infrastructure</li>
+                <li><strong>Azure Global:</strong> Data residency locked to EU regions</li>
+                <li><strong>Municipal APIs:</strong> Only connect to European municipal systems</li>
+            </ul>
+
+            <h3>10.4 Transfer Impact Assessment</h3>
+            <p>Before any future international transfer:</p>
+            <ul>
+                <li><strong>Necessity Assessment:</strong> Evaluation of transfer necessity and alternatives</li>
+                <li><strong>Risk Analysis:</strong> Privacy impact assessment for destination country</li>
+                <li><strong>Safeguard Implementation:</strong> Additional technical and organizational measures</li>
+                <li><strong>User Notification:</strong> Clear notice of transfer purposes and safeguards</li>
+            </ul>
+
+            <h2>11. Privacy Policy Updates</h2>
+
+            <h3>11.1 Update Procedures</h3>
+            <p>We are committed to transparency in privacy policy changes:</p>
+            <ul>
+                <li><strong>Regular Review:</strong> Annual review and updates to reflect legal and operational changes</li>
+                <li><strong>Version Control:</strong> All versions maintained with clear change documentation</li>
+                <li><strong>Public Archive:</strong> Previous versions available for reference</li>
+                <li><strong>Change Summary:</strong> Clear explanation of modifications with each update</li>
+            </ul>
+
+            <h3>11.2 Notification Requirements</h3>
+            <ul>
+                <li><strong>Material Changes:</strong> 30-day advance notice via email and in-app notifications</li>
+                <li><strong>Minor Updates:</strong> Notice through website posting and app notifications</li>
+                <li><strong>Emergency Changes:</strong> Immediate notification for security or legal compliance</li>
+                <li><strong>Consent Requirements:</strong> Explicit consent for changes affecting legal basis or data use</li>
+            </ul>
+
+            <h3>11.3 User Options</h3>
+            <ul>
+                <li><strong>Accept Changes:</strong> Continue using service under new terms</li>
+                <li><strong>Reject Changes:</strong> Option to close account and delete data</li>
+                <li><strong>Granular Consent:</strong> Selective acceptance where technically feasible</li>
+                <li><strong>Grace Period:</strong> 30 days to decide on material changes</li>
+            </ul>
+
+            <h3>11.4 Change Categories</h3>
+            <ul>
+                <li><strong>Technical Updates:</strong> Clarifications and technical corrections (no consent required)</li>
+                <li><strong>Legal Compliance:</strong> Changes required by law or regulation (notice only)</li>
+                <li><strong>Service Enhancement:</strong> New features or processing activities (consent required)</li>
+                <li><strong>Business Changes:</strong> Corporate transactions or significant operational changes (advance notice)</li>
+            </ul>
+
+            <h2>12. Contact Information and Complaints</h2>
+
             <div class="contact-info">
-                <h3>Data Protection Officer</h3>
-                <p><strong>Email:</strong> dpo@urbanai.site</p>
-                <p><strong>Privacy Questions:</strong> privacy@urbanai.site</p>
+                <h3>Data Protection Contacts</h3>
+                <p><strong>Data Protection Officer:</strong> dpo@urbanai.site</p>
+                <p><strong>Privacy Rights Requests:</strong> privacy@urbanai.site</p>
+                <p><strong>Security Issues:</strong> security@urbanai.site</p>
                 <p><strong>General Support:</strong> support@urbanai.site</p>
-                
-                <h3>Supervisory Authority</h3>
-                <p>You have the right to lodge a complaint with your local data protection authority if you believe your privacy rights have been violated.</p>
+
+                <h3>Legal and Regulatory Information</h3>
+                <p><strong>Legal Entity:</strong> UrbanAI Technology Solutions Ltd.</p>
+                <p><strong>Registration:</strong> Ireland Company Registration Office</p>
+                <p><strong>EU Representative:</strong> As required under GDPR Article 27</p>
+                <p><strong>Address:</strong> To be updated with company registration</p>
+
+                <h3>Supervisory Authority Rights</h3>
+                <p><strong>Lead Supervisory Authority:</strong> Data Protection Commission (Ireland)</p>
+                <p><strong>Contact:</strong> <a href="https://www.dataprotection.ie" target="_blank">dataprotection.ie</a></p>
+                <p><strong>Local Authorities:</strong> You may lodge complaints with your national DPA</p>
+                <p><strong>European Data Protection Board:</strong> <a href="https://edpb.europa.eu" target="_blank">edpb.europa.eu</a></p>
+
+                <h3>Response Commitments</h3>
+                <ul>
+                    <li><strong>Privacy Requests:</strong> Response within 30 days (GDPR requirement)</li>
+                    <li><strong>Security Issues:</strong> Initial response within 24 hours</li>
+                    <li><strong>General Inquiries:</strong> Response within 5 business days</li>
+                    <li><strong>Breach Notifications:</strong> DPA notification within 72 hours if required</li>
+                </ul>
             </div>
 
-            <h2>12. Commitment to Privacy</h2>
-            
-            <p>UrbanAI is committed to being a privacy-first platform. Our architecture is designed to minimize data collection while maximizing utility for urban issue reporting. We believe privacy and functionality can coexist, and we've built our platform to prove it.</p>
-            
-            <p>If you have any questions about this privacy policy or our data practices, please don't hesitate to contact us. We're here to help and committed to transparency in all our privacy practices.</p>
+            <h2>13. Privacy-by-Design Commitment</h2>
+
+            <p><strong>Foundational Principle:</strong> UrbanAI is architected with privacy-by-design principles, implementing data protection from the ground up rather than as an afterthought.</p>
+
+            <h3>13.1 Technical Privacy Implementation</h3>
+            <ul>
+                <li><strong>Zero-PII Architecture:</strong> System designed to function without collecting personal identifiable information</li>
+                <li><strong>Data Minimization:</strong> Collect only data absolutely necessary for civic issue reporting</li>
+                <li><strong>Purpose Limitation:</strong> Data used only for explicitly stated civic purposes</li>
+                <li><strong>Storage Limitation:</strong> Automated deletion schedules aligned with legal requirements</li>
+                <li><strong>Accuracy Maintenance:</strong> Mechanisms for data correction and verification</li>
+                <li><strong>Integrity and Confidentiality:</strong> End-to-end security protecting data throughout lifecycle</li>
+                <li><strong>Accountability:</strong> Comprehensive audit trails and privacy impact assessments</li>
+            </ul>
+
+            <h3>13.2 Ongoing Privacy Enhancement</h3>
+            <ul>
+                <li><strong>Regular Audits:</strong> Quarterly privacy compliance reviews</li>
+                <li><strong>Technology Updates:</strong> Continuous improvement of privacy-preserving technologies</li>
+                <li><strong>Staff Training:</strong> Ongoing privacy education for all team members</li>
+                <li><strong>Community Engagement:</strong> Regular dialogue with privacy advocacy groups</li>
+            </ul>
+
+            <h3>13.3 Transparency Commitment</h3>
+            <p>We believe transparent communication builds trust:</p>
+            <ul>
+                <li><strong>Plain Language:</strong> Privacy information in understandable terms</li>
+                <li><strong>Proactive Disclosure:</strong> Clear information about all data practices</li>
+                <li><strong>Open Communication:</strong> Responsive to questions and concerns</li>
+                <li><strong>Regular Updates:</strong> Timely notification of any changes</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p><strong>Our Promise:</strong> Privacy and civic functionality are not competing interests. We've proven that robust urban issue reporting can coexist with strong privacy protection. Our commitment is to maintain this balance while continuously improving both service quality and privacy protection.</p>
+            </div>
+
+            <p><strong>Questions or Concerns?</strong> We encourage open dialogue about privacy. Contact us at privacy@urbanai.site with any questions, suggestions, or concerns about our privacy practices. Your feedback helps us improve our commitment to privacy protection.</p>
         </div>
     </main>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <img src="assets/brand/logos/urbanai-logo-white.png" alt="UrbanAI Logo">
+                    <p>Empowering citizens to report municipal issues with confidence.</p>
+                    <div class="footer-social">
+                        <a href="#"><img src="assets/icons/vendors/x-official.svg" alt="X"></a>
+                        <a href="#"><img src="assets/icons/vendors/linkedin-official.svg" alt="LinkedIn"></a>
+                        <a href="#"><img src="assets/icons/vendors/github-official.svg" alt="GitHub"></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Product</h3>
+                    <ul class="footer-links">
+                        <li><a href="features.html">Features</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="security.html">Security</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 UrbanAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        if (hamburger) {
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        // Match logo height to the "Get Started" button (slightly larger for prominence)
+        function setLogoTargetFromCTA() {
+            const cta = document.querySelector('.cta-button');
+            if (!cta) return;
+            const h = Math.ceil(cta.getBoundingClientRect().height); // includes padding/border
+            document.documentElement.style.setProperty('--header-action-height', h + 'px');
+        }
+
+        window.addEventListener('load', setLogoTargetFromCTA);
+        window.addEventListener('resize', () => {
+            clearTimeout(window.__logoResizeTimer);
+            window.__logoResizeTimer = setTimeout(setLogoTargetFromCTA, 150);
+        });
+    </script>
 </body>
 </html>

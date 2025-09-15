@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - UrbanAI</title>
+    <meta name="description" content="UrbanAI Terms of Service - Legal terms and conditions for using our urban issue reporting platform.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary-color: #475569;
+            --light-gray: #F1F5F9;
+            --dark-gray: #0F172A;
+            --white: #FFFFFF;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            color: var(--secondary-color);
+            background-color: var(--white);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo img {
+            /* Larger brand presence; never shrink below 200px and scale with CTA */
+            height: max(200px, calc(var(--header-action-height, 48px) * 1.2));
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-color);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .cta-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background-color: var(--dark-gray);
+            margin: 5px 0;
+            transition: 0.4s;
+        }
+
+        .main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .effective-date {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            font-size: 16px;
+        }
+
+        .content h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 32px 0 16px 0;
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+        }
+
+        .content h2:first-of-type {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .content h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 24px 0 12px 0;
+        }
+
+        .content h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 16px 0 8px 0;
+        }
+
+        .content p {
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+
+        .content ul, .content ol {
+            margin: 16px 0 16px 20px;
+        }
+
+        .content li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .warning-box {
+            background: #FEF3C7;
+            border: 1px solid #F59E0B;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .warning-box h4 {
+            color: #92400E;
+            margin-top: 0;
+        }
+
+        .contact-info {
+            background: var(--highlight-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .back-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 24px;
+            display: inline-block;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .definition-list {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .definition-list dt {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 12px;
+        }
+
+        .definition-list dt:first-child {
+            margin-top: 0;
+        }
+
+        .definition-list dd {
+            margin-left: 0;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .section-summary {
+            background: linear-gradient(135deg, var(--bg-secondary), #EFF6FF);
+            border-left: 4px solid var(--primary-color);
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .section-summary p {
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                background-color: var(--white);
+                padding: 20px 0;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .nav-links li {
+                margin: 10px 0;
+                text-align: center;
+            }
+            .hamburger {
+                display: block;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+
+            .content h2 {
+                font-size: 20px;
+            }
+
+            .content h3 {
+                font-size: 18px;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--dark-gray);
+            color: var(--white);
+            padding: 60px 0 20px;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-main {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .footer-brand, .footer-section {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-brand img {
+            /* Footer logo matches header logo exactly (bind to CTA height from header) */
+            height: max(200px, calc(var(--header-action-height, 48px) * 1.2));
+            width: auto;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .footer-social img {
+            height: 24px;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-social a:hover img {
+            opacity: 0.8;
+        }
+
+        .footer-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #a0aec0;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--secondary-color);
+            padding-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .footer-main {
+                flex-direction: column;
+                text-align: center;
+            }
+            .footer-social {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav-bar">
+                <a href="index.html" class="logo">
+                    <img src="assets/brand/logos/urbanai-logo-black.png" alt="UrbanAI Logo">
+                </a>
+                <ul class="nav-links">
+                    <li><a href="features.html">Features</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="security.html">Security</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <a href="/app" class="cta-button">Get Started</a>
+                <div class="hamburger">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <a href="index.html" class="back-link">← Back to Home</a>
+
+        <h1 class="page-title">Terms of Service</h1>
+        <p class="effective-date">Effective Date: January 15, 2025</p>
+
+        <div class="content">
+            <div class="section-summary">
+                <p><strong>Quick Summary:</strong> These terms govern your use of UrbanAI's civic issue reporting platform. By using our service, you agree to report genuine urban issues responsibly, respect our privacy-first approach, and follow applicable laws. We provide the platform "as-is" with reasonable support.</p>
+            </div>
+
+            <h2>1. Definitions and Interpretation</h2>
+
+            <div class="definition-list">
+                <dl>
+                    <dt>"UrbanAI," "we," "us," or "our"</dt>
+                    <dd>UrbanAI Technology Solutions Ltd., an Irish company providing civic technology services.</dd>
+
+                    <dt>"Service" or "Platform"</dt>
+                    <dd>The UrbanAI web application, mobile applications, APIs, and related services for urban issue reporting.</dd>
+
+                    <dt>"User," "you," or "your"</dt>
+                    <dd>Any individual or entity accessing or using the UrbanAI Service.</dd>
+
+                    <dt>"Issue Report"</dt>
+                    <dd>A user-submitted report of an urban issue, including descriptions, locations, photos, and related data.</dd>
+
+                    <dt>"Municipal Authority"</dt>
+                    <dd>Government agencies, departments, and officials responsible for addressing urban issues.</dd>
+
+                    <dt>"Content"</dt>
+                    <dd>All information, data, text, images, and materials submitted through the Service.</dd>
+
+                    <dt>"AI Agents"</dt>
+                    <dd>Our automated systems for issue classification, authority routing, and regulatory matching.</dd>
+                </dl>
+            </div>
+
+            <h2>2. Acceptance of Terms</h2>
+
+            <h3>2.1 Agreement Formation</h3>
+            <p>By accessing, registering for, or using the UrbanAI Service, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service and our Privacy Policy. If you disagree with any part of these terms, you may not use our Service.</p>
+
+            <h3>2.2 Capacity to Contract</h3>
+            <ul>
+                <li><strong>Age Requirement:</strong> You must be at least 16 years old to use this Service</li>
+                <li><strong>Legal Authority:</strong> You represent that you have the legal capacity to enter into these terms</li>
+                <li><strong>Organizational Use:</strong> If using on behalf of an organization, you have authority to bind that entity</li>
+            </ul>
+
+            <h3>2.3 Modifications to Terms</h3>
+            <p>We may modify these terms at any time. Material changes will be communicated through:</p>
+            <ul>
+                <li>Email notification to registered users</li>
+                <li>Prominent notice on the Service</li>
+                <li>In-app notifications</li>
+            </ul>
+            <p>Continued use after notification constitutes acceptance of modified terms.</p>
+
+            <h2>3. Service Description</h2>
+
+            <h3>3.1 Core Functionality</h3>
+            <p>UrbanAI provides a platform for:</p>
+            <ul>
+                <li><strong>Issue Reporting:</strong> Submitting reports of urban problems, infrastructure issues, and civic concerns</li>
+                <li><strong>AI-Powered Classification:</strong> Automated categorization and routing of reports using multi-agent AI systems</li>
+                <li><strong>Municipal Integration:</strong> Anonymous forwarding of reports to appropriate government authorities</li>
+                <li><strong>Regulatory Discovery:</strong> Matching issues with relevant laws, regulations, and compliance requirements</li>
+                <li><strong>Document Generation:</strong> Creating formal complaint documents and submissions</li>
+                <li><strong>Progress Tracking:</strong> Monitoring report status and municipal responses</li>
+            </ul>
+
+            <h3>3.2 Service Availability</h3>
+            <ul>
+                <li><strong>Geographic Coverage:</strong> Initially available in select European municipalities with expansion planned</li>
+                <li><strong>Service Hours:</strong> Available 24/7 with scheduled maintenance windows announced in advance</li>
+                <li><strong>Technical Requirements:</strong> Modern web browser or supported mobile application</li>
+            </ul>
+
+            <h2>4. User Responsibilities and Conduct</h2>
+
+            <h3>4.1 Acceptable Use</h3>
+            <p>You agree to use the Service only for legitimate civic purposes:</p>
+            <ul>
+                <li><strong>Genuine Issues:</strong> Report only real urban problems requiring municipal attention</li>
+                <li><strong>Accurate Information:</strong> Provide truthful, accurate descriptions and locations</li>
+                <li><strong>Appropriate Content:</strong> Submit only relevant photos and documentation</li>
+                <li><strong>Respectful Communication:</strong> Use professional, courteous language in all reports</li>
+            </ul>
+
+            <h3>4.2 Prohibited Activities</h3>
+            <p>You must not:</p>
+            <ul>
+                <li><strong>False Reports:</strong> Submit knowingly false, misleading, or frivolous reports</li>
+                <li><strong>Spam or Abuse:</strong> Overwhelm the system with excessive or duplicate reports</li>
+                <li><strong>Harassment:</strong> Target individuals, groups, or organizations with malicious reports</li>
+                <li><strong>Commercial Use:</strong> Use the Service for advertising, marketing, or commercial gain</li>
+                <li><strong>Illegal Content:</strong> Submit content that violates applicable laws or regulations</li>
+                <li><strong>System Interference:</strong> Attempt to disrupt, hack, or reverse engineer the Service</li>
+                <li><strong>Data Mining:</strong> Extract data for unauthorized purposes</li>
+                <li><strong>Impersonation:</strong> Misrepresent your identity or authority</li>
+            </ul>
+
+            <div class="warning-box">
+                <h4>⚠️ Violation Consequences</h4>
+                <p>Violation of these terms may result in account suspension, service termination, and potential legal action. Fraudulent reports may be referred to law enforcement.</p>
+            </div>
+
+            <h3>4.3 Content Standards</h3>
+            <h4>Required Content Qualities:</h4>
+            <ul>
+                <li><strong>Factual Accuracy:</strong> Reports must be based on actual observations</li>
+                <li><strong>Relevance:</strong> Content must relate to legitimate urban issues</li>
+                <li><strong>Civility:</strong> Professional tone and respectful language required</li>
+                <li><strong>Legal Compliance:</strong> Content must comply with applicable laws</li>
+            </ul>
+
+            <h4>Prohibited Content:</h4>
+            <ul>
+                <li>Defamatory, libelous, or false statements about individuals or organizations</li>
+                <li>Discriminatory language based on race, gender, religion, or other protected characteristics</li>
+                <li>Personal information of private individuals without consent</li>
+                <li>Copyrighted material without proper authorization</li>
+                <li>Graphic or disturbing content unnecessary for issue documentation</li>
+            </ul>
+
+            <h2>5. Privacy and Data Protection</h2>
+
+            <h3>5.1 Privacy-First Architecture</h3>
+            <p>Our Service is designed with privacy-by-design principles:</p>
+            <ul>
+                <li><strong>Minimal Data Collection:</strong> We collect only data necessary for service functionality</li>
+                <li><strong>OAuth-Only Authentication:</strong> No personal information stored beyond authentication needs</li>
+                <li><strong>Anonymous Reporting:</strong> Issue reports are not linked to personal identities</li>
+                <li><strong>GDPR Compliance:</strong> Full compliance with European data protection regulations</li>
+            </ul>
+
+            <h3>5.2 Data Usage Rights</h3>
+            <p>By using the Service, you grant us limited rights to:</p>
+            <ul>
+                <li><strong>Process Reports:</strong> Use AI systems to classify and route your issue reports</li>
+                <li><strong>Municipal Sharing:</strong> Share anonymized reports with relevant authorities</li>
+                <li><strong>Service Improvement:</strong> Analyze aggregated data to enhance platform functionality</li>
+                <li><strong>Legal Compliance:</strong> Retain data as required by applicable laws</li>
+            </ul>
+
+            <h3>5.3 User Privacy Rights</h3>
+            <p>You retain significant control over your data:</p>
+            <ul>
+                <li><strong>Access Rights:</strong> Request information about data we hold</li>
+                <li><strong>Correction Rights:</strong> Update or correct inaccurate information</li>
+                <li><strong>Deletion Rights:</strong> Request removal of your data (subject to legal retention requirements)</li>
+                <li><strong>Portability Rights:</strong> Export your data in machine-readable format</li>
+            </ul>
+
+            <p><strong>Detailed Privacy Information:</strong> Please review our comprehensive <a href="privacy.html">Privacy Policy</a> for complete details on data handling practices.</p>
+
+            <h2>6. Intellectual Property Rights</h2>
+
+            <h3>6.1 UrbanAI Intellectual Property</h3>
+            <p>We retain all rights to:</p>
+            <ul>
+                <li><strong>Platform Technology:</strong> Software, algorithms, and AI systems</li>
+                <li><strong>Branding:</strong> Trademarks, logos, and service marks</li>
+                <li><strong>Content:</strong> Documentation, help materials, and platform interface</li>
+                <li><strong>Data Processing Methods:</strong> Proprietary techniques for issue classification and routing</li>
+            </ul>
+
+            <h3>6.2 User Content License</h3>
+            <p>By submitting content to the Service, you grant us:</p>
+            <ul>
+                <li><strong>Processing License:</strong> Right to process, classify, and route your reports</li>
+                <li><strong>Municipal Sharing License:</strong> Right to share anonymized reports with authorities</li>
+                <li><strong>Platform Operation License:</strong> Right to display and manage content within the Service</li>
+                <li><strong>Improvement License:</strong> Right to use aggregated, anonymized data for service enhancement</li>
+            </ul>
+
+            <h3>6.3 User Content Ownership</h3>
+            <p>You retain ownership of your original content, but acknowledge that:</p>
+            <ul>
+                <li>Issue reports may become part of public municipal records</li>
+                <li>Shared reports cannot be completely withdrawn once submitted to authorities</li>
+                <li>We may need to retain certain data for legal compliance</li>
+            </ul>
+
+            <h3>6.4 Third-Party Content</h3>
+            <p>Respect third-party intellectual property rights:</p>
+            <ul>
+                <li><strong>Copyright Compliance:</strong> Only submit content you own or have permission to use</li>
+                <li><strong>Attribution:</strong> Provide proper attribution when required</li>
+                <li><strong>Fair Use:</strong> Ensure any third-party content falls under fair use provisions</li>
+            </ul>
+
+            <h2>7. Service Availability and Performance</h2>
+
+            <h3>7.1 Service Level Expectations</h3>
+            <p>While we strive for optimal performance, we provide the Service "as-is" with:</p>
+            <ul>
+                <li><strong>Target Uptime:</strong> 99.5% availability (excluding scheduled maintenance)</li>
+                <li><strong>Response Times:</strong> Reasonable processing times for issue classification</li>
+                <li><strong>Support Response:</strong> Business hours support for technical issues</li>
+            </ul>
+
+            <h3>7.2 Planned Maintenance</h3>
+            <ul>
+                <li><strong>Advance Notice:</strong> Minimum 24 hours notice for planned downtime</li>
+                <li><strong>Maintenance Windows:</strong> Typically scheduled during low-usage periods</li>
+                <li><strong>Emergency Maintenance:</strong> May occur without advance notice for security or critical issues</li>
+            </ul>
+
+            <h3>7.3 Service Limitations</h3>
+            <p>Our Service has inherent limitations:</p>
+            <ul>
+                <li><strong>Municipal Response:</strong> We cannot guarantee municipal action on reports</li>
+                <li><strong>AI Accuracy:</strong> Automated classification may occasionally be incorrect</li>
+                <li><strong>Coverage Area:</strong> Limited to participating municipalities</li>
+                <li><strong>Emergency Issues:</strong> Not suitable for urgent emergency situations requiring immediate response</li>
+            </ul>
+
+            <div class="warning-box">
+                <h4>🚨 Emergency Disclaimer</h4>
+                <p><strong>For emergencies requiring immediate attention (fires, medical emergencies, imminent public safety threats), contact local emergency services directly. Do not rely on UrbanAI for emergency response.</strong></p>
+            </div>
+
+            <h2>8. Subscription Terms and Billing</h2>
+
+            <h3>8.1 Service Tiers</h3>
+            <p>We offer multiple service levels:</p>
+            <ul>
+                <li><strong>Free Tier:</strong> Limited monthly reports with core functionality</li>
+                <li><strong>Paid Subscriptions:</strong> Enhanced features and higher usage limits</li>
+                <li><strong>Enterprise Plans:</strong> Custom solutions for municipalities and organizations</li>
+            </ul>
+
+            <h3>8.2 Billing and Payment</h3>
+            <ul>
+                <li><strong>Billing Cycle:</strong> Monthly or annual billing as selected</li>
+                <li><strong>Payment Methods:</strong> Credit cards and other approved payment methods</li>
+                <li><strong>Auto-Renewal:</strong> Subscriptions automatically renew unless cancelled</li>
+                <li><strong>Price Changes:</strong> 30-day advance notice for subscription price changes</li>
+            </ul>
+
+            <h3>8.3 Cancellation and Refunds</h3>
+            <ul>
+                <li><strong>Cancellation:</strong> Cancel subscription anytime with service continuing until end of billing period</li>
+                <li><strong>Refund Policy:</strong> 30-day money-back guarantee for new subscriptions</li>
+                <li><strong>Pro-Rated Refunds:</strong> No pro-rated refunds for partial billing periods</li>
+                <li><strong>Outstanding Reports:</strong> Previously submitted reports remain in municipal systems</li>
+            </ul>
+
+            <h2>9. Disclaimers and Limitations</h2>
+
+            <h3>9.1 Service Disclaimers</h3>
+            <p><strong>THE SERVICE IS PROVIDED "AS-IS" AND "AS-AVAILABLE" WITHOUT WARRANTIES OF ANY KIND.</strong> We disclaim all warranties, including:</p>
+            <ul>
+                <li><strong>Accuracy:</strong> We do not warrant the accuracy of AI classifications or municipal routing</li>
+                <li><strong>Completeness:</strong> We do not guarantee comprehensive coverage of all regulations or authorities</li>
+                <li><strong>Timeliness:</strong> We do not warrant specific processing or response times</li>
+                <li><strong>Municipal Action:</strong> We do not guarantee that municipalities will act on reports</li>
+            </ul>
+
+            <h3>9.2 Limitation of Liability</h3>
+            <p><strong>TO THE MAXIMUM EXTENT PERMITTED BY LAW:</strong></p>
+            <ul>
+                <li><strong>Indirect Damages:</strong> We are not liable for indirect, incidental, or consequential damages</li>
+                <li><strong>Damage Cap:</strong> Our total liability is limited to the amount paid for the Service in the preceding 12 months</li>
+                <li><strong>Municipal Actions:</strong> We are not responsible for municipal responses or lack thereof</li>
+                <li><strong>Third-Party Actions:</strong> We are not liable for actions taken by authorities based on reports</li>
+            </ul>
+
+            <h3>9.3 Indemnification</h3>
+            <p>You agree to indemnify and hold harmless UrbanAI from claims arising from:</p>
+            <ul>
+                <li>Your use of the Service in violation of these terms</li>
+                <li>Content you submit that violates third-party rights</li>
+                <li>False or misleading information in your reports</li>
+                <li>Your violation of applicable laws or regulations</li>
+            </ul>
+
+            <h2>10. Termination</h2>
+
+            <h3>10.1 Termination by User</h3>
+            <ul>
+                <li><strong>Account Closure:</strong> Close your account at any time through the Service</li>
+                <li><strong>Data Deletion:</strong> Request deletion of personal data (subject to legal retention requirements)</li>
+                <li><strong>Subscription Cancellation:</strong> Cancel paid subscriptions with service continuing until period end</li>
+            </ul>
+
+            <h3>10.2 Termination by UrbanAI</h3>
+            <p>We may terminate or suspend access for:</p>
+            <ul>
+                <li><strong>Terms Violation:</strong> Breach of these Terms of Service</li>
+                <li><strong>Prohibited Conduct:</strong> Misuse of the Service or submission of false reports</li>
+                <li><strong>Legal Requirements:</strong> Compliance with legal obligations or court orders</li>
+                <li><strong>Service Discontinuation:</strong> If we cease operations (with reasonable notice)</li>
+            </ul>
+
+            <h3>10.3 Effect of Termination</h3>
+            <ul>
+                <li><strong>Access Termination:</strong> Immediate loss of access to the Service</li>
+                <li><strong>Data Retention:</strong> Previously submitted reports may remain in municipal systems</li>
+                <li><strong>Legal Obligations:</strong> Termination does not affect legal rights or obligations that accrued before termination</li>
+            </ul>
+
+            <h2>11. Dispute Resolution</h2>
+
+            <h3>11.1 Governing Law</h3>
+            <p>These terms are governed by Irish law and European Union regulations. Any disputes will be subject to the jurisdiction of Irish courts.</p>
+
+            <h3>11.2 Dispute Resolution Process</h3>
+            <ol>
+                <li><strong>Direct Communication:</strong> First attempt to resolve disputes through direct communication with our support team</li>
+                <li><strong>Mediation:</strong> If direct resolution fails, we encourage mediation through recognized Irish mediation services</li>
+                <li><strong>Arbitration:</strong> For disputes over €10,000, arbitration may be required before court proceedings</li>
+                <li><strong>Court Proceedings:</strong> Final recourse through Irish courts with jurisdiction in Dublin</li>
+            </ol>
+
+            <h3>11.3 Consumer Rights</h3>
+            <p>Nothing in these terms affects your statutory consumer rights under Irish or EU law. If you are a consumer, you retain rights to:</p>
+            <ul>
+                <li>Pursue disputes in your country of residence</li>
+                <li>Seek remedies under consumer protection legislation</li>
+                <li>Lodge complaints with relevant consumer protection authorities</li>
+            </ul>
+
+            <h2>12. Miscellaneous Provisions</h2>
+
+            <h3>12.1 Entire Agreement</h3>
+            <p>These Terms of Service, together with our Privacy Policy, constitute the entire agreement between you and UrbanAI regarding the Service.</p>
+
+            <h3>12.2 Severability</h3>
+            <p>If any provision of these terms is found to be unenforceable, the remaining provisions will continue in full force and effect.</p>
+
+            <h3>12.3 Waiver</h3>
+            <p>Our failure to enforce any provision does not constitute a waiver of that provision or any other provision.</p>
+
+            <h3>12.4 Assignment</h3>
+            <ul>
+                <li><strong>By UrbanAI:</strong> We may assign these terms in connection with a merger, acquisition, or sale of assets</li>
+                <li><strong>By User:</strong> You may not assign these terms without our written consent</li>
+            </ul>
+
+            <h3>12.5 Force Majeure</h3>
+            <p>We are not liable for delays or failures in performance due to circumstances beyond our reasonable control, including natural disasters, war, terrorism, or government actions.</p>
+
+            <h3>12.6 Survival</h3>
+            <p>Provisions relating to intellectual property, liability limitations, indemnification, and dispute resolution survive termination of these terms.</p>
+
+            <h2>13. Contact Information</h2>
+
+            <div class="contact-info">
+                <h3>Legal and Terms Questions</h3>
+                <p><strong>Email:</strong> legal@urbanai.site</p>
+                <p><strong>Terms Questions:</strong> terms@urbanai.site</p>
+                <p><strong>General Support:</strong> support@urbanai.site</p>
+
+                <h3>Company Information</h3>
+                <p><strong>Legal Entity:</strong> UrbanAI Technology Solutions Ltd.</p>
+                <p><strong>Jurisdiction:</strong> Ireland</p>
+                <p><strong>Registration:</strong> Irish Companies Registration Office</p>
+                <p><strong>Address:</strong> [To be updated with company registration]</p>
+
+                <h3>Regulatory Compliance</h3>
+                <p><strong>Data Protection:</strong> privacy@urbanai.site</p>
+                <p><strong>GDPR Compliance:</strong> dpo@urbanai.site</p>
+                <p><strong>Consumer Rights:</strong> consumer@urbanai.site</p>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Document History</h3>
+                <p><strong>Version:</strong> 1.0</p>
+                <p><strong>Effective Date:</strong> January 15, 2025</p>
+                <p><strong>Last Review:</strong> January 15, 2025</p>
+                <p><strong>Next Review:</strong> July 15, 2025</p>
+                <p><strong>Previous Versions:</strong> N/A (initial version)</p>
+            </div>
+
+            <p style="margin-top: 40px; font-style: italic; color: var(--text-secondary);">
+                <strong>Thank you for using UrbanAI.</strong> We're committed to providing a reliable, privacy-respecting platform for civic engagement. If you have questions about these terms or our Service, please don't hesitate to contact us.
+            </p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <img src="assets/brand/logos/urbanai-logo-white.png" alt="UrbanAI Logo">
+                    <p>Empowering citizens to report municipal issues with confidence.</p>
+                    <div class="footer-social">
+                        <a href="#"><img src="assets/icons/vendors/x-official.svg" alt="X"></a>
+                        <a href="#"><img src="assets/icons/vendors/linkedin-official.svg" alt="LinkedIn"></a>
+                        <a href="#"><img src="assets/icons/vendors/github-official.svg" alt="GitHub"></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Product</h3>
+                    <ul class="footer-links">
+                        <li><a href="features.html">Features</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="security.html">Security</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 UrbanAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        if (hamburger) {
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        // Match logo height to the "Get Started" button (slightly larger for prominence)
+        function setLogoTargetFromCTA() {
+            const cta = document.querySelector('.cta-button');
+            if (!cta) return;
+            const h = Math.ceil(cta.getBoundingClientRect().height); // includes padding/border
+            document.documentElement.style.setProperty('--header-action-height', h + 'px');
+        }
+
+        window.addEventListener('load', setLogoTargetFromCTA);
+        window.addEventListener('resize', () => {
+            clearTimeout(window.__logoResizeTimer);
+            window.__logoResizeTimer = setTimeout(setLogoTargetFromCTA, 150);
+        });
+    </script>
+</body>
+</html>
