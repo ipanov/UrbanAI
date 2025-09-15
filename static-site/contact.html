@@ -50,6 +50,7 @@
             z-index: 1000;
             border-bottom: 1px solid #e5e7eb;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 20px 0;
         }
 
         .nav-bar {
@@ -60,7 +61,7 @@
 
         .logo img {
             /* Larger brand presence; never shrink below 200px and scale with CTA */
-            height: max(200px, calc(var(--header-action-height, 48px) * 1.2));
+            height: calc(var(--header-action-height, 48px) * 0.75);
             width: auto;
         }
 
@@ -172,7 +173,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 40px;
-            margin-top: 60px;
+            margin-top: 100px;
         }
 
         .contact-card {
@@ -445,7 +446,7 @@
 
         .footer-brand img {
             /* Footer logo matches header logo exactly (bind to CTA height from header) */
-            height: max(200px, calc(var(--header-action-height, 48px) * 1.2));
+            height: calc(var(--header-action-height, 48px) * 0.75);
             width: auto;
         }
 
@@ -539,7 +540,7 @@
                 flex-direction: column;
                 width: 100%;
                 position: absolute;
-                top: 80px;
+                top: 100px;
                 left: 0;
                 background-color: var(--white);
                 padding: 20px 0;

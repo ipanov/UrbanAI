@@ -133,7 +133,12 @@
       "mcp__playwright-mcp__playwright_close",
       "mcp__firecrawl-mcp__firecrawl_scrape",
       "WebFetch(domain:claude.ai)",
-      "mcp__playwright-mcp__playwright_click"
+      "mcp__playwright-mcp__playwright_click",
+      "Bash(for:*)",
+      "Bash(do:*)",
+      "Bash(head:*)",
+      "Bash(fi)",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []
