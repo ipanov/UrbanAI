@@ -7,6 +7,7 @@ interface UserProfile {
   email: string;
   provider: 'microsoft' | 'google' | 'facebook' | null;
   initials: string;
+  userType: 'citizen' | 'investor' | 'authority';
 }
 
 interface UserContextType {
@@ -109,7 +110,8 @@ export const useUser = (): UserContextType => {
 // eslint-disable-next-line react-refresh/only-export-components
 export const extractUserInfoFromProvider = (
   provider: 'microsoft' | 'google' | 'facebook',
-  providerUserData?: any
+  providerUserData?: any,
+  userType?: 'citizen' | 'investor' | 'authority'
 ): Partial<UserProfile> => {
   
   if (!providerUserData) {
@@ -161,6 +163,7 @@ export const extractUserInfoFromProvider = (
     displayName,
     email,
     provider,
-    initials: ''
+    initials: '',
+    userType: userType || 'citizen' // Default to citizen if not specified
   };
 };

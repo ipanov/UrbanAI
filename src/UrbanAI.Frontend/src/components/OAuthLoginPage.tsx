@@ -64,6 +64,13 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
     setError(null);
     setLoading(true);
 
+    // Require user type selection before OAuth
+    if (!selectedUserType) {
+      setError('Please select your user type before continuing');
+      setLoading(false);
+      return;
+    }
+
     // For testing environments, use mock behavior
     // @ts-ignore
     if (import.meta.env && import.meta.env.VITEST === 'true') {
@@ -93,6 +100,7 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
       sessionStorage.setItem('oauth_state', data.state);
       sessionStorage.setItem('oauth_code_verifier', data.codeVerifier);
       sessionStorage.setItem('oauth_provider', provider);
+      sessionStorage.setItem('oauth_user_type', selectedUserType);
       
       // Redirect to OAuth provider
       window.location.href = data.authorizationUrl;
@@ -176,11 +184,18 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
           <Typography variant="h2" align="center" className="section-title">
             Choose Your Login Method
           </Typography>
+          {!selectedUserType && (
+            <Card variant="bordered" className="user-type-required-notice" padding="sm">
+              <Typography variant="body2" color="warning" align="center">
+                Please select your user type above before continuing
+              </Typography>
+            </Card>
+          )}
           <div className="oauth-buttons">
-            <button 
-              className="oauth-btn oauth-btn--microsoft"
+            <button
+              className={`oauth-btn oauth-btn--microsoft ${!selectedUserType ? 'disabled' : ''}`}
               onClick={() => handleOAuthClick(AUTH_PROVIDERS.MICROSOFT)}
-              disabled={loading}
+              disabled={loading || !selectedUserType}
               aria-label="Continue with Microsoft"
               data-testid="microsoft-oauth-button"
             >
@@ -195,10 +210,10 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
               Continue with Microsoft
             </button>
 
-            <button 
-              className="oauth-btn oauth-btn--google"
+            <button
+              className={`oauth-btn oauth-btn--google ${!selectedUserType ? 'disabled' : ''}`}
               onClick={() => handleOAuthClick(AUTH_PROVIDERS.GOOGLE)}
-              disabled={loading}
+              disabled={loading || !selectedUserType}
               aria-label="Continue with Google"
               data-testid="google-oauth-button"
             >
@@ -213,10 +228,10 @@ const OAuthLoginPage: React.FC<OAuthLoginPageProps> = ({
               Continue with Google
             </button>
 
-            <button 
-              className="oauth-btn oauth-btn--facebook"
+            <button
+              className={`oauth-btn oauth-btn--facebook ${!selectedUserType ? 'disabled' : ''}`}
               onClick={() => handleOAuthClick('facebook')}
-              disabled={loading}
+              disabled={loading || !selectedUserType}
               aria-label="Continue with Facebook"
             >
               <div className="oauth-icon">

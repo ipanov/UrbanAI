@@ -138,7 +138,10 @@
       "Bash(do:*)",
       "Bash(head:*)",
       "Bash(fi)",
-      "Bash(done)"
+      "Bash(done)",
+      "mcp__filesystem-mcp__search_files",
+      "mcp__filesystem-mcp__write_file",
+      "mcp__filesystem-mcp__edit_file"
     ],
     "deny": [],
     "ask": []

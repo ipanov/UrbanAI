@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using UrbanAI.Domain.Entities;
+using UrbanAI.Domain.Common;
 
 namespace UrbanAI.Infrastructure.Data
 {
@@ -24,6 +25,9 @@ namespace UrbanAI.Infrastructure.Data
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Username).IsRequired();
                 entity.Property(e => e.Role).IsRequired();
+                entity.Property(e => e.UserType).IsRequired()
+                      .HasDefaultValue(UserType.Citizen)
+                      .HasConversion<int>(); // Store as integer in database
 
                 // Configure SQL Server-specific types
                 if (Database.IsSqlServer())
@@ -82,11 +86,11 @@ namespace UrbanAI.Infrastructure.Data
                 {
                     entity.Property(e => e.Id).HasColumnType("uniqueidentifier");
                     entity.Property(e => e.Content).HasColumnType("nvarchar(max)");
-                    entity.Property(e => e.Metadata).HasColumnType("nvarchar(max)"); // JSON storage in SQL Server
                     entity.Property(e => e.CreatedAt).HasColumnType("datetime2");
                     entity.Property(e => e.UpdatedAt).HasColumnType("datetime2");
                     entity.Ignore(e => e.Tags); // Array not natively supported in SQL Server
                     entity.Ignore(e => e.Embedding); // Vector not supported in SQL Server
+                    entity.Ignore(e => e.Metadata); // JsonDocument not supported in SQL Server without converter
                 }
                 else
                 {

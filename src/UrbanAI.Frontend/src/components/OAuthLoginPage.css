@@ -201,6 +201,27 @@
   outline-offset: 2px;
 }
 
+.oauth-btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.oauth-btn.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.oauth-btn.disabled::before {
+  display: none;
+}
+
+.user-type-required-notice {
+  margin-bottom: 16px;
+  background: #fffbeb;
+  border-color: #f59e0b;
+}
+
 .oauth-btn--microsoft {
   background: linear-gradient(135deg, #0078D4 0%, #106ebe 100%);
   color: #FFFFFF;
@@ -407,6 +428,10 @@
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
+  .user-type-required-notice {
+    background: #451a03;
+    border-color: #d97706;
+  }
   .oauth-login-page {
     background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
   }
@@ -496,8 +521,9 @@
   .guest-link {
     transition: none;
   }
-  
-  .oauth-btn::before {
+
+  .oauth-btn::before,
+  .oauth-btn.disabled::before {
     display: none;
   }
 }

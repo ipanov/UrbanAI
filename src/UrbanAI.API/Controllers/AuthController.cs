@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using UrbanAI.Domain.Entities;
+using UrbanAI.Domain.Common;
 using UrbanAI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,6 +42,7 @@ namespace UrbanAI.API.Controllers
         {
             public string? Provider { get; set; }
             public string? ExternalId { get; set; }
+            public UserType UserType { get; set; } = UserType.Citizen;
         }
 
         /// <summary>
@@ -71,6 +73,7 @@ namespace UrbanAI.API.Controllers
             {
                 Username = $"{provider}_{externalId}",
                 Role = "User",
+                UserType = dto.UserType,
                 ExternalLogins = new List<ExternalLogin>
                 {
                     new ExternalLogin
@@ -99,6 +102,7 @@ namespace UrbanAI.API.Controllers
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Role, user.Role),
+                    new Claim("user_type", user.UserType.ToString()),
                     new Claim("auth_time", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
                     new Claim("iss", _jwtIssuer),
                     new Claim("aud", _jwtAudience)
