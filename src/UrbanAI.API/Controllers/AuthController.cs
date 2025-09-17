@@ -46,6 +46,85 @@ namespace UrbanAI.API.Controllers
         }
 
         /// <summary>
+        /// Registers a new user with OAuth provider, user type selection, and Terms of Service acceptance.
+        /// </summary>
+        [HttpPost("register-complete")]
+        public async Task<IActionResult> RegisterComplete([FromBody] UserRegistrationDto dto)
+        {
+            if (dto == null || string.IsNullOrEmpty(dto.Provider) || string.IsNullOrEmpty(dto.ExternalId))
+            {
+                return BadRequest("Provider and ExternalId are required.");
+            }
+
+            var provider = dto.Provider.ToLowerInvariant();
+            var externalId = dto.ExternalId;
+
+            // Check if user already exists
+            var existing = await _dbContext.Users
+                .Include(u => u.ExternalLogins)
+                .SingleOrDefaultAsync(u => u.ExternalLogins.Any(l => l.Provider == provider && l.ExternalId == externalId));
+
+            if (existing != null)
+            {
+                var existingToken = GenerateJwtToken(existing);
+                return Ok(new AuthResponseDto { Token = existingToken });
+            }
+
+            // Create new user
+            var user = new User
+            {
+                Username = $"{provider}_{externalId}",
+                Role = "User",
+                UserType = dto.UserType,
+                RegistrationCompleted = true,
+                OnboardingStep = "completed",
+                ExternalLogins = new List<ExternalLogin>
+                {
+                    new ExternalLogin
+                    {
+                        Provider = provider,
+                        ExternalId = externalId,
+                        CreatedAt = DateTime.UtcNow
+                    }
+                },
+                TermsOfServiceAcceptances = new List<UserTermsOfService>
+                {
+                    new UserTermsOfService
+                    {
+                        Version = dto.TermsOfServiceVersion,
+                        AcceptedAt = DateTime.UtcNow,
+                        IpAddress = dto.ClientIpAddress,
+                        UserAgent = dto.ClientUserAgent
+                    }
+                }
+            };
+
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
+
+            var token = GenerateJwtToken(user);
+            return Ok(new AuthResponseDto { Token = token });
+        }
+
+        /// <summary>
+        /// Gets the current Terms of Service information.
+        /// </summary>
+        [HttpGet("terms-of-service")]
+        public IActionResult GetTermsOfService()
+        {
+            var terms = new
+            {
+                Version = "1.0",
+                Title = "UrbanAI Terms of Service",
+                Content = "This is a placeholder for the Terms of Service content. Users must agree to these terms before using the service.",
+                LastUpdated = "2025-01-01",
+                Url = "/terms-of-service"
+            };
+
+            return Ok(terms);
+        }
+
+        /// <summary>
         /// Registers an anonymous user linked to an external provider identifier.
         /// </summary>
         [HttpPost("register-external")]

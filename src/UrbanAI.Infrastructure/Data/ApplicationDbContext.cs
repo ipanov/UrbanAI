@@ -16,6 +16,8 @@ namespace UrbanAI.Infrastructure.Data
         public DbSet<Regulation> Regulations { get; set; }
         public DbSet<ExternalLogin> ExternalLogins { get; set; }
         public DbSet<RegulationDocument> RegulationDocuments { get; set; }
+        public DbSet<UserTermsOfService> UserTermsOfServices { get; set; }
+        public DbSet<TermsOfService> TermsOfServices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +30,9 @@ namespace UrbanAI.Infrastructure.Data
                 entity.Property(e => e.UserType).IsRequired()
                       .HasDefaultValue(UserType.Citizen)
                       .HasConversion<int>(); // Store as integer in database
+                entity.Property(e => e.RegistrationCompleted).IsRequired()
+                      .HasDefaultValue(false);
+                entity.Property(e => e.OnboardingStep).HasMaxLength(50);
 
                 // Configure SQL Server-specific types
                 if (Database.IsSqlServer())
@@ -39,6 +44,12 @@ namespace UrbanAI.Infrastructure.Data
                 entity.HasMany(u => u.ExternalLogins)
                       .WithOne(el => el.User)
                       .HasForeignKey(el => el.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                // Configure the relationship with UserTermsOfServices
+                entity.HasMany(u => u.TermsOfServiceAcceptances)
+                      .WithOne(tos => tos.User)
+                      .HasForeignKey(tos => tos.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -103,6 +114,29 @@ namespace UrbanAI.Infrastructure.Data
 
             // Configure the Issue entity using the separate configuration class
             modelBuilder.ApplyConfiguration(new Configurations.IssueConfiguration());
+            // Configure the UserTermsOfService entity
+            modelBuilder.Entity<UserTermsOfService>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Version).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.AcceptedAt).IsRequired();
+                entity.Property(e => e.IpAddress).HasMaxLength(45);
+                entity.Property(e => e.UserAgent);
+
+                // Configure SQL Server-specific types
+                if (Database.IsSqlServer())
+                {
+                    entity.Property(e => e.Id).HasColumnType("uniqueidentifier");
+                    entity.Property(e => e.AcceptedAt).HasColumnType("datetime2");
+                }
+
+                // Configure the relationship with User
+                entity.HasOne(tos => tos.User)
+                      .WithMany(u => u.TermsOfServiceAcceptances)
+                      .HasForeignKey(tos => tos.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
             // Ensure Issue Id is also mapped to uniqueidentifier if not already handled in IssueConfiguration
             modelBuilder.Entity<Issue>(entity =>
             {
@@ -110,6 +144,26 @@ namespace UrbanAI.Infrastructure.Data
                 if (Database.IsSqlServer())
                 {
                     entity.Property(e => e.Id).HasColumnType("uniqueidentifier");
+                }
+            });
+
+            // Configure the TermsOfService entity
+            modelBuilder.Entity<TermsOfService>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Version).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
+                entity.Property(e => e.Content).IsRequired();
+                entity.Property(e => e.EffectiveDate).IsRequired();
+                entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
+                entity.Property(e => e.Url).HasMaxLength(500);
+
+                // Configure SQL Server-specific types
+                if (Database.IsSqlServer())
+                {
+                    entity.Property(e => e.Id).HasColumnType("uniqueidentifier");
+                    entity.Property(e => e.Content).HasColumnType("nvarchar(max)");
+                    entity.Property(e => e.EffectiveDate).HasColumnType("datetime2");
                 }
             });
         }

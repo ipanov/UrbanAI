@@ -7,6 +7,7 @@ export interface UserProfile {
   email: string;
   provider: 'microsoft' | 'google' | 'facebook' | null;
   initials: string;
+  userType?: 'citizen' | 'investor' | 'authority' | null;
 }
 
 export interface ApiConfig {
@@ -64,4 +65,30 @@ export interface LocationData {
   longitude: number;
   accuracy: number;
   address?: string;
+}
+
+// Mobile-specific types
+export interface MobileAuthState {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+  token: string | null;
+  userProfile: UserProfile | null;
+}
+
+export interface UserTypeSelectionParams {
+  onComplete?: (userType: string) => void;
+  currentUserType?: string | null;
+  showBackButton?: boolean;
+}
+
+export interface MobileNavigationProps {
+  navigation: {
+    navigate: (screenName: string, params?: any) => void;
+    goBack: () => void;
+    setOptions: (options: any) => void;
+  };
+  route: {
+    params?: any;
+  };
 }

@@ -303,25 +303,28 @@ describe('GDPRDataManagementPage', () => {
     const deleteTab = screen.getByText('Delete Account');
     fireEvent.click(deleteTab);
 
+    // Wait for delete tab content to load
     await waitFor(() => {
-      // Find the delete button with danger class (more specific selector)
-      const deleteButton = screen.getByRole('button', { name: /Delete My Account/i });
-      expect(deleteButton).toHaveClass('btn-danger');
-      fireEvent.click(deleteButton);
+      expect(screen.getByText(/Permanently remove your account/)).toBeInTheDocument();
+    });
+
+    // Find and click the delete button to open modal
+    const deleteButton = screen.getByTestId('delete-account-button');
+    fireEvent.click(deleteButton);
+
+    // Wait for modal to appear
+    await waitFor(() => {
+      expect(screen.getByText('Confirm Account Deletion')).toBeInTheDocument();
     });
 
     // Enter confirmation text
-    await waitFor(() => {
-      const input = screen.getByPlaceholderText('Type DELETE here');
-      fireEvent.change(input, { target: { value: 'DELETE' } });
-    });
+    const input = screen.getByPlaceholderText('Type DELETE here');
+    fireEvent.change(input, { target: { value: 'DELETE' } });
 
-    // Click confirm
-    await waitFor(() => {
-      const confirmButton = screen.getByTestId('delete-account-button');
-      expect(confirmButton).not.toBeDisabled();
-      fireEvent.click(confirmButton);
-    });
+    // Click confirm button in modal (the one with btn-danger class)
+    const confirmButton = screen.getByRole('button', { name: 'Delete Account' });
+    expect(confirmButton).toHaveClass('btn-danger');
+    fireEvent.click(confirmButton);
 
     expect(mockAlert).toHaveBeenCalledWith('Account deletion request submitted. You will receive a confirmation email.');
     mockAlert.mockRestore();
@@ -365,8 +368,20 @@ describe('GDPRDataManagementPage', () => {
   it('renders info boxes correctly', () => {
     renderWithRouter(<GDPRDataManagementPage />);
 
-    expect(screen.getByText('Privacy Protection')).toBeInTheDocument();
+    // Navigate to export tab to see "What's Included"
+    const exportTab = screen.getByText('Export Data');
+    fireEvent.click(exportTab);
+
     expect(screen.getByText('What\'s Included')).toBeInTheDocument();
+
+    // Privacy Protection is in the My Data tab
+    const myDataTab = screen.getByText('My Data');
+    fireEvent.click(myDataTab);
+    expect(screen.getByText('Privacy Protection')).toBeInTheDocument();
+
+    // Legal Exceptions is in the Delete Account tab
+    const deleteTab = screen.getByText('Delete Account');
+    fireEvent.click(deleteTab);
     expect(screen.getByText('Legal Exceptions')).toBeInTheDocument();
   });
 
@@ -377,7 +392,7 @@ describe('GDPRDataManagementPage', () => {
     expect(screen.getByTestId('database-icon')).toBeInTheDocument();
     expect(screen.getByTestId('file-text-icon')).toBeInTheDocument();
     expect(screen.getAllByTestId('download-icon')).toHaveLength(2); // Tab icon and content icon
-    expect(screen.getByTestId('trash-icon')).toBeInTheDocument();
+    expect(screen.getAllByTestId('trash-icon')).toHaveLength(2); // Tab icon and content icon
   });
 
   it('renders logo and navigation correctly', () => {

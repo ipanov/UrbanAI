@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using UrbanAI.Domain.Entities;
+using UrbanAI.Application.DTOs;
 
 namespace UrbanAI.API.Controllers
 {
@@ -175,11 +176,18 @@ namespace UrbanAI.API.Controllers
                 {
                     // User exists, generate JWT
                     var jwtToken = GenerateJwtToken(existingUser);
-                    var callbackResponse = new { 
-                        token = jwtToken, 
-                        userInfo = new { userInfo.Id, userInfo.Name, userInfo.FirstName, userInfo.LastName, userInfo.Email } 
+                    var callbackResponse = new OAuthRegistrationResponseDto
+                    {
+                        Token = jwtToken,
+                        Provider = normalizedProvider,
+                        ExternalId = userInfo.Id,
+                        DisplayName = userInfo.Name,
+                        Email = userInfo.Email,
+                        Picture = userInfo.Picture,
+                        RequiresRegistration = false,
+                        TermsOfServiceVersion = "1.0"
                     };
-                    
+
                     if (Request.Headers.Accept.ToString().Contains("application/json"))
                     {
                         return Ok(callbackResponse);
@@ -192,13 +200,18 @@ namespace UrbanAI.API.Controllers
                 else
                 {
                     // User doesn't exist, return registration required
-                    var callbackResponse = new { 
-                        requiresRegistration = true, 
-                        provider = normalizedProvider, 
-                        externalId = userInfo.Id,
-                        userInfo = new { userInfo.Id, userInfo.Name, userInfo.FirstName, userInfo.LastName, userInfo.Email }
+                    var callbackResponse = new OAuthRegistrationResponseDto
+                    {
+                        RequiresRegistration = true,
+                        Provider = normalizedProvider,
+                        ExternalId = userInfo.Id,
+                        DisplayName = userInfo.Name,
+                        Email = userInfo.Email,
+                        Picture = userInfo.Picture,
+                        TermsOfServiceVersion = "1.0",
+                        TermsOfServiceUrl = "/terms-of-service"
                     };
-                    
+
                     if (Request.Headers.Accept.ToString().Contains("application/json"))
                     {
                         return Ok(callbackResponse);
@@ -210,7 +223,8 @@ namespace UrbanAI.API.Controllers
                         $"provider={normalizedProvider}&" +
                         $"externalId={Uri.EscapeDataString(userInfo.Id)}&" +
                         $"name={Uri.EscapeDataString(userInfo.Name)}&" +
-                        $"email={Uri.EscapeDataString(userInfo.Email)}";
+                        $"email={Uri.EscapeDataString(userInfo.Email)}&" +
+                        $"picture={Uri.EscapeDataString(userInfo.Picture)}";
                     return Redirect(redirectUrl);
                 }
             }
@@ -281,6 +295,7 @@ namespace UrbanAI.API.Controllers
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Role, user.Role),
+                    new Claim("user_type", user.UserType.ToString()),
                     new Claim("auth_time", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
                     new Claim("iss", _jwtIssuer),
                     new Claim("aud", _jwtAudience)

@@ -1,4 +1,7 @@
 {
+  "env": {
+    "ANTHROPIC_MODEL": "glm-4.5"
+  },
   "permissions": {
     "allow": [
       "Bash(claude mcp)",
@@ -141,7 +144,8 @@
       "Bash(done)",
       "mcp__filesystem-mcp__search_files",
       "mcp__filesystem-mcp__write_file",
-      "mcp__filesystem-mcp__edit_file"
+      "mcp__filesystem-mcp__edit_file",
+      "mcp__filesystem-mcp__list_allowed_directories"
     ],
     "deny": [],
     "ask": []

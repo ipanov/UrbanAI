@@ -3,6 +3,7 @@ import OAuthLoginPage from './components/OAuthLoginPage';
 import Dashboard from './components/Dashboard';
 import Issues from './components/Issues';
 import OAuthCallback from './components/OAuthCallback';
+import RegisterComplete from './components/RegisterComplete';
 import GDPRDataManagementPage from './components/GDPRDataManagementPage';
 import PrivacyPolicyPage from './components/PrivacyPolicyPage';
 import TermsOfServicePage from './components/TermsOfServicePage';
@@ -45,6 +46,7 @@ function App() {
             <Route path="/terms" element={<TermsOfServicePage />} />
             <Route path="/privacy/cookies" element={<CookiePolicyPage />} />
             <Route path="/auth/callback" element={<OAuthCallback />} />
+            <Route path="/register-complete" element={<RegisterComplete />} />
           </Routes>
         </div>
       </Router>

@@ -21,12 +21,19 @@ const OAuthCallback: React.FC<OAuthCallbackProps> = ({ onSuccess, onError }) => 
 
   const registerUser = useCallback(async (provider: string, externalId: string) => {
     try {
-      const response = await fetch(buildApiUrl('auth/register-external'), {
+      // Get user type from sessionStorage
+      const selectedUserType = sessionStorage.getItem('oauth_user_type') || 'citizen';
+
+      const response = await fetch(buildApiUrl('auth/register-complete'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           provider,
-          externalId
+          externalId,
+          userType: selectedUserType,
+          termsOfServiceVersion: '1.0',
+          clientIpAddress: '', // Will be filled by backend
+          clientUserAgent: navigator.userAgent
         })
       });
 
@@ -141,6 +148,7 @@ const OAuthCallback: React.FC<OAuthCallbackProps> = ({ onSuccess, onError }) => 
             displayName: data.userInfo.Name || data.userInfo.displayName || data.userInfo.name || `${data.userInfo.FirstName || data.userInfo.firstName || ''} ${data.userInfo.LastName || data.userInfo.lastName || ''}`.trim() || 'User',
             email: data.userInfo.Email || data.userInfo.email || data.userInfo.mail || data.userInfo.userPrincipalName || '',
             provider: (data.provider || provider) as 'microsoft' | 'google' | 'facebook',
+            userType: (sessionStorage.getItem('oauth_user_type') || 'citizen') as 'citizen' | 'investor' | 'authority',
             initials: ''
           };
           
@@ -164,8 +172,23 @@ const OAuthCallback: React.FC<OAuthCallbackProps> = ({ onSuccess, onError }) => 
           onSuccess?.(data.token);
           window.location.href = '/dashboard';
         } else if (data.requiresRegistration) {
-          // New user, register with external ID only (no PII sent to server)
-          await registerUser(data.provider, data.externalId);
+          // New user, show Terms of Service modal
+          const userType = sessionStorage.getItem('oauth_user_type') || 'citizen';
+
+          // Store registration data for after Terms of Service acceptance
+          sessionStorage.setItem('oauth_registration_data', JSON.stringify({
+            provider: data.provider,
+            externalId: data.externalId,
+            displayName: data.displayName,
+            email: data.email,
+            picture: data.picture,
+            userType: userType,
+            termsOfServiceVersion: data.termsOfServiceVersion || '1.0',
+            termsOfServiceUrl: data.termsOfServiceUrl || '/terms-of-service'
+          }));
+
+          // Redirect to registration completion page with Terms of Service
+          window.location.href = '/register-complete';
         } else {
           throw new Error('Invalid OAuth callback response - missing token or registration data');
         }

@@ -21,6 +21,7 @@ import DashboardScreen from './src/screens/DashboardScreen';
 import IssueReportScreen from './src/components/IssueReportScreen';
 import IssuesListScreen from './src/screens/IssuesListScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import UserTypeSelectionScreen from './src/screens/UserTypeSelectionScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -108,6 +109,17 @@ function App(): React.JSX.Element {
           ) : (
             <Stack.Screen name="Login" component={LoginScreen} />
           )}
+          <Stack.Screen
+            name="UserTypeSelection"
+            component={UserTypeSelectionScreen}
+            options={{
+              headerShown: true,
+              headerStyle: {
+                backgroundColor: '#667eea',
+              },
+              headerTintColor: '#FFFFFF',
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

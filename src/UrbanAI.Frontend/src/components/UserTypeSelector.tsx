@@ -3,12 +3,13 @@ import { Users, TrendingUp, Building, Check, Info } from 'lucide-react';
 import { Card, Typography } from './atoms';
 import { USER_TYPES, COLORS } from '../constants';
 
+
 interface UserType {
   id: string;
   title: string;
   description: string;
   detailedDescription: string;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: React.ComponentType<{ size?: number | string; className?: string }>;
   color: string;
   features: string[];
   permissions: string[];
@@ -127,7 +128,7 @@ const UserTypeSelector: React.FC<UserTypeSelectorProps> = ({
           <currentUserType.icon size={16} className="user-type-icon" />
           <span className="user-type-title">{currentUserType.title}</span>
         </div>
-        <style jsx>{`
+        <style>{`
           .user-type-display {
             display: inline-flex;
             align-items: center;
@@ -173,7 +174,7 @@ const UserTypeSelector: React.FC<UserTypeSelectorProps> = ({
         <Typography variant="h2" className="selector-title">
           Choose Your Account Type
         </Typography>
-        <Typography variant="body" className="selector-description">
+        <Typography variant="body1" className="selector-description">
           Select the account type that best describes your role in the community.
         </Typography>
       </div>
@@ -189,15 +190,6 @@ const UserTypeSelector: React.FC<UserTypeSelectorProps> = ({
               key={userType.id}
               className={`user-type-card ${isSelected ? 'selected' : ''} ${isExpanded ? 'expanded' : ''}`}
               onClick={() => handleCardClick(userType.id)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  handleCardClick(userType.id);
-                }
-              }}
-              aria-label={`Select ${userType.title} account type: ${userType.description}`}
             >
               <div className="card-header">
                 <div className="icon-container">
@@ -207,7 +199,7 @@ const UserTypeSelector: React.FC<UserTypeSelectorProps> = ({
                   <Typography variant="h3" className="card-title">
                     {userType.title}
                   </Typography>
-                  <Typography variant="body" className="card-description">
+                  <Typography variant="body1" className="card-description">
                     {userType.description}
                   </Typography>
                 </div>
@@ -218,7 +210,7 @@ const UserTypeSelector: React.FC<UserTypeSelectorProps> = ({
 
               {isExpanded && (
                 <div className="expanded-content">
-                  <Typography variant="body" className="detailed-description">
+                  <Typography variant="body1" className="detailed-description">
                     {userType.detailedDescription}
                   </Typography>
 
@@ -264,7 +256,7 @@ const UserTypeSelector: React.FC<UserTypeSelectorProps> = ({
         })}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .user-type-selector {
           width: 100%;
           max-width: 800px;

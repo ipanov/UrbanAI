@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,38 +6,84 @@ import {
   StyleSheet,
   Alert,
   Image,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { STORAGE_KEYS, AUTH_PROVIDERS } from '../../../UrbanAI.Shared/constants';
+import { STORAGE_KEYS, AUTH_PROVIDERS, USER_TYPES } from '../../../UrbanAI.Shared/constants';
+import { UserProfile } from '../../../UrbanAI.Shared/types';
+import UserTypeSelector from '../components/UserTypeSelector';
 
 const LoginScreen: React.FC = () => {
+  const [showUserTypeSelector, setShowUserTypeSelector] = useState(false);
+  const [selectedUserType, setSelectedUserType] = useState<string | null>(null);
+  const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
   const handleOAuthLogin = async (provider: string) => {
     try {
-      // Simulate OAuth login flow
+      // First step: show user type selection
+      setSelectedProvider(provider);
+      setShowUserTypeSelector(true);
+    } catch (error) {
+      console.error('OAuth login error:', error);
+      Alert.alert('Login Error', 'Failed to authenticate. Please try again.');
+    }
+  };
+
+  const handleUserTypeSelect = async (userType: string) => {
+    try {
+      setLoading(true);
+
+      // Simulate OAuth flow with user type
       Alert.alert(
         'OAuth Login',
-        `Redirecting to ${provider} for authentication...`,
+        `Redirecting to ${selectedProvider} for authentication as ${userType}...`,
         [
           {
             text: 'Cancel',
             style: 'cancel',
+            onPress: () => {
+              setShowUserTypeSelector(false);
+              setSelectedUserType(null);
+              setSelectedProvider(null);
+              setLoading(false);
+            },
           },
           {
             text: 'Continue',
             onPress: async () => {
-              // Simulate successful login
-              const mockToken = `mock_token_${provider}_${Date.now()}`;
+              // Simulate successful login with user type
+              const mockToken = `mock_token_${selectedProvider}_${Date.now()}`;
+              const userProfile: UserProfile = {
+                firstName: 'Mock',
+                lastName: 'User',
+                displayName: 'Mock User',
+                email: 'user@example.com',
+                provider: selectedProvider as any,
+                initials: 'MU',
+                userType: userType as any,
+              };
+
               await AsyncStorage.setItem(STORAGE_KEYS.TOKEN, mockToken);
+              await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(userProfile));
+
+              setShowUserTypeSelector(false);
+              setSelectedUserType(null);
+              setSelectedProvider(null);
+              setLoading(false);
+
               // The app will automatically navigate to main tabs due to auth state change
             },
           },
         ]
       );
     } catch (error) {
-      console.error('OAuth login error:', error);
-      Alert.alert('Login Error', 'Failed to authenticate. Please try again.');
+      console.error('User type selection error:', error);
+      Alert.alert('Selection Error', 'Failed to complete user type selection. Please try again.');
+      setLoading(false);
     }
   };
 
@@ -53,7 +99,7 @@ const LoginScreen: React.FC = () => {
       <View style={styles.content}>
         {/* Logo and Title */}
         <View style={styles.logoContainer}>
-          <Image 
+          <Image
             source={require('../../assets/images/urbanai-logo.png')}
             style={styles.logoImage}
             resizeMode="contain"
@@ -72,6 +118,7 @@ const LoginScreen: React.FC = () => {
           <TouchableOpacity
             style={[styles.oauthButton, styles.googleButton]}
             onPress={() => handleOAuthLogin(AUTH_PROVIDERS.GOOGLE)}
+            disabled={loading}
           >
             <Icon name="account-circle" size={24} color="#4285F4" />
             <Text style={[styles.buttonText, styles.googleText]}>
@@ -82,6 +129,7 @@ const LoginScreen: React.FC = () => {
           <TouchableOpacity
             style={[styles.oauthButton, styles.microsoftButton]}
             onPress={() => handleOAuthLogin(AUTH_PROVIDERS.MICROSOFT)}
+            disabled={loading}
           >
             <Icon name="business" size={24} color="#00A4EF" />
             <Text style={[styles.buttonText, styles.microsoftText]}>
@@ -92,6 +140,7 @@ const LoginScreen: React.FC = () => {
           <TouchableOpacity
             style={[styles.oauthButton, styles.facebookButton]}
             onPress={() => handleOAuthLogin(AUTH_PROVIDERS.FACEBOOK)}
+            disabled={loading}
           >
             <Icon name="group" size={24} color="#1877F2" />
             <Text style={[styles.buttonText, styles.facebookText]}>
@@ -103,6 +152,7 @@ const LoginScreen: React.FC = () => {
           <TouchableOpacity
             style={styles.guestButton}
             onPress={handleGuestAccess}
+            disabled={loading}
           >
             <Text style={styles.guestButtonText}>
               Continue as Guest
@@ -118,6 +168,19 @@ const LoginScreen: React.FC = () => {
           </Text>
         </View>
       </View>
+
+      {/* User Type Selection Modal */}
+      <Modal
+        visible={showUserTypeSelector}
+        animationType="slide"
+        presentationStyle="pageSheet"
+      >
+        <UserTypeSelector
+          selectedUserType={selectedUserType}
+          onUserTypeSelect={handleUserTypeSelect}
+          loading={loading}
+        />
+      </Modal>
     </SafeAreaView>
   );
 };

@@ -104,29 +104,7 @@ Phase 2: Dynamic Subagent Orchestration (Parallel Execution)
    - **Platform Team Lead** (2-3 subagents) → Infrastructure
    - **QA Team Lead** (2-3 subagents) → Test automation
 3. **UX Designer** (2-3 subagents) → Design refinement (parallel)
-4. **Integration & Validation** (2 hours)
-```
 
-#### **Strategy 3: Complex Feature (High Complexity)**
-```markdown
-**Parallel Teams**: All teams (6 teams, 30-35 subagents)
-**Dependencies**: Architecture + UX Design → Full parallel implementation
-**Timeline**: 16-24 hours
-
-1. **Architecture & UX Design** (Parallel):
-   - **Software Architect** (4-6 subagents) → Comprehensive architecture
-   - **UX Designer** (3-4 subagents) → Complete design system
-2. **Full Parallel Implementation**:
-   - **Frontend Team Lead** (4-6 subagents) → Web + shared components
-   - **Backend Team Lead** (5-7 subagents) → Full API + security
-   - **Mobile Team Lead** (4-6 subagents) → Android + iOS
-   - **Platform Team Lead** (3-4 subagents) → Full infrastructure
-   - **QA Team Lead** (3-5 subagents) → Comprehensive testing
-3. **Cross-Platform Integration** (2-3 hours)
-4. **Quality Validation** (2 hours)
-```
-
-#### **Strategy 4: Cross-Platform UI Feature (Critical Parallel)**
 ```markdown
 **Parallel Teams**: All teams with cross-platform focus (6 teams, 25-30 subagents)
 **Dependencies**: Architecture → Simultaneous web+Android+iOS development
