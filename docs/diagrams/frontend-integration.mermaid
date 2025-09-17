@@ -1,0 +1,75 @@
+graph TB
+    subgraph "Existing React App Structure"
+        App[App.tsx]
+        Router[React Router]
+        Auth[Auth Context]
+        API[API Service Layer]
+    end
+
+    subgraph "New Agent Integration Components"
+        AgentDashboard[AgentDashboard.tsx]
+        ChatInterface[ChatInterface.tsx]
+        ResearchPanel[ResearchPanel.tsx]
+        ReportViewer[ReportViewer.tsx]
+        AgentSelector[AgentSelector.tsx]
+    end
+
+    subgraph "Agent Service Layer"
+        AgentService[AgentService.ts]
+        ChatService[ChatService.ts]
+        ResearchService[ResearchService.ts]
+        ReportService[ReportService.ts]
+    end
+
+    subgraph "State Management"
+        AgentStore[Agent Zustand Store]
+        ChatStore[Chat Zustand Store]
+        ResearchStore[Research Zustand Store]
+    end
+
+    subgraph "UI Components"
+        ChatMessages[ChatMessages.tsx]
+        AgentStatus[AgentStatus.tsx]
+        ResearchResults[ResearchResults.tsx]
+        ReportDiagrams[ReportDiagrams.tsx]
+        LoadingSpinner[LoadingSpinner.tsx]
+    end
+
+    subgraph "WebSocket Integration"
+        Socket[WebSocket Client]
+        SocketManager[SocketManager.tsx]
+    end
+
+    App --> Router
+    Router --> Auth
+    Router --> AgentDashboard
+    Router --> ChatInterface
+    Router --> ResearchPanel
+    Router --> ReportViewer
+
+    AgentDashboard --> AgentSelector
+    AgentSelector --> AgentService
+
+    ChatInterface --> ChatMessages
+    ChatInterface --> AgentStatus
+    ChatInterface --> ChatService
+    ChatInterface --> Socket
+
+    ResearchPanel --> ResearchResults
+    ResearchPanel --> LoadingSpinner
+    ResearchPanel --> ResearchService
+
+    ReportViewer --> ReportDiagrams
+    ReportViewer --> ReportService
+
+    AgentService --> AgentStore
+    ChatService --> ChatStore
+    ResearchService --> ResearchStore
+
+    Socket --> SocketManager
+    SocketManager --> ChatStore
+
+    API --> AgentService
+    API --> ChatService
+    API --> ResearchService
+    API --> ReportService

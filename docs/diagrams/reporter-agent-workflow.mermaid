@@ -1,0 +1,49 @@
+sequenceDiagram
+    participant U as User
+    participant F as React Frontend
+    participant API as API Gateway
+    participant SA as Software Architect
+    participant RP as Reporter Agent
+    participant TDE as Technical Documentation
+    participant VAD as Visual Architecture
+    participant PSA as Performance Analyst
+    participant M as Mermaid MCP
+    participant DB as Database
+
+    U->>F: Request Documentation Report
+    F->>API: POST /api/agents/report
+    API->>SA: Route Report Request
+    SA->>RP: Deploy Reporter Agent
+
+    rect rgb(245, 255, 250)
+        Note over RP,PSA: Parallel Documentation Generation
+        RP->>TDE: Generate Technical Docs
+        RP->>VAD: Create Architecture Diagrams
+        RP->>PSA: Analyze Performance Metrics
+
+        TDE->>DB: Fetch Architecture Data
+        TDE->>DB: Retrieve Decision Records
+        TDE->>TDE: Write Documentation
+
+        VAD->>M: Generate Mermaid Diagrams
+        VAD->>VAD: Design Visual Elements
+        VAD->>VAD: Optimize Diagram Layout
+
+        PSA->>DB: Query Performance Data
+        PSA->>PSA: Model Scalability
+        PSA->>PSA: Generate Projections
+    end
+
+    TDE->>RP: Technical Documentation
+    VAD->>RP: Visual Architecture Package
+    PSA->>RP: Performance Analysis
+
+    RP->>RP: Assemble Comprehensive Report
+    RP->>SA: Documentation Package
+
+    SA->>SA: Quality Review
+    SA->>SA: Validate Completeness
+
+    SA->>API: Report Package
+    API->>F: Documentation Response
+    F->>U: Complete Report with Diagrams

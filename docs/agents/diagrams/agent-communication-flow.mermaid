@@ -1,0 +1,87 @@
+sequenceDiagram
+    participant User as User
+    participant UI as Chat Interface
+    participant Gateway as API Gateway
+    participant Orchestrator as Agent Orchestrator
+    participant Router as Task Router
+    participant Research as Research Agent
+    participant Reporter as Reporter Agent
+    participant Subagents as Subagents
+    participant External as External Services
+    participant Storage as Data Storage
+    participant Response as Response Aggregator
+
+    User->>UI: Submit issue/query with attachments
+    UI->>Gateway: HTTP POST /api/v1/agents/chat
+    Gateway->>Gateway: Authentication & Authorization
+    Gateway->>Orchestrator: Forward validated request
+
+    Note over Orchestrator: Request Analysis & Planning
+    Orchestrator->>Orchestrator: Parse user intent and context
+    Orchestrator->>Orchestrator: Identify required agent capabilities
+    Orchestrator->>Router: Distribute tasks to agents
+
+    par Parallel Agent Execution
+        Router->>Research: Research task (images, web, classification)
+        Router->>Reporter: Reporting task (triage, status, notifications)
+    end
+
+    Note over Research: Research Agent Processing
+    Research->>Subagents: Execute parallel subagent tasks
+
+    par Parallel Subagent Research
+        Subagents->>External: Web scraping (municipal sites, regulations)
+        Subagents->>External: Image analysis (issue identification, severity)
+        Subagents->>External: ML classification (category, priority)
+        Subagents->>External: Municipal discovery (services, contacts)
+    end
+
+    Note over Reporter: Reporter Agent Processing
+    Reporter->>Subagents: Execute parallel subagent tasks
+
+    par Parallel Subagent Reporting
+        Subagents->>Storage: Issue triage and prioritization
+        Subagents->>Storage: Status update generation
+        Subagents->>External: Report generation and formatting
+        Subagents->>External: Notification dispatch
+    end
+
+    Subagents-->>Research: Research results aggregated
+    Subagents-->>Reporter: Reporting results aggregated
+
+    par Agent Result Processing
+        Research->>Orchestrator: Research findings and insights
+        Reporter->>Orchestrator: Reporting status and updates
+    end
+
+    Note over Orchestrator: Result Aggregation & Response Generation
+    Orchestrator->>Orchestrator: Combine research and reporting results
+    Orchestrator->>Orchestrator: Generate comprehensive response
+    Orchestrator->>Orchestrator: Format response for user interface
+    Orchestrator->>Response: Send aggregated response
+
+    Response-->>Gateway: Final response package
+    Gateway-->>UI: HTTP response with data
+    UI-->>User: Display results with rich media
+
+    Note over Storage: Asynchronous Processing
+    Orchestrator->>Storage: Store interaction history
+    Orchestrator->>Storage: Cache research results
+    Subagents->>Storage: Update agent performance metrics
+
+    Note over External: Background Processing
+    loop Continuous Monitoring
+        Subagents->>External: Monitor for regulation updates
+        Subagents->>External: Track issue status changes
+        Subagents->>External: Process scheduled reports
+    end
+
+    classDef primaryAgent fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef subagent fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef external fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef storage fill:#fff3e0,stroke:#e65100,stroke-width:2px
+
+    class Research,Reporter primaryAgent
+    class Subagents subagent
+    class External external
+    class Storage storage

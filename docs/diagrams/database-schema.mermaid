@@ -1,0 +1,109 @@
+erDiagram
+    AGENTS {
+        Guid id PK
+        string name
+        string type
+        string description
+        json capabilities
+        datetime created_at
+        datetime updated_at
+        boolean is_active
+    }
+
+    AGENT_SESSIONS {
+        Guid id PK
+        Guid agent_id FK
+        Guid user_id FK
+        string session_type
+        json session_data
+        datetime started_at
+        datetime ended_at
+        string status
+    }
+
+    RESEARCH_TASKS {
+        Guid id PK
+        Guid agent_session_id FK
+        string task_type
+        string research_query
+        json research_parameters
+        json research_results
+        datetime created_at
+        datetime completed_at
+        string status
+    }
+
+    DOCUMENTATION_REPORTS {
+        Guid id PK
+        Guid agent_session_id FK
+        string report_type
+        json report_content
+        string document_path
+        datetime generated_at
+        string version
+    }
+
+    ARCHITECTURAL_DECISIONS {
+        Guid id PK
+        string decision_id
+        string title
+        string context
+        string decision
+        string rationale
+        json alternatives
+        json implications
+        Guid author_id FK
+        datetime created_at
+        datetime updated_at
+    }
+
+    CHAT_CONVERSATIONS {
+        Guid id PK
+        Guid user_id FK
+        Guid agent_session_id FK
+        string conversation_type
+        json conversation_context
+        datetime started_at
+        datetime ended_at
+    }
+
+    CHAT_MESSAGES {
+        Guid id PK
+        Guid conversation_id FK
+        string role
+        string content
+        json metadata
+        datetime timestamp
+    }
+
+    AGENT_PERFORMANCE_METRICS {
+        Guid id PK
+        Guid agent_id FK
+        string metric_type
+        decimal metric_value
+        json metric_data
+        datetime recorded_at
+    }
+
+    MCP_SERVICE_LOGS {
+        Guid id PK
+        string service_name
+        string operation
+        json request_data
+        json response_data
+        datetime execution_time
+        string status
+        string error_message
+        datetime created_at
+    }
+
+    AGENTS ||--o{ AGENT_SESSIONS : "has"
+    AGENT_SESSIONS ||--o{ RESEARCH_TASKS : "contains"
+    AGENT_SESSIONS ||--o{ DOCUMENTATION_REPORTS : "generates"
+    AGENT_SESSIONS ||--o{ CHAT_CONVERSATIONS : "related_to"
+    CHAT_CONVERSATIONS ||--o{ CHAT_MESSAGES : "contains"
+    AGENTS ||--o{ AGENT_PERFORMANCE_METRICS : "monitors"
+    MCP_SERVICE_LOGS }|--|| AGENTS : "used_by"
+    AGENT_SESSIONS }|--|| AGENTS : "belongs_to"
+    CHAT_CONVERSATIONS }|--|| AGENT_SESSIONS : "part_of"
+    ARCHITECTURAL_DECISIONS }|--|| AGENT_SESSIONS : "documented_in"

@@ -1,0 +1,100 @@
+graph TB
+    subgraph "User Interface Layer"
+        UI[React Frontend]
+        Mobile[Mobile App]
+        Admin[Admin Dashboard]
+    end
+
+    subgraph "Agent Orchestration Layer"
+        SA[Software Architect Agent]
+        PO[Product Owner Agent]
+        QA[QA Engineer Agent]
+        Dev[Developer Agent]
+    end
+
+    subgraph "Custom AI Agents Layer"
+        RA[Research Agent]
+        RP[Reporter Agent]
+        Chat[AI Chat Assistant]
+    end
+
+    subgraph "Subagent Network Layer"
+        subgraph "Research Subagents"
+            TRS[Technology Research Specialist]
+            APA[Architecture Pattern Analyst]
+            SAS[Security Architecture Specialist]
+        end
+
+        subgraph "Documentation Subagents"
+            TDE[Technical Documentation Engineer]
+            VAD[Visual Architecture Designer]
+            PSA[Performance & Scalability Analyst]
+        end
+    end
+
+    subgraph "Core Application Layer"
+        API[ASP.NET Core API]
+        Auth[OAuth2 Authentication]
+        Gateway[API Gateway]
+        Services[Application Services]
+    end
+
+    subgraph "Domain & Infrastructure Layer"
+        Entities[Domain Entities]
+        Repositories[Repositories]
+        SQL[Azure SQL Database]
+        Cosmos[Azure Cosmos DB]
+        Cache[Redis Cache]
+    end
+
+    subgraph "External Services Layer"
+        OpenAI[Azure OpenAI]
+        Search[Web Search APIs]
+        Context[Context7 MCP]
+        Firecrawl[Firecrawl MCP]
+        Mermaid[Mermaid MCP]
+    end
+
+    UI --> API
+    Mobile --> API
+    Admin --> API
+
+    API --> Auth
+    API --> Gateway
+    Gateway --> Services
+
+    Services --> SA
+    Services --> PO
+    Services --> QA
+    Services --> Dev
+
+    SA --> RA
+    SA --> RP
+    SA --> Chat
+
+    RA --> TRS
+    RA --> APA
+    RA --> SAS
+
+    RP --> TDE
+    RP --> VAD
+    RP --> PSA
+
+    TRS --> OpenAI
+    TRS --> Search
+    TRS --> Context
+    TRS --> Firecrawl
+
+    APA --> Context
+    APA --> Firecrawl
+
+    SAS --> Context
+    SAS --> Firecrawl
+
+    VAD --> Mermaid
+
+    Services --> Entities
+    Services --> Repositories
+    Repositories --> SQL
+    Repositories --> Cosmos
+    Services --> Cache

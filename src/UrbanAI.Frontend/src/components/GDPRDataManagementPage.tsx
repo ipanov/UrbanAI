@@ -529,11 +529,19 @@ const GDPRDataManagementPage: React.FC = () => {
                   </div>
 
                   <div className="action-buttons">
-                    <button className="btn btn-danger" onClick={() => setShowDeleteModal(true)}>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => setShowDeleteModal(true)}
+                      data-testid="delete-account-button"
+                    >
                       <Trash2 size={16} />
                       Delete My Account
                     </button>
-                    <button className="btn btn-warning" onClick={() => setShowAnonymizeModal(true)}>
+                    <button
+                      className="btn btn-warning"
+                      onClick={() => setShowAnonymizeModal(true)}
+                      data-testid="anonymize-data-button"
+                    >
                       <Shield size={16} />
                       Anonymize My Data Only
                     </button>

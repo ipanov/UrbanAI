@@ -1,0 +1,118 @@
+graph TB
+    subgraph "Development Environment"
+        DEV1[Local Development<br/>.NET 9 + VS Code]
+        DEV2[Agent Simulators]
+        DEV3[Mock Services]
+        DEV4[Local Databases]
+
+        DEV1 --> DEV2
+        DEV2 --> DEV3
+        DEV3 --> DEV4
+    end
+
+    subgraph "Staging Environment"
+        STAGE1[Azure Functions<br/>Staging Slot]
+        STAGE2[Azure App Service<br/>Staging Slot]
+        STAGE3[Azure SQL DB<br/>Staging]
+        STAGE4[Azure Cosmos DB<br/>Staging]
+        STAGE5[Azure Service Bus<br/>Staging]
+
+        STAGE1 --> STAGE2
+        STAGE2 --> STAGE3
+        STAGE2 --> STAGE4
+        STAGE3 --> STAGE5
+    end
+
+    subgraph "Production Environment"
+        PROD1[Azure Functions<br/>Production]
+        PROD2[Azure App Service<br/>Production]
+        PROD3[Azure SQL DB<br/>Production]
+        PROD4[Azure Cosmos DB<br/>Production]
+        PROD5[Azure Service Bus<br/>Production]
+        PROD6[Azure Front Door<br/>CDN]
+        PROD7[Azure Application Insights]
+
+        PROD1 --> PROD2
+        PROD2 --> PROD3
+        PROD2 --> PROD4
+        PROD3 --> PROD5
+        PROD6 --> PROD1
+        PROD7 --> PROD1
+        PROD7 --> PROD2
+    end
+
+    subgraph "CI/CD Pipeline"
+        CI1[GitHub Actions<br/>CI Pipeline]
+        CI2[Build & Test]
+        CI3[Infrastructure as Code<br/>Bicep Templates]
+        CI4[Deployment Slots]
+        CI5[Canary Deployment]
+        CI6[Rollback Strategy]
+
+        CI1 --> CI2
+        CI2 --> CI3
+        CI3 --> CI4
+        CI4 --> CI5
+        CI5 --> CI6
+    end
+
+    subgraph "Monitoring & Observability"
+        MON1[Azure Monitor<br/>Metrics & Logs]
+        MON2[Application Insights<br/>APM]
+        MON3[Log Analytics<br/>Query & Alert]
+        MON4[Azure Alert<br/>Notifications]
+        MON5[Dashboard<br/>Performance Metrics]
+
+        MON1 --> MON2
+        MON2 --> MON3
+        MON3 --> MON4
+        MON4 --> MON5
+    end
+
+    subgraph "External Integrations"
+        EXT1[Azure OpenAI Service]
+        EXT2[Azure Computer Vision]
+        EXT3[Azure Machine Learning]
+        EXT4[Municipal APIs]
+        EXT5[Third-party Web Services]
+
+        EXT1 --> PROD1
+        EXT2 --> PROD1
+        EXT3 --> PROD1
+        EXT4 --> PROD2
+        EXT5 --> PROD2
+    end
+
+    subgraph "Security & Compliance"
+        SEC1[Azure Key Vault<br/>Secrets Management]
+        SEC2[Azure AD<br/>Identity & Access]
+        SEC3[Azure Policy<br/>Compliance]
+        SEC4[Azure Security Center<br/>Threat Protection]
+
+        SEC1 --> PROD1
+        SEC2 --> PROD2
+        SEC3 --> PROD1
+        SEC4 --> PROD1
+    end
+
+    CI1 --> STAGE1
+    CI1 --> PROD1
+    STAGE1 --> PROD1
+    MON1 --> PROD1
+    MON1 --> STAGE1
+
+    classDef development fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef staging fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+    classDef production fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef cicd fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef monitoring fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef external fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    classDef security fill:#efebe9,stroke:#5d4037,stroke-width:2px
+
+    class DEV1,DEV2,DEV3,DEV4 development
+    class STAGE1,STAGE2,STAGE3,STAGE4,STAGE5 staging
+    class PROD1,PROD2,PROD3,PROD4,PROD5,PROD6,PROD7 production
+    class CI1,CI2,CI3,CI4,CI5,CI6 cicd
+    class MON1,MON2,MON3,MON4,MON5 monitoring
+    class EXT1,EXT2,EXT3,EXT4,EXT5 external
+    class SEC1,SEC2,SEC3,SEC4 security

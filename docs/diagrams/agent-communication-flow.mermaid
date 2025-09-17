@@ -1,0 +1,28 @@
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Active: User Request
+    Active --> ResearchOrchestrating: Research Task
+    Active --> DocumentationGenerating: Documentation Task
+    Active --> ChatProcessing: Chat Interaction
+
+    ResearchOrchestrating --> DeployingSubagents: Deploy Research Subagents
+    DeployingSubagents --> ExecutingResearch: Parallel Execution
+    ExecutingResearch --> SynthesizingResults: Collect Results
+    SynthesizingResults --> AnalysisComplete: Ultra Thinking
+    AnalysisComplete --> Active: Research Complete
+
+    DocumentationGenerating --> DeployingWriters: Deploy Documentation Subagents
+    DeployingWriters --> GeneratingContent: Parallel Generation
+    GeneratingContent --> AssemblingReport: Combine Content
+    AssemblingReport --> QualityReview: Validate Quality
+    QualityReview --> Active: Documentation Complete
+
+    ChatProcessing --> IntentAnalysis: Analyze User Intent
+    IntentAnalysis --> AgentRouting: Route to Agent
+    AgentRouting --> ProcessingRequest: Handle Request
+    ProcessingRequest --> GeneratingResponse: Create Response
+    GeneratingResponse --> Active: Response Complete
+
+    Active --> [*]: Task Complete
+    Active --> ErrorHandling: Error Occurred
+    ErrorHandling --> Active: Error Resolved

@@ -1,0 +1,84 @@
+graph LR
+    subgraph "Orchestration Layer"
+        SA[Software Architect Agent]
+        PO[Product Owner Agent]
+    end
+
+    subgraph "Agent Network"
+        RA[Research Agent]
+        RP[Reporter Agent]
+        QA[QA Engineer Agent]
+        Dev[Developer Agent]
+    end
+
+    subgraph "Research Subagents Cluster"
+        TRS[Technology Research Specialist]
+        APA[Architecture Pattern Analyst]
+        SAS[Security Architecture Specialist]
+    end
+
+    subgraph "Documentation Subagents Cluster"
+        TDE[Technical Documentation Engineer]
+        VAD[Visual Architecture Designer]
+        PSA[Performance & Scalability Analyst]
+    end
+
+    subgraph "MCP Services Layer"
+        C7[Context7 MCP]
+        FC[Firecrawl MCP]
+        WS[WebSearch MCP]
+        MM[Mermaid MCP]
+        ST[Sequential Thinking]
+        PM[Planning Mode]
+    end
+
+    subgraph "Data Stores"
+        Docs[Documentation Store]
+        Diagrams[Diagram Repository]
+        Research[Research Cache]
+        Performance[Performance Metrics]
+    end
+
+    PO --> SA
+    SA --> RA
+    SA --> RP
+    SA --> QA
+    SA --> Dev
+
+    RA --> TRS
+    RA --> APA
+    RA --> SAS
+
+    RP --> TDE
+    RP --> VAD
+    RP --> PSA
+
+    TRS --> C7
+    TRS --> FC
+    TRS --> WS
+
+    APA --> C7
+    APA --> FC
+    APA --> ST
+
+    SAS --> C7
+    SAS --> FC
+    SAS --> WS
+
+    VAD --> MM
+    VAD --> C7
+
+    SA --> PM
+    SA --> ST
+
+    TRS --> Research
+    APA --> Research
+    SAS --> Research
+
+    TDE --> Docs
+    VAD --> Diagrams
+    PSA --> Performance
+
+    RP --> Docs
+    RP --> Diagrams
+    RP --> Performance

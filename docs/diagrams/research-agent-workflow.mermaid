@@ -1,0 +1,50 @@
+sequenceDiagram
+    participant U as User
+    participant F as React Frontend
+    participant API as API Gateway
+    participant SA as Software Architect
+    participant RA as Research Agent
+    participant TRS as Tech Research Specialist
+    participant APA as Architecture Analyst
+    participant SAS as Security Specialist
+    participant C7 as Context7 MCP
+    participant FC as Firecrawl MCP
+    participant WS as WebSearch
+
+    U->>F: Request Architecture Research
+    F->>API: POST /api/agents/research
+    API->>SA: Route Research Request
+    SA->>RA: Deploy Research Agent
+
+    rect rgb(255, 245, 238)
+        Note over RA,SAS: Parallel Research Execution
+        RA->>TRS: Research Technology Stack
+        RA->>APA: Analyze Architecture Patterns
+        RA->>SAS: Assess Security Implications
+
+        TRS->>C7: Get .NET 9 Documentation
+        TRS->>FC: Crawl Tech Documentation
+        TRS->>WS: Search Latest Trends
+
+        APA->>C7: Research Clean Architecture
+        APA->>FC: Analyze Competitor Patterns
+        APA->>WS: Search Architecture Best Practices
+
+        SAS->>C7: Research Security Standards
+        SAS->>FC: Analyze Security Patterns
+        SAS->>WS: Search Security Threats
+    end
+
+    TRS->>RA: Technology Research Report
+    APA->>RA: Architecture Analysis Report
+    SAS->>RA: Security Assessment Report
+
+    RA->>RA: Synthesize Research Findings
+    RA->>SA: Comprehensive Research Package
+
+    SA->>SA: Ultra Thinking Analysis
+    SA->>SA: Generate Architectural Alternatives
+
+    SA->>API: Research Results
+    API->>F: JSON Response
+    F->>U: Research Findings & Recommendations

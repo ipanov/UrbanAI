@@ -1,0 +1,77 @@
+graph TB
+    subgraph "Frontend Layer"
+        UI[React Chat Interface]
+        Auth[Authentication Context]
+        Socket[WebSocket Client]
+    end
+
+    subgraph "API Gateway Layer"
+        Gateway[API Gateway]
+        RateLimit[Rate Limiting]
+        AuthMW[Authentication Middleware]
+    end
+
+    subgraph "Chat Service Layer"
+        ChatService[Chat Service]
+        SessionManager[Session Manager]
+        ContextManager[Context Manager]
+        MessageBroker[Message Broker]
+    end
+
+    subgraph "AI Integration Layer"
+        Orchestrator[Agent Orchestrator]
+        Router[Intent Router]
+        RA[Research Agent]
+        RP[Reporter Agent]
+        ChatAssistant[AI Chat Assistant]
+    end
+
+    subgraph "MCP Services Layer"
+        OpenAI[Azure OpenAI]
+        Context7[Context7 MCP]
+        Firecrawl[Firecrawl MCP]
+        WebSearch[WebSearch MCP]
+    end
+
+    subgraph "Data Layer"
+        ChatDB[Chat History Database]
+        ContextDB[Context Database]
+        Cache[Redis Cache]
+    end
+
+    UI --> Socket
+    UI --> Auth
+    Socket --> Gateway
+
+    Gateway --> RateLimit
+    RateLimit --> AuthMW
+    AuthMW --> ChatService
+
+    ChatService --> SessionManager
+    ChatService --> ContextManager
+    ChatService --> MessageBroker
+
+    SessionManager --> ChatDB
+    ContextManager --> ContextDB
+    ContextManager --> Cache
+
+    MessageBroker --> Orchestrator
+    Orchestrator --> Router
+
+    Router --> RA
+    Router --> RP
+    Router --> ChatAssistant
+
+    RA --> OpenAI
+    RA --> Context7
+    RA --> Firecrawl
+    RA --> WebSearch
+
+    RP --> Context7
+    RP --> Firecrawl
+
+    ChatAssistant --> OpenAI
+    ChatAssistant --> Context7
+
+    ChatAssistant --> MessageBroker
+    MessageBroker --> UI

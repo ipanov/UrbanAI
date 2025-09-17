@@ -1,0 +1,108 @@
+sequenceDiagram
+    participant U as User
+    participant CI as Chat Interface
+    participant WS as WebSocket Manager
+    participant CA as Chat Service
+    participant IA as Intent Analyzer
+    participant CM as Context Manager
+    participant AC as Agent Coordinator
+    participant RA as Research Agent
+    participant RP as Reporter Agent
+    participant CH as Chat Agent
+    participant DB as Database
+
+    %% Connection Establishment
+    U->>CI: Open Chat Interface
+    CI->>WS: Establish WebSocket Connection
+    WS->>CA: Authenticate User
+    CA->>DB: Validate User Session
+    DB-->>CA: User Session Valid
+    CA-->>WS: Authentication Success
+    WS-->>CI: Connection Established
+    CI-->>U: Chat Interface Ready
+
+    %% Message Flow
+    U->>CI: Type Message
+    CI->>WS: Send via WebSocket
+    WS->>CA: Process Message Request
+    CA->>IA: Analyze Intent
+    IA-->>CA: Intent: ISSUE_REPORT, Entities: {issue_type: "pothole", location: "Main Street"}
+
+    CA->>CM: Get Conversation Context
+    CM->>DB: Load Context Data
+    DB-->>CM: Context Retrieved
+    CM-->>CA: Context Loaded
+
+    CA->>AC: Coordinate Agent Response
+    AC->>RP: Process Issue Report
+    RP-->>AC: Issue Created: #12345
+    AC->>CH: Generate User Response
+    CH-->>AC: Response Generated
+
+    CA->>CM: Update Context with Response
+    CM->>DB: Save Updated Context
+    DB-->>CM: Context Saved
+
+    CA-->>WS: Response Message
+    WS-->>CI: Deliver Response
+    CI-->>U: Display Response
+
+    %% Parallel Research Flow
+    par Research and Analysis
+        AC->>RA: Research Similar Issues
+        RA->>DB: Query Historical Data
+        DB-->>RA: Related Cases Found
+        RA-->>AC: Research Results
+    and Issue Processing
+        AC->>RP: Triage and Categorize
+        RP->>DB: Save Issue Details
+        DB-->>RP: Issue Saved
+        RP-->>AC: Processing Complete
+    end
+
+    %% Typing Indicators
+    U->>CI: Start Typing
+    CI->>WS: Typing Start Event
+    WS->>CA: Update Typing Status
+    CA->>AC: Notify Agents Typing
+    AC-->>CA: Agents Processing
+    CA-->>WS: Typing Status Update
+    WS-->>CI: Show Typing Indicator
+    CI-->>U: Display Typing Indicator
+
+    %% Agent Status Updates
+    loop Every 30 seconds
+        AC->>RA: Health Check
+        RA-->>AC: Status: Healthy
+        AC->>RP: Health Check
+        RP-->>RP: Status: Healthy
+        AC->>CH: Health Check
+        CH-->>AC: Status: Healthy
+        AC-->>WS: Agent Status Update
+        WS-->>CI: Update Agent Status
+        CI-->>U: Display Agent Status
+    end
+
+    %% Error Handling
+    alt Agent Failure
+        AC->>RP: Process Request
+        RP-->>AC: Error: Service Unavailable
+        AC->>CH: Handle Error Fallback
+        CH-->>AC: Error Response Generated
+        CA->>DB: Log Error Event
+        DB-->>CA: Error Logged
+        CA-->>WS: Error Response
+        WS-->>CI: Display Error Message
+        CI-->>U: Show Error with Retry Option
+    end
+
+    %% Conversation End
+    U->>CI: End Conversation
+    CI->>WS: Close Connection
+    WS->>CA: Cleanup Session
+    CA->>CM: Archive Context
+    CM->>DB: Save Conversation History
+    DB-->>CM: History Saved
+    CA-->>WS: Session Ended
+    WS-->>CI: Connection Closed
+    CI-->>U: Conversation Ended

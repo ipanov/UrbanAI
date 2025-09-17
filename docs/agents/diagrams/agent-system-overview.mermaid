@@ -1,0 +1,124 @@
+graph TB
+    subgraph "User Interface Layer"
+        UI1[Citizens Web Interface]
+        UI2[Operators Dashboard]
+        UI3[Admin Portal]
+        UI4[Mobile App]
+    end
+
+    subgraph "API Gateway Layer"
+        GW1[API Gateway]
+        GW2[Authentication Service]
+        GW3[Rate Limiting]
+        GW4[CORS Handler]
+    end
+
+    subgraph "Chat Integration Layer"
+        CHAT1[Chat Interface Service]
+        CHAT2[Conversation Manager]
+        CHAT3[Context Manager]
+        CHAT4[Response Aggregator]
+    end
+
+    subgraph "Agent Orchestration Layer"
+        ORCH1[Agent Orchestrator]
+        ORCH2[Task Router]
+        ORCH3[Result Aggregator]
+        ORCH4[Error Handler]
+        ORCH5[Performance Monitor]
+    end
+
+    subgraph "Primary Agent Layer"
+        RESEARCH[Research Agent]
+        REPORTER[Reporter Agent]
+        CHAT_AGENT[Chat Agent]
+    end
+
+    subgraph "Research Agent Subagents"
+        WEB[Web Scraping Subagent]
+        IMAGE[Image Recognition Subagent]
+        CLASSIFY[Classification Subagent]
+        DISCOVER[Municipal Discovery Subagent]
+    end
+
+    subgraph "Reporter Agent Subagents"
+        TRIAGE[Issue Triage Subagent]
+        STATUS[Status Update Subagent]
+        REPORTS[Report Generation Subagent]
+        NOTIFY[Notification Subagent]
+    end
+
+    subgraph "External Services Layer"
+        AI1[Azure OpenAI]
+        AI2[Azure Computer Vision]
+        AI3[Azure ML Studio]
+        WEB1[Web Scraping Services]
+        DATA1[Azure Cosmos DB]
+        DATA2[Azure SQL DB]
+    end
+
+    subgraph "Infrastructure Layer"
+        INFRA1[Azure Functions]
+        INFRA2[Azure Service Bus]
+        INFRA3[Azure Monitor]
+        INFRA4[Azure Key Vault]
+    end
+
+    UI1 --> GW1
+    UI2 --> GW1
+    UI3 --> GW1
+    UI4 --> GW1
+
+    GW1 --> CHAT1
+    GW1 --> ORCH1
+
+    CHAT1 --> CHAT2
+    CHAT2 --> CHAT3
+    CHAT3 --> CHAT4
+    CHAT4 --> ORCH1
+
+    ORCH1 --> ORCH2
+    ORCH2 --> RESEARCH
+    ORCH2 --> REPORTER
+    ORCH2 --> CHAT_AGENT
+
+    RESEARCH --> WEB
+    RESEARCH --> IMAGE
+    RESEARCH --> CLASSIFY
+    RESEARCH --> DISCOVER
+
+    REPORTER --> TRIAGE
+    REPORTER --> STATUS
+    REPORTER --> REPORTS
+    REPORTER --> NOTIFY
+
+    WEB --> WEB1
+    IMAGE --> AI2
+    CLASSIFY --> AI3
+    DISCOVER --> WEB1
+
+    TRIAGE --> DATA1
+    STATUS --> DATA1
+    REPORTS --> DATA2
+    NOTIFY --> INFRA2
+
+    CHAT_AGENT --> AI1
+
+    ORCH3 --> CHAT4
+    ORCH4 --> ORCH3
+    ORCH5 --> ORCH1
+
+    INFRA1 --> ORCH1
+    INFRA2 --> ORCH2
+    INFRA3 --> ORCH5
+    INFRA4 --> GW2
+
+    classDef primaryAgent fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef subagent fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef externalService fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef infrastructure fill:#fff3e0,stroke:#e65100,stroke-width:2px
+
+    class RESEARCH,REPORTER,CHAT_AGENT primaryAgent
+    class WEB,IMAGE,CLASSIFY,DISCOVER,TRIAGE,STATUS,REPORTS,NOTIFY subagent
+    class AI1,AI2,AI3,WEB1,DATA1,DATA2 externalService
+    class INFRA1,INFRA2,INFRA3,INFRA4 infrastructure

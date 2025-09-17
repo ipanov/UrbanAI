@@ -267,8 +267,9 @@ describe('GDPRDataManagementPage', () => {
       expect(screen.getByText(/Permanently remove your account/)).toBeInTheDocument();
     });
 
-    // Find the delete button by text that includes the icon
-    const deleteButton = screen.getByRole('button', { name: /Delete My Account/ });
+    // Find the delete button with danger class (more specific selector)
+    const deleteButton = screen.getByRole('button', { name: /Delete My Account/i });
+    expect(deleteButton).toHaveClass('btn-danger');
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
@@ -303,7 +304,9 @@ describe('GDPRDataManagementPage', () => {
     fireEvent.click(deleteTab);
 
     await waitFor(() => {
+      // Find the delete button with danger class (more specific selector)
       const deleteButton = screen.getByRole('button', { name: /Delete My Account/i });
+      expect(deleteButton).toHaveClass('btn-danger');
       fireEvent.click(deleteButton);
     });
 
@@ -315,7 +318,7 @@ describe('GDPRDataManagementPage', () => {
 
     // Click confirm
     await waitFor(() => {
-      const confirmButton = screen.getByText('Delete Account');
+      const confirmButton = screen.getByTestId('delete-account-button');
       expect(confirmButton).not.toBeDisabled();
       fireEvent.click(confirmButton);
     });
@@ -394,6 +397,7 @@ describe('GDPRDataManagementPage', () => {
 
     await waitFor(() => {
       const deleteButton = screen.getByRole('button', { name: /Delete My Account/i });
+      expect(deleteButton).toHaveClass('btn-danger');
       fireEvent.click(deleteButton);
     });
 

@@ -1,0 +1,55 @@
+graph TB
+    subgraph "Security Boundaries"
+        UserBoundary[User Security Boundary]
+        AgentBoundary[Agent Security Boundary]
+        SystemBoundary[System Security Boundary]
+    end
+
+    subgraph "Authentication & Authorization"
+        OAuth[OAuth2 Provider]
+        JWT[JWT Token Validation]
+        RBAC[Role-Based Access Control]
+        AgentAuth[Agent Authentication]
+    end
+
+    subgraph "Data Protection"
+        Encryption[Data Encryption]
+        Masking[Data Masking]
+        Audit[Audit Logging]
+        Compliance[GDPR Compliance]
+    end
+
+    subgraph "Network Security"
+        Firewall[Web Application Firewall]
+        HTTPS[TLS/SSL Encryption]
+        RateLimit[Rate Limiting]
+        DDoS[DDoS Protection]
+    end
+
+    subgraph "Agent Security"
+        Sandbox[Agent Sandbox]
+        Validation[Input Validation]
+        Monitoring[Agent Monitoring]
+        Scanning[Vulnerability Scanning]
+    end
+
+    UserBoundary --> OAuth
+    UserBoundary --> JWT
+    UserBoundary --> RBAC
+
+    AgentBoundary --> AgentAuth
+    AgentBoundary --> Sandbox
+    AgentBoundary --> Validation
+
+    SystemBoundary --> Encryption
+    SystemBoundary --> Audit
+    SystemBoundary --> Firewall
+    SystemBoundary --> HTTPS
+
+    AgentBoundary --> Monitoring
+    SystemBoundary --> RateLimit
+    SystemBoundary --> DDoS
+    SystemBoundary --> Scanning
+
+    Encryption --> Compliance
+    Audit --> Compliance
