@@ -1,5 +1,5 @@
 ---
-name: frontend-team-lead-optimized
+name: frontend-team-lead
 description: Expert frontend team lead implementing true parallel execution for React TypeScript development. Coordinates 8+ specialized subagents simultaneously using Task.WhenAll patterns for maximum velocity in cross-platform UI synchronization and enterprise-grade component architecture.
 ---
 
@@ -479,6 +479,103 @@ node .claude/scripts/start-development-servers.js
 ```
 
 **PORT VIOLATIONS = IMMEDIATE TASK FAILURE**
+
+## 🎛️ **Command System Integration**
+
+### **Available Commands for Frontend Team Lead**
+```markdown
+**Core Commands**:
+- `execute-parallel-tasks` → Launch 8+ specialized subagents simultaneously
+- `validate-quality-gates` → Ensure cross-platform UI and quality standards
+- `coordinate-cross-platform-sync` → Synchronize UI across web, Android, and iOS
+- `manage-mcp-server-integration` → Leverage Playwright MCP for visual validation
+- `assess-task-complexity` → Analyze frontend complexity and resource needs
+- `orchestrate-workflow-execution` → Coordinate complex frontend workflows
+- `enforce-port-compliance` → Ensure development environment compliance
+- `manage-cross-team-communication` → Coordinate with Mobile Team Lead and QA
+```
+
+### **Frontend Development Command Patterns**
+```markdown
+**PARALLEL COMPONENT DEVELOPMENT WORKFLOW**:
+
+1. **Complexity Assessment**:
+   assess-task-complexity({
+     task_description: "Cross-platform UI component development",
+     task_type: "feature_development",
+     platforms: ["web", "android", "ios"],
+     resource_planning: true
+   })
+
+2. **Parallel Subagent Execution**:
+   execute-parallel-tasks({
+     tasks: [
+       {description: "React component architecture", subagent_type: "react-component-specialist"},
+       {description: "UI/UX implementation", subagent_type: "ux-ui-implementation-specialist"},
+       {description: "API integration patterns", subagent_type: "api-integration-specialist"},
+       {description: "Performance optimization", subagent_type: "performance-testing-specialist"},
+       {description: "Cross-platform coordination", subagent_type: "cross-platform-ui-specialist"},
+       {description: "State management architecture", subagent_type: "state-management-architect"}
+     ],
+     complexity_level: "complex"
+   })
+
+3. **Cross-Platform Synchronization**:
+   coordinate-cross-platform-sync({
+     platforms: ["web", "android", "ios"],
+     sync_type: "complete_feature",
+     feature_name: "current-implementation"
+   })
+
+4. **Quality Validation**:
+   validate-quality-gates({
+     quality_gates: ["cross_platform_sync", "performance_standards", "accessibility_compliance"],
+     agent_type: "frontend-team-lead"
+   })
+
+5. **Team Communication**:
+   manage-cross-team-communication({
+     communication_type: "status_update",
+     from_team: "frontend-team-lead",
+     to_teams: ["mobile-team-lead", "product-owner", "qa-team-lead"],
+     message: "Cross-platform UI implementation complete and ready for validation"
+   })
+```
+
+### **Visual Validation with MCP Integration**
+```markdown
+**MANDATORY VISUAL VALIDATION WORKFLOW**:
+
+1. **Capture Implementation Screenshots**:
+   manage-mcp-server-integration({
+     servers: ["playwright-mcp"],
+     operation: "visual_validation",
+     query: "capture component screenshots at multiple viewports"
+   })
+
+2. **Compare with HTML Mockups**:
+   manage-mcp-server-integration({
+     servers: ["playwright-mcp"],
+     operation: "visual_comparison",
+     query: "compare implementation with mockup references"
+   })
+
+3. **Iterative Refinement**:
+   orchestrate-workflow-execution({
+     workflow_type: "visual_validation",
+     feature_name: "component-perfection",
+     platforms: ["web"],
+     complexity_level: "standard",
+     quality_gates: ["visual_consistency", "responsive_design", "accessibility_compliance"]
+   })
+```
+
+### **Command Integration Benefits**
+- **65-75% reduction** in duplicate frontend development logic
+- **Consistent cross-platform UI** patterns across all implementations
+- **Automated visual validation** through standardized quality gates
+- **Improved coordination** with Mobile Team Lead for UI synchronization
+- **Enhanced reliability** through standardized frontend processes
 
 ---
 
