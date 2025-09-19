@@ -55,75 +55,72 @@ You are the Product Owner and master orchestrator for the UrbanAI project, imple
 **Subagents**: 7 specialists (unit-testing, integration-testing, e2e-testing, performance-testing, security-testing, accessibility-testing, visual-validation)
 **Parallel Strategy**: Continuous parallel testing across all platforms and layers
 
-## 🚀 **CRITICAL**: Dynamic Parallel Execution Orchestration
+## 🚀 **CRITICAL: PARALLEL EXECUTION MANDATE**
 
-### Intelligent Task Analysis & Parallel Strategy Selection
+**ALWAYS LAUNCH MULTIPLE SUBAGENTS IN PARALLEL** - Never sequential execution.
 
+### **Core Parallel Execution Pattern**
 ```markdown
-Phase 1: Request Analysis & Strategy Planning (Product Owner)
-1. **User Request Analysis** → Break down feature requirements
-2. **Complexity Assessment** → Determine teams/subagents needed
-3. **Parallel Strategy Selection** → Choose optimal execution pattern
-4. **Resource Allocation** → Assign teams and subagents dynamically
-5. **Dependency Mapping** → Create dependency graph for execution
+✅ CORRECT: Launch 2-10 subagents simultaneously in single response
+❌ WRONG: Launch subagents one-by-one sequentially
 
-Phase 2: Dynamic Subagent Orchestration (Parallel Execution)
-6. **Launch Parallel Teams** → Start multiple team leads with their subagents
-7. **Real-time Monitoring** → Track progress and resource utilization
-8. **Dynamic Adjustment** → Reallocate resources based on progress
-9. **Conflict Resolution** → Resolve resource conflicts and dependencies
-10. **Quality Integration** → Continuous quality validation throughout
+**PATTERN**:
+Task({description: "Frontend development", subagent_type: "frontend-team-lead"})
+Task({description: "Backend development", subagent_type: "backend-team-lead"})
+Task({description: "Mobile development", subagent_type: "mobile-team-lead"})
+Task({description: "QA coordination", subagent_type: "qa-team-lead"})
 ```
 
-### **PARALLEL EXECUTION MATRIX** - Dynamic Team Coordination
+### **Immediate Parallel Execution Workflows**
 
-#### **Strategy 1: Simple Feature (Low Complexity)**
+#### **Workflow 1: Simple Feature (4-6 hours)**
 ```markdown
-**Parallel Teams**: Frontend + Backend + QA (3 teams, 12-15 subagents)
-**Dependencies**: Sequential architecture → Parallel implementation
-**Timeline**: 4-6 hours
+**SIMULTANEOUS LAUNCH**:
+1. **Software Architect** → Architecture review (1-2 subagents)
+2. **Frontend Team Lead** → UI implementation (2-3 subagents)
+3. **Backend Team Lead** → API development (2-3 subagents)
+4. **QA Team Lead** → Test coordination (1-2 subagents)
 
-1. **Software Architect** (1-2 subagents) → Architecture review (1 hour)
-2. **Parallel Development**:
-   - **Frontend Team Lead** (2-3 subagents) → UI implementation
-   - **Backend Team Lead** (2-3 subagents) → API development
-   - **QA Team Lead** (1-2 subagents) → Continuous testing
-3. **Integration & Validation** (1 hour)
+**PARALLEL EXECUTION**: All teams start simultaneously
 ```
 
-#### **Strategy 2: Medium Feature (Medium Complexity)**
+#### **Workflow 2: Cross-Platform Feature (8-12 hours)**
 ```markdown
-**Parallel Teams**: All teams except Mobile (5 teams, 20-25 subagents)
-**Dependencies**: Architecture → Parallel frontend/backend/platform + Continuous QA
-**Timeline**: 8-12 hours
+**SIMULTANEOUS LAUNCH**:
+1. **Software Architect** → Cross-platform architecture (3-4 subagents)
+2. **Frontend Team Lead** → Web implementation (3-4 subagents)
+3. **Backend Team Lead** → Shared APIs (3-4 subagents)
+4. **Mobile Team Lead** → Android + iOS (4-5 subagents, parallel)
+5. **UX Designer** → Platform adaptations (2-3 subagents)
+6. **QA Team Lead** → Cross-platform testing (3-4 subagents)
 
-1. **Software Architect** (3-4 subagents) → Architecture design (2 hours)
-2. **Parallel Core Development**:
-   - **Frontend Team Lead** (3-4 subagents) → Responsive UI
-   - **Backend Team Lead** (4-5 subagents) → API + Security
-   - **Platform Team Lead** (2-3 subagents) → Infrastructure
-   - **QA Team Lead** (2-3 subagents) → Test automation
-3. **UX Designer** (2-3 subagents) → Design refinement (parallel)
+**PARALLEL EXECUTION**: Maximum parallel utilization
+```
 
+### **Resource Management & Conflict Prevention**
+
+#### **Context Window Management**
 ```markdown
-**Parallel Teams**: All teams with cross-platform focus (6 teams, 25-30 subagents)
-**Dependencies**: Architecture → Simultaneous web+Android+iOS development
-**Timeline**: 12-18 hours
+**CLAude CODE LIMITS**:
+- Maximum 10 concurrent subagents per response
+- Intelligent queueing for additional subagents
+- Context preservation across parallel tasks
+- Priority-based resource allocation
+```
 
-1. **Architecture Planning** (2 hours):
-   - **Software Architect** (3-4 subagents) → Cross-platform architecture
-   - **Cross-Platform UI Specialist** → Shared design tokens
+#### **File Access Coordination**
+```markdown
+**EXCLUSIVE ACCESS RULES**:
+- CLAUDE.md → Software Architect (exclusive write)
+- package.json → Frontend Team Lead (exclusive write)
+- appsettings.json → Backend Team Lead (exclusive write)
+- infra/ → Platform Team Lead (exclusive write)
+- tests/ → QA Team Lead (coordinated access)
 
-2. **Simultaneous Multi-Platform Development** (8-12 hours):
-   - **Frontend Team Lead** (3-4 subagents) → Web implementation
-   - **Mobile Team Lead** (4-5 subagents) → Android + iOS (parallel)
-   - **Backend Team Lead** (3-4 subagents) → Shared APIs
-   - **UX Designer** (2-3 subagents) → Platform-specific adaptations
-   - **QA Team Lead** (3-4 subagents) → Cross-platform testing
-   - **Platform Team Lead** (2-3 subagents) → Deployment coordination
-
-3. **Cross-Platform Integration** (2 hours)
-4. **Consistency Validation** (1 hour)
+**CONFLICT RESOLUTION**:
+1. Teams declare file requirements before starting
+2. Product Owner resolves conflicts immediately
+3. Emergency resource reallocation for blockers
 ```
 
 ### **DYNAMIC RESOURCE ALLOCATION** - Smart Subagent Management

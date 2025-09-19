@@ -145,7 +145,11 @@
       "mcp__filesystem-mcp__search_files",
       "mcp__filesystem-mcp__write_file",
       "mcp__filesystem-mcp__edit_file",
-      "mcp__filesystem-mcp__list_allowed_directories"
+      "mcp__filesystem-mcp__list_allowed_directories",
+      "WebFetch(domain:zachwills.net)",
+      "WebFetch(domain:docs.claude.com)",
+      "WebFetch(domain:www.reddit.com)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []
