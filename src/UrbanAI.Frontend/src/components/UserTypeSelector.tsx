@@ -17,7 +17,7 @@ interface UserType {
 
 interface UserTypeSelectorProps {
   selectedUserType: string | null;
-  onUserTypeSelect: (userType: string) => void;
+  onUserTypeSelect: (_userType: string) => void;
   variant?: 'registration' | 'compact';
   className?: string;
 }
@@ -180,16 +180,16 @@ const UserTypeSelector: React.FC<UserTypeSelectorProps> = ({
       </div>
 
       <div className="user-type-grid">
-        {userTypes.map((userType) => {
-          const isSelected = selectedUserType === userType.id;
-          const isExpanded = expandedType === userType.id;
-          const IconComponent = userType.icon;
+        {userTypes.map((type) => {
+          const isSelected = selectedUserType === type.id;
+          const isExpanded = expandedType === type.id;
+          const IconComponent = type.icon;
 
           return (
             <Card
-              key={userType.id}
+              key={type.id}
               className={`user-type-card ${isSelected ? 'selected' : ''} ${isExpanded ? 'expanded' : ''}`}
-              onClick={() => handleCardClick(userType.id)}
+              onClick={() => handleCardClick(type.id)}
             >
               <div className="card-header">
                 <div className="icon-container">
@@ -197,10 +197,10 @@ const UserTypeSelector: React.FC<UserTypeSelectorProps> = ({
                 </div>
                 <div className="card-content">
                   <Typography variant="h3" className="card-title">
-                    {userType.title}
+                    {type.title}
                   </Typography>
                   <Typography variant="body1" className="card-description">
-                    {userType.description}
+                    {type.description}
                   </Typography>
                 </div>
                 <div className="selection-indicator">
@@ -211,7 +211,7 @@ const UserTypeSelector: React.FC<UserTypeSelectorProps> = ({
               {isExpanded && (
                 <div className="expanded-content">
                   <Typography variant="body1" className="detailed-description">
-                    {userType.detailedDescription}
+                    {type.detailedDescription}
                   </Typography>
 
                   <div className="features-section">
@@ -219,7 +219,7 @@ const UserTypeSelector: React.FC<UserTypeSelectorProps> = ({
                       Key Features
                     </Typography>
                     <ul className="features-list">
-                      {userType.features.map((feature, index) => (
+                      {type.features.map((feature, index) => (
                         <li key={index} className="feature-item">
                           <Check size={16} className="feature-check" />
                           <span>{feature}</span>
@@ -233,7 +233,7 @@ const UserTypeSelector: React.FC<UserTypeSelectorProps> = ({
                       Permissions
                     </Typography>
                     <ul className="permissions-list">
-                      {userType.permissions.map((permission, index) => (
+                      {type.permissions.map((permission, index) => (
                         <li key={index} className="permission-item">
                           <Info size={16} className="permission-icon" />
                           <span>{permission}</span>
@@ -244,10 +244,10 @@ const UserTypeSelector: React.FC<UserTypeSelectorProps> = ({
 
                   <button
                     className="select-button"
-                    onClick={(e) => handleSelectClick(userType.id, e)}
-                    aria-label={`Confirm selection of ${userType.title} account type`}
+                    onClick={(e) => handleSelectClick(type.id, e)}
+                    aria-label={`Confirm selection of ${type.title} account type`}
                   >
-                    Select {userType.title}
+                    Select {type.title}
                   </button>
                 </div>
               )}
