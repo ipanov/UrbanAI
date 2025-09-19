@@ -1,0 +1,46 @@
+/* Enhanced Background Variations for UrbanAI Static Pages */
+
+/* Technology/AI Background Pattern */
+.bg-tech-pattern {
+    background-image:
+        linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%),
+        radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+    background-size: 100% 100%, 200px 200px, 300px 300px;
+    background-position: center, 0 0, 100% 100%;
+}
+
+/* Security/Trust Background Pattern */
+.bg-security-pattern {
+    background-image:
+        linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%),
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(16, 185, 129, 0.02) 10px, rgba(16, 185, 129, 0.02) 20px);
+}
+
+/* Business/Professional Background Pattern */
+.bg-business-pattern {
+    background-image:
+        linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(37, 99, 235, 0.08) 100%),
+        radial-gradient(ellipse at top left, rgba(79, 70, 229, 0.03) 0%, transparent 70%);
+}
+
+/* Community/Engagement Background Pattern */
+.bg-community-pattern {
+    background-image:
+        linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(37, 99, 235, 0.08) 100%),
+        radial-gradient(circle at 30% 70%, rgba(245, 158, 11, 0.04) 0%, transparent 50%);
+}
+
+/* Content/Blog Background Pattern */
+.bg-content-pattern {
+    background-image:
+        linear-gradient(135deg, rgba(139, 92, 246, 0.06) 0%, rgba(59, 130, 246, 0.06) 100%);
+    background-size: 100% 100%;
+}
+
+/* Legal/Professional Subtle Background */
+.bg-legal-pattern {
+    background-image:
+        linear-gradient(135deg, rgba(107, 114, 128, 0.04) 0%, rgba(75, 85, 99, 0.06) 100%);
+    background-size: 100% 100%;
+}

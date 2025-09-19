@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/background-patterns.css">
     <style>
         :root {
             --primary-color: #2563EB;
@@ -121,9 +122,11 @@
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('assets/images/hero/features-hero.jpg');
+            background-size: cover;
+            background-position: center;
             color: var(--white);
-            padding: 100px 0 80px;
+            padding: 120px 0;
             text-align: center;
         }
 
@@ -143,6 +146,23 @@
         /* Main Content */
         .main-content {
             padding: 80px 0;
+            background-color: rgba(255, 255, 255, 0.95);
+            position: relative;
+        }
+
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%),
+                            radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
+                            radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            background-size: 100% 100%, 200px 200px, 300px 300px;
+            background-position: center, 0 0, 100% 100%;
+            z-index: -1;
         }
 
         .section {
