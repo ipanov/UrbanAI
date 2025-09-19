@@ -132,6 +132,7 @@ jobs:
     needs: detect-changes
     if: needs.detect-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 15 # Add explicit timeout for frontend job
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -150,18 +151,22 @@ jobs:
       - name: Type check
         working-directory: src/UrbanAI.Frontend
         run: npm run type-check
+        timeout-minutes: 5
 
       - name: Lint
         working-directory: src/UrbanAI.Frontend
         run: npm run lint
+        timeout-minutes: 3
 
       - name: Run unit tests
         working-directory: src/UrbanAI.Frontend
         run: npm run test:coverage
+        timeout-minutes: 10 # Increased timeout for coverage tests
 
       - name: Build for production
         working-directory: src/UrbanAI.Frontend
         run: npm run build
+        timeout-minutes: 5
 
       - name: Upload frontend test results
         if: always()
